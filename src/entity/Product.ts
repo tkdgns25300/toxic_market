@@ -1,80 +1,61 @@
-import { Entity, Column, CreateDateColumn, PrimaryColumn } from "typeorm";
+import { Entity, Column, CreateDateColumn, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
 import { BaseEntity } from "./BaseEntity";
+import { User } from "./User";
 
 @Entity("product")
 export class Product extends BaseEntity {
-  @PrimaryColumn({
-    type: "varchar",
-    length: "40",
-    unique: true,
-    comment: "관리자 아이디",
+  @PrimaryGeneratedColumn({
+    comment: "상품 아이디"
   })
-  user_id: string;
+  id: number;
 
   @Column({
     type: "varchar",
-    length: 129,
-    comment: "관리자 패스워드",
-    select: false,
-  })
-  password: string;
-
-  @Column({ type: "varchar", length: 40, comment: "관리자 이름" })
-  name: string;
-
-  @Column({
-    type: "varchar",
-    length: 30,
-    default: null,
+    length: 200,
     nullable: true,
-    unique: true,
-    comment: "관리자 이메일",
+    comment: "대표 이미지 주소",
   })
-  email: string;
+  main_img_url: string;
+
+  @Column({
+    type: "text",
+    comment: "서브 이미지 주소"
+  })
+  sub_img_url: string;
+
+  @Column({
+    type: "int",
+    comment: "상품 가격",
+  })
+  price: number;
+
+  @Column({
+    type: "int",
+    comment: "등록 수량",
+  })
+  amount: number;
 
   @Column({
     type: "varchar",
-    length: 30,
-    default: null,
-    nullable: true,
-    unique: true,
-    comment: "관리자 연락처",
+    length: 50,
+    comment: "상품명",
   })
-  phone_number: string;
+  title: string;
 
   @Column({
-    type: "datetime",
-    default: null,
-    nullable: true,
-    comment: "최근 접속 일시",
+    type: "text",
+    comment: "상품 설명",
   })
-  last_login: Date;
+  description: string;
 
-  @Column({
-    type: "boolean",
-    default: false,
-    comment: "super관리자인 경우 true",
+  @CreateDateColumn({
+    comment: "생성 시간"
   })
-  is_super: Boolean;
-
-  @Column({
-    type: "varchar",
-    length: 150,
-    default: null,
-    nullable: true,
-    comment: "괸라자 이미지 src",
-  })
-  profile_img: string;
-
-  @CreateDateColumn()
   created_at: Date;
 
-  @Column({
-    type: "varchar",
-    length: "200",
-    default: null,
-    nullable: true,
-    comment: "소개",
-  })
-  self_introduction: string;
+  @ManyToOne(
+    () => User,
+    user => user.public_address
+  )
+  user: User
 }
