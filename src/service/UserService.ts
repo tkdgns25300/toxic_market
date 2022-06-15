@@ -74,48 +74,4 @@ export class UserService {
     );
     return new PageResObj(result, "user 생성에 성공했습니다.");
   }
-
-  async update(
-    paramObj: UserDto,
-    id: string
-  ): Promise<PageResObj<User | {}>> {
-    const candidate: User = await this.userQueryRepo.findOne(
-      "user_id",
-      id
-    );
-
-    if (paramObj.getBase64Img()) {
-      if (candidate.profile_img) await imageDelete(candidate.profile_img);
-      paramObj.profile_img = await imageUpload(
-        paramObj.getBase64Img(),
-        "profile"
-      );
-    }
-    if (paramObj.password) {
-      paramObj.password = hash(paramObj.password);
-    }
-    await this.userQueryRepo.update( paramObj,
-      "user_id",
-      id
-    );
-    const result = await this.userQueryRepo.findOne(
-
-      "user_id",
-      id
-    );
-    return new PageResObj(result, "user 정보 수정에 성공했습니다.");
-  }
-
-  @Transaction()
-  async delete(
-    idArr: { id: string }[],
-    @TransactionManager() manager: EntityManager
-  ) {
-    for (const el of idArr) {
-      const candidate = await manager.findOne(User, el.id);
-      if (candidate.profile_img) await imageDelete(candidate.profile_img);
-      await manager.delete(User, el.id);
-    }
-    return new PageResObj({}, "user 삭제에 성공했습니다.");
-  }
 }

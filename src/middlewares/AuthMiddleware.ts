@@ -67,12 +67,10 @@ export const checkSuperAccessToken = (
  * JWT AccessToken을 만든다.
  * @param admin
  */
-export const generateAccessToken = (admin: User, remember: boolean) => {
+export const generateAccessToken = (user: User, remember: boolean) => {
   return jwt.sign(
     {
-      aud: admin.user_id, // 이 토큰을 사용할 수신자
-      email: admin.email,
-      super: admin.is_super,
+      aud: user.user_name, // 이 토큰을 사용할 수신자
     },
     process.env.JWT_TOKEN_KEY,
       { expiresIn: remember? '7d':'24h' }

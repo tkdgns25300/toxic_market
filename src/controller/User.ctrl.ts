@@ -82,39 +82,4 @@ export class AdminController {
     }
   }
 
-  @Patch("/update/:id")
-  // @UseBefore(checkAccessToken)
-  public async update(
-    @Body({ options: { limit: "20mb" } }) updateDto: UserDto,
-    @Param("id") id: string,
-    @Res() res: Response
-  ) {
-    try {
-      return await this.adminService.update(updateDto, id);
-    } catch (err) {
-      console.log(err);
-      if (err instanceof QueryFailedError) {
-        console.log("Instance of QueryFailedError!");
-        return new PageResObj({}, err.message, true);
-      }
-      return new PageResObj({}, err.message, true);
-    }
-  }
-  @Post("/delete")
-  // @UseBefore(checkAccessToken)
-  public async delete(@Body() idArr: {id: string}[], @Res() res: Response) {
-    try {
-      const jwtPayload = res.locals.jwtPayload;
-      if (!jwtPayload.super) {
-        throw new Error("슈퍼관리자가 아닙니다.");
-      }
-      return await this.adminService.delete(idArr, null);
-    } catch (err) {
-      if (err instanceof QueryFailedError) {
-        console.log("Instance of QueryFailedError!");
-        return new PageResObj({}, err.message, true);
-      }
-      return new PageResObj({}, err.message, true);
-    }
-  }
 }
