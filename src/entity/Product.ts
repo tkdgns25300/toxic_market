@@ -31,6 +31,7 @@ export class Product extends BaseEntity {
 
   @Column({
     type: "int",
+    nullable: true,
     comment: "등록 수량",
   })
   amount: number;
