@@ -39,7 +39,7 @@ export class Log extends BaseEntity {
     type: "bool",
     comment: "구매/판매 로그 구분",
   })
-  is_sale: Boolean;
+  is_sale: boolean;
 
   @ManyToOne(
     () => User,
