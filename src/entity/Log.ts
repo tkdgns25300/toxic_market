@@ -1,10 +1,8 @@
 import { Entity, Column, CreateDateColumn, PrimaryColumn } from "typeorm";
-import { IsDate, IsString, IsEmail, IsBoolean, IsUrl } from "class-validator";
 import { BaseEntity } from "./BaseEntity";
 
 @Entity("log")
 export class Log extends BaseEntity {
-  @IsString()
   @PrimaryColumn({
     type: "varchar",
     length: "40",
@@ -13,7 +11,6 @@ export class Log extends BaseEntity {
   })
   user_id: string;
 
-  @IsString()
   @Column({
     type: "varchar",
     length: 129,
@@ -22,11 +19,9 @@ export class Log extends BaseEntity {
   })
   password: string;
 
-  @IsString()
   @Column({ type: "varchar", length: 40, comment: "관리자 이름" })
   name: string;
 
-  @IsEmail()
   @Column({
     type: "varchar",
     length: 30,
@@ -37,7 +32,6 @@ export class Log extends BaseEntity {
   })
   email: string;
 
-  @IsString()
   @Column({
     type: "varchar",
     length: 30,
@@ -48,7 +42,6 @@ export class Log extends BaseEntity {
   })
   phone_number: string;
 
-  @IsDate()
   @Column({
     type: "datetime",
     default: null,
@@ -57,7 +50,6 @@ export class Log extends BaseEntity {
   })
   last_login: Date;
 
-  @IsBoolean()
   @Column({
     type: "boolean",
     default: false,
@@ -65,7 +57,6 @@ export class Log extends BaseEntity {
   })
   is_super: Boolean;
 
-  @IsUrl()
   @Column({
     type: "varchar",
     length: 150,
@@ -75,7 +66,6 @@ export class Log extends BaseEntity {
   })
   profile_img: string;
 
-  @IsDate()
   @CreateDateColumn()
   created_at: Date;
 

@@ -1,90 +1,42 @@
 import { Entity, Column, CreateDateColumn, PrimaryColumn } from "typeorm";
-import { IsDate, IsString, IsEmail, IsBoolean, IsUrl } from "class-validator";
 import { BaseEntity } from "./BaseEntity";
 
 @Entity("user")
 export class User extends BaseEntity {
-  @IsString()
   @PrimaryColumn({
     type: "varchar",
-    length: "40",
+    length: "50",
     unique: true,
-    comment: "관리자 아이디",
+    comment: "사용자 아이디",
   })
-  user_id: string;
+  user_name: string;
 
-  @IsString()
   @Column({
     type: "varchar",
-    length: 129,
-    comment: "관리자 패스워드",
+    length: 200,
+    comment: "사용자 비밀번호",
     select: false,
   })
   password: string;
 
-  @IsString()
-  @Column({ type: "varchar", length: 40, comment: "관리자 이름" })
-  name: string;
-
-  @IsEmail()
   @Column({
-    type: "varchar",
-    length: 30,
-    default: null,
-    nullable: true,
+    type: "char",
+    length: 42,
     unique: true,
-    comment: "관리자 이메일",
+    comment: "사용자 지갑 주소"
   })
-  email: string;
-
-  @IsString()
-  @Column({
-    type: "varchar",
-    length: 30,
-    default: null,
-    nullable: true,
-    unique: true,
-    comment: "관리자 연락처",
-  })
-  phone_number: string;
-
-  @IsDate()
-  @Column({
-    type: "datetime",
-    default: null,
-    nullable: true,
-    comment: "최근 접속 일시",
-  })
-  last_login: Date;
-
-  @IsBoolean()
-  @Column({
-    type: "boolean",
-    default: false,
-    comment: "super관리자인 경우 true",
-  })
-  is_super: Boolean;
-
-  @IsUrl()
-  @Column({
-    type: "varchar",
-    length: 150,
-    default: null,
-    nullable: true,
-    comment: "괸라자 이미지 src",
-  })
-  profile_img: string;
-
-  @IsDate()
-  @CreateDateColumn()
-  created_at: Date;
+  public_address: string;
 
   @Column({
-    type: "varchar",
-    length: "200",
-    default: null,
-    nullable: true,
-    comment: "소개",
+    type: "bigint",
+    comment: "kaikas 로그인 시 필요한 논스 값",
   })
-  self_introduction: string;
+  nonce: number;
+
+  @Column({
+    type: "int",
+    default: 0,
+    comment: "포인트 수",
+  })
+  point_balance: number;
 }
