@@ -12,7 +12,7 @@ import {
   IsDate,
 } from "class-validator";
 
-export class UserDto {
+export class LogDto {
   @IsOptional()
   @MaxLength(40, { message: "최대 40자까지 입력됩니다." })
   @IsString({ message: "문자열이 아닙니다." })
