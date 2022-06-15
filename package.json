@@ -1,0 +1,48 @@
+{
+  "name": "NFT WIKI",
+  "version": "0.0.1",
+  "description": "Project with using TypeORM",
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/node": "^16.11.7",
+    "cross-env": "^7.0.3",
+    "nodemon": "^2.0.14",
+    "swagger-jsdoc": "^6.1.0",
+    "swagger-ui-express": "^4.1.6",
+    "ts-node": "^10.4.0",
+    "typescript": "^3.8.3"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.1033.0",
+    "axios": "^0.24.0",
+    "body-parser": "^1.18.1",
+    "class-transformer": "^0.4.0",
+    "class-validator": "^0.13.1",
+    "class-validator-jsonschema": "^3.1.0",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^10.0.0",
+    "express": "^4.15.4",
+    "jsonwebtoken": "^8.5.1",
+    "moment": "^2.29.1",
+    "moment-timezone": "^0.5.33",
+    "multer": "^1.4.3",
+    "mysql2": "^2.3.2",
+    "reflect-metadata": "^0.1.10",
+    "routing-controllers": "^0.9.0",
+    "routing-controllers-openapi": "^3.1.0",
+    "typedi": "^0.8.0",
+    "typeorm": "^0.2.38",
+    "typeorm-naming-strategies": "^2.0.0",
+    "typeorm-typedi-extensions": "^0.4.1",
+    "uniqid": "^5.4.0"
+  },
+  "scripts": {
+    "start": "cross-env NODE_ENV=production node dist/index.js",
+    "build:clean": "rm -rf dist",
+    "build:ts": "tsc --project ./tsconfig.json",
+    "build": "npm run build:clean && npm run build:ts",
+    "beta" : "cross-env NODE_ENV=beta node dist/index.js",
+    "dev": "cross-env NODE_ENV=development nodemon --exec ts-node src/index.ts"
+  }
+}

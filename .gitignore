@@ -1,0 +1,7 @@
+node_modules
+dist
+.DS_Store
+.idea
+.env.dev
+.env.beta
+.env.production

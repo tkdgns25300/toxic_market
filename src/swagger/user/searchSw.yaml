@@ -1,0 +1,94 @@
+paths:
+  /admin/search:
+    get:
+      tags:
+        - Admin
+      summary: Find by keyword
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          description: rowPerPage
+          schema:
+            type: integer
+
+        - name: pageNo
+          in: query
+          required: false
+          description: pageNumber
+          schema:
+            type: integer
+
+        - name: column
+          in: query
+          required: false
+          description: 분류 기준
+          schema:
+            type: string
+            enum: [admin_id, name, email, phone_number]
+
+        - name: keyword
+          in: query
+          required: false
+          description: 검색 단어
+          schema:
+            type: string
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+                  totalCount:
+                    type: integer
+                    description: 전체 productItems의 갯수
+                    example: 10
+                  totalPage:
+                    type: integer
+                    description: limit, pageNo 를 0으로 보낼 시 null
+                    example: 1
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: productItems 목록을 찾는데 성공했습니다.
+                  items:
+                    type: array
+                    items:
+                      properties:
+                        admin_id:
+                          type: string
+                        password:
+                          type: string
+                        name:
+                          type: string
+                        email:
+                          type: string
+                          format: email
+                        phone_number:
+                          type: string
+                        is_super:
+                          type: boolean
+                        profile_img:
+                          type: string
+                        self_introduction:
+                          type: string
+                        last_login:
+                          type: string
+                          format: date
+                        create_at:
+                          type: string
+                          format: date
+
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http

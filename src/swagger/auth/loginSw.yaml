@@ -1,0 +1,53 @@
+tags:
+  - name: Auth
+    description: 로그인 API
+
+paths:
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: log in
+      consumes:
+        - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                admin_id:
+                  type: string
+                password:
+                  type: string
+                remember:
+                  type: boolean
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: 로그인에 성공했습니다.
+                  item:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http

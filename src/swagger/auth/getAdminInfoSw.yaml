@@ -1,0 +1,57 @@
+
+paths:
+  /auth/info:
+    get:
+      tags:
+        - Auth
+      summary: get admin info
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: admin을 찾는데 성공했습니다.
+                  item:
+                    type: object
+                    properties:
+                      admin_id:
+                        type: string
+                      password:
+                        type: string
+                      name:
+                        type: string
+                      email:
+                        type: string
+                        format: email
+                      phone_number:
+                        type: string
+                      is_super:
+                        type: boolean
+                      profile_img:
+                        type: string
+                      self_introduction:
+                        type: string
+                      last_login:
+                        type: string
+                        format: date
+                      create_at:
+                        type: string
+                        format: date
+
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http
