@@ -1,5 +1,4 @@
-import { BooleanFlag } from "aws-sdk/clients/directconnect";
-import { IsBoolean, IsNumber, IsOptional, IsString, MaxLength, ValidateNested } from "class-validator";
+import { IsBoolean, IsNumber, IsString, MaxLength, ValidateNested } from "class-validator";
 import { User } from "../entity";
 
 export class LogDto {
