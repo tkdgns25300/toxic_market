@@ -70,7 +70,7 @@ export const checkSuperAccessToken = (
 export const generateAccessToken = (admin: User, remember: boolean) => {
   return jwt.sign(
     {
-      aud: admin.admin_id, // 이 토큰을 사용할 수신자
+      aud: admin.user_id, // 이 토큰을 사용할 수신자
       email: admin.email,
       super: admin.is_super,
     },

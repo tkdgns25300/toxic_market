@@ -21,7 +21,7 @@ export class checkEntityExist {
                 .insert()
                 .into(User)
                 .values({
-                    admin_id: 'wiki',
+                    user_id: 'wiki',
                     password: hashedPassword,
                     name: 'test',
                     created_at: new Date()
