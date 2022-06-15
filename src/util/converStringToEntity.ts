@@ -1,10 +1,14 @@
 import {
   User,
+  Product,
+  Log
 } from "../entity";
 
 export const convertStringToEntity = (entityName: string) => {
   const convertList = {
-    ["Admin"]: User,
+    ["User"]: User,
+    ["Product"]: Product,
+    ["Log"]: Log
   };
   return convertList[entityName];
 };
