@@ -1,4 +1,4 @@
-import { convertStringToEntity } from "../util/converStringToEntity";
+import { convertStringToEntity } from "../util/convertStringToEntity";
 
 export class BaseEntity {
   getEntity(schemaClassName: string, param: object) {

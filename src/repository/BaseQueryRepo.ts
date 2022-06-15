@@ -1,6 +1,6 @@
 import { createQueryBuilder } from "typeorm";
 import { PageReq, UserSearchReq } from "../api";
-import { convertStringToEntity } from "../util/converStringToEntity";
+import { convertStringToEntity } from "../util/convertStringToEntity";
 
 interface joinArrItem {
   property: string;
