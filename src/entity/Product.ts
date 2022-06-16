@@ -19,7 +19,8 @@ export class Product extends BaseEntity {
 
   @Column({
     type: "text",
-    comment: "서브 이미지 주소"
+    nullable: true,
+    comment: "서브 이미지 주소",
   })
   sub_img_url: string;
 
@@ -31,6 +32,7 @@ export class Product extends BaseEntity {
 
   @Column({
     type: "int",
+    nullable: true,
     comment: "등록 수량",
   })
   amount: number;

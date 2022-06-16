@@ -1,6 +1,5 @@
-import { createQueryBuilder, EntityRepository } from "typeorm";
+import { EntityRepository } from "typeorm";
 import { Service } from "typedi";
-
 import { User } from "../entity";
 import {  UserSearchReq } from "../api";
 import { BaseQueryRepo } from "./BaseQueryRepo";
@@ -11,6 +10,7 @@ export class UserQueryRepo extends BaseQueryRepo {
   constructor() {
     super('user', 'User');
   }
+
 
   search(param: UserSearchReq) {
     return createQueryBuilder()
@@ -23,5 +23,6 @@ export class UserQueryRepo extends BaseQueryRepo {
       .take(param.getLimit())
       .getManyAndCount();
   }
+
 
 }

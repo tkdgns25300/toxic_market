@@ -6,7 +6,6 @@ export class User extends BaseEntity {
   @PrimaryColumn({
     type: "char",
     length: 42,
-    unique: true,
     comment: "사용자 지갑 주소"
   })
   public_address: string;
