@@ -1,19 +1,19 @@
-  import {
+import {
   Body,
   Get,
-  JsonController,
+  JsonController, Param,
   Post,
   Res,
   UseBefore,
 } from "routing-controllers";
 import { Request, Response } from "express";
 import { Inject, Service } from "typedi";
-import { AuthService } from "../service/AuthService";
-import { LoginDto } from "../dto";
-import { PageResObj } from "../api";
-
-import { checkAccessToken } from "../middlewares/AuthMiddleware";
 import { QueryFailedError } from "typeorm";
+
+import { AuthService } from "../service/AuthService";
+import {PageResObj} from "../api";
+import { checkAccessToken } from "../middlewares/AuthMiddleware";
+
 
 @Service()
 @JsonController("/auth")
@@ -29,7 +29,19 @@ export class AuthController {
       return await this.authService.findOne(aud);
     } catch (err) {
       if (err instanceof QueryFailedError) {
-        console.log("Instance of QueryFailedError!");
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
+
+
+  @Get("/login/:address")
+  public async findByAddress(@Param("address") address: string) {
+    try {
+      return this.authService.findOne(address);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);
       }
       return new PageResObj({}, err.message, true);
@@ -37,15 +49,28 @@ export class AuthController {
   }
 
   @Post("/login")
-  public async login(@Body() loginDto: LoginDto, @Res() res: Response) {
+  public async login( @Body()  data:{public_address: string, signature:string}) {
     try {
-      return await this.authService.login(loginDto.getHashAdminInfo());
+      return this.authService.login(data);
     } catch (err) {
       if (err instanceof QueryFailedError) {
-        console.log("Instance of QueryFailedError!");
         return new PageResObj({}, err.message, true);
       }
       return new PageResObj({}, err.message, true);
     }
   }
+
+  @Get("/signup/:address")
+  public async signup(@Param("address") address: string) {
+    try {
+      return this.authService.signup(address);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
+
+
 }
