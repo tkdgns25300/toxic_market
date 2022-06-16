@@ -1,7 +1,7 @@
-import { EntityRepository } from "typeorm";
+import { createQueryBuilder, EntityRepository } from "typeorm";
 import { Service } from "typedi";
 import { User } from "../entity";
-import {  UserSearchReq } from "../api";
+import { UserSearchReq } from "../api";
 import { BaseQueryRepo } from "./BaseQueryRepo";
 
 @Service()
