@@ -10,7 +10,7 @@ import { BaseQueryRepo } from "./BaseQueryRepo";
 @EntityRepository(User)
 export class UserQueryRepo extends BaseQueryRepo {
   constructor() {
-    super('admin', 'Admin');
+    super('user', 'User');
   }
 
   search(param: UserSearchReq) {
