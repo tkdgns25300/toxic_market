@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, IsString, MaxLength } from "class-validator";
+import { IsInt, IsNumber, IsOptional, IsString, MaxLength } from "class-validator";
 
 export class UserDto {
     @IsString({ message: "문자열이 아닙니다." })
@@ -16,7 +16,7 @@ export class UserDto {
     @IsNumber()
     nonce: number;
 
-    @IsNumber()
+    @IsInt()
     @IsOptional()
     point_balance: number;
 }

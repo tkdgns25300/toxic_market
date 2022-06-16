@@ -1,4 +1,4 @@
-import { IsBoolean, IsNumber, IsString, MaxLength, ValidateNested } from "class-validator";
+import { IsBoolean, IsInt, IsString, MaxLength, ValidateNested } from "class-validator";
 import { User } from "../entity";
 
 export class LogDto {
@@ -10,10 +10,10 @@ export class LogDto {
   @MaxLength(50, { message: "최대 50자까지 입력됩니다." })
   title: string;
 
-  @IsNumber()
+  @IsInt()
   total_point: number;
 
-  @IsNumber()
+  @IsInt()
   amount: number;
 
   @IsBoolean()

@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, IsString, MaxLength, ValidateNested } from "class-validator";
+import { IsInt, IsNumber, IsOptional, IsString, MaxLength, ValidateNested } from "class-validator";
 import { User } from "../entity";
 
 export class ProductDto {
@@ -12,10 +12,10 @@ export class ProductDto {
     @IsOptional()
     sub_img_url: string;
 
-    @IsNumber()
+    @IsInt()
     price: number;
 
-    @IsNumber()
+    @IsInt()
     amount: number;
 
     @IsString({ message: "문자열이 아닙니다." })
