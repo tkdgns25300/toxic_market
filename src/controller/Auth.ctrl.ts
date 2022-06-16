@@ -49,7 +49,7 @@ export class AuthController {
   }
 
   @Post("/login")
-  public async login( @Body()  data:{publicAddress: string, signature:string}) {
+  public async login( @Body()  data:{public_address: string, signature:string}) {
     try {
       return this.authService.login(data);
     } catch (err) {
