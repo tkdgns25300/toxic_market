@@ -3,7 +3,7 @@ import { InjectRepository } from 'typeorm-typedi-extensions';
 
 import { LogQueryRepo } from '../repository/LogQueryRepo';
 import { Log } from '../entity';
-import { PageReq, PageResList } from '../api';
+import { PageResList } from '../api';
 import { LogSearchReq } from '../api/request/LogSearchReq';
 
 @Service()
