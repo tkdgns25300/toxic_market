@@ -10,7 +10,6 @@ import {
 import { routingControllerOptions } from "./util/RoutingConfig";
 import { useSwagger } from "./util/swagger";
 import path from "path";
-import { checkEntityExist } from "./util/entityCheck";
 
 export class App {
   public app: express.Application;
@@ -25,8 +24,8 @@ export class App {
   // DB 셋팅
   private async setDatabase(): Promise<void> {
     try {
-      await createConnection().then(async () => {
-        await this.checkEntityExist();
+      await createConnection().then(() => {
+        console.log("DB Connected successfully")
       });
     } catch (error) {
       console.log(error);
@@ -71,13 +70,5 @@ export class App {
       });
     }
   }
-  // DB연결 후 site_config, dashboard, footer가 있는지 체크 후 없으면 생성하는 함수
-  public async checkEntityExist(): Promise<void> {
-    try {
-      const checkSiteConfig = new checkEntityExist();
-      await checkSiteConfig.checkAdmin();
-    } catch (error) {
-      console.log(error);
-    }
-  }
+
 }

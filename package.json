@@ -16,12 +16,14 @@
     "aws-sdk": "^2.1033.0",
     "axios": "^0.24.0",
     "body-parser": "^1.18.1",
+    "caver-js": "^1.8.1",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
     "class-validator-jsonschema": "^3.1.0",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^10.0.0",
+    "ethereumjs-util": "^7.1.5",
     "express": "^4.15.4",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.1",
@@ -42,7 +44,7 @@
     "build:clean": "rm -rf dist",
     "build:ts": "tsc --project ./tsconfig.json",
     "build": "npm run build:clean && npm run build:ts",
-    "beta" : "cross-env NODE_ENV=beta node dist/index.js",
+    "beta": "cross-env NODE_ENV=beta node dist/index.js",
     "dev": "cross-env NODE_ENV=development nodemon --exec ts-node src/index.ts"
   }
 }
