@@ -59,5 +59,5 @@ export class Product extends BaseEntity {
     () => User,
     user => user.public_address
   )
-  user: User
+  user: string
 }

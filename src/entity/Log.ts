@@ -45,5 +45,5 @@ export class Log extends BaseEntity {
     () => User,
     user => user.public_address
   )
-  user: User
+  user: string
 }

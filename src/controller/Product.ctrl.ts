@@ -52,4 +52,19 @@ export class ProductController {
       return new PageResObj({}, err.message, true);
     }
   }
+
+  @Post("/buy")
+  @UseBefore(checkAccessToken)
+  public async buy(@Param("id") id: number, @Param("amount") amount: number, @Param("public_address") public_address: string, @Res() res: Response) {
+    try {
+      const {aud} = res.locals.jwtPayload;
+      return await this.productService.buy(id, amount, aud, null);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        console.log("Instance of QueryFailedError!");
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
 }

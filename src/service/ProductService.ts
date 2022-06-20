@@ -2,15 +2,18 @@ import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 
 import { ProductQueryRepo } from '../repository/ProductQueryRepo';
-import { Product } from '../entity';
-import { ProductDto } from '../dto';
+import { Log, Product, User } from '../entity';
+import { LogDto, ProductDto } from '../dto';
 import { PageReq, PageResList, PageResObj } from '../api';
+import { LogQueryRepo } from '../repository/LogQueryRepo';
+import { EntityManager, Transaction, TransactionManager } from 'typeorm';
 
 @Service()
 export class ProductService {
   constructor(
     @InjectRepository()
-    readonly ProductQueryRepo: ProductQueryRepo
+    readonly ProductQueryRepo: ProductQueryRepo,
+    readonly LogQueryRepo: LogQueryRepo
   ) { }
 
   async findAll(param: PageReq): Promise<PageResList<Product>> {
@@ -31,11 +34,51 @@ export class ProductService {
   }
 
   async create(paramObj: ProductDto): Promise<PageResObj<Product | {}>> {
+    if (paramObj.amount === 0) paramObj.amount = null;
     const product = await this.ProductQueryRepo.create(paramObj);
     const result: Product = await this.ProductQueryRepo.findOne(
       "id",
       product.identifiers[0].id
     );
     return new PageResObj(result, "Product 생성에 성공했습니다.")
+  }
+
+  @Transaction()
+  async buy(id: number, amount: number, public_address: string, @TransactionManager() manager: EntityManager ): Promise<PageResObj<Product | {}>> {
+    // 상품 수량 줄이기
+    const product: Product = await manager.findOne(Product, {"id": id});
+    if (typeof product.amount === 'number') {
+      if (product.amount < amount) return new PageResObj({}, "Product 수량이 부족합니다.");
+      else {
+        product.amount -= amount;
+        await manager.update(Product, id, product);
+      }
+    }
+
+    // 구매자 CF 줄이기
+    const buyer: User = await manager.findOne(User, {public_address: public_address});
+    if (buyer.point_balance < product.price * amount) {
+      return new PageResObj({}, "CF가 부족합니다.");
+    }
+    buyer.point_balance -= product.price * amount;
+    await manager.update(User, public_address, buyer);
+
+    // 판매자 CF 올리기
+    const seller: User = await manager.findOne(User, {public_address: product.user});
+    seller.point_balance += product.price * amount;
+    await manager.update(User, product.user, seller);
+
+    // 로그 생성
+    const logItem = {
+      public_address: public_address,
+      title: product.title,
+      total_point: product.price * amount,
+      amount: amount,
+      date: Date.now(),
+      seller: seller,
+      buyer: buyer
+    }
+    await manager.create(Log, logItem);
+    return new PageResObj(logItem, "Product 구매에 성공했습니다.")
   }
 }
