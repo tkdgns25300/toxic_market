@@ -13,9 +13,9 @@ export function useSwagger(app: express.Application) {
     swaggerDefinition: {
       openapi: "3.0.0",
       info: {
-        title: "NFT wiki Api",
+        title: "TOXIC MARKET PLACE API",
         version: "1.0.0",
-        description: `<h2>근데 우리 문서까지 만들 시간이 없는 것 같긴 해 ㅎㅎ</h2>`
+        description: `<h2>로그인 기능이 스웨거로 만들기에 많이 복작해서 현재 코인 포인트 교환 기능 말고 모든 기능은 로그인 없이 체크 가능합니다.</h2>`
       },
       components: {
         securitySchemes: {

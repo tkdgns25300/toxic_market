@@ -1,21 +1,20 @@
-
 paths:
-  /admin/delete:
+  /exchange/coin:
     post:
       tags:
-        - Admin
-      summary: Delete admin
+        - Exchange
+      summary: Exchange coin to point
       consumes:
         - application/json
       requestBody:
         content:
           application/json:
             schema:
-              type: array
-              items:
-                properties:
-                  id:
-                    type: string
+              type: object
+              properties:
+                amount:
+                  type: number
+                  description: coin amount
       responses:
         200:
           description: "OK"
@@ -31,10 +30,16 @@ paths:
                   msg:
                     type: string
                     description: 메시지
-                    example: admin 삭제에 성공했습니다.
+                    example: TOX 코인을 포인트로 교환하는데 성공했습니다.
                   item:
                     type: object
-
+                    properties:
+                      public_address:
+                        type: string
+                      nonce:
+                        type: number
+                      point_balance:
+                        type: number
         500:
           description: "Server Error"
 
