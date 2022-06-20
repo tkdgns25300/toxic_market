@@ -26,7 +26,7 @@ export class ExchangeService {
         // @ts-ignore
         const contractInstance = caver.contract.create(ABI, CONTRACT_ADDRESS);
         const user: User = await manager.findOne(User, {public_address: public_address});
-        user.point_balance = user.point_balance + amount;
+        user.point_balance = user.point_balance + amount * 10; // 1 TOX = 10 POINT
         await manager.update(User, public_address, user);
         //sending coin
         await contractInstance.send(
@@ -37,14 +37,14 @@ export class ExchangeService {
     }
 
     @Transaction()
-    async pointToTox(amount: number, public_address: string, @TransactionManager() manager: EntityManager) {
+    async pointToTox(point_amount: number, public_address: string, @TransactionManager() manager: EntityManager) {
         const user: User = await manager.findOne(User, {public_address: public_address});
-        if (user.point_balance < amount) {
+        if (user.point_balance < point_amount) {
             return new PageResObj({}, "포인트가 부족합니다.");
         }
-        user.point_balance = user.point_balance - amount;
+        user.point_balance = user.point_balance - point_amount;
         await manager.update(User, public_address, user);
-        const amountOfCoins = BigInt(amount * 0.95 * Math.pow(10, 18))   // 95% of pointAmount
+        const amountOfCoins = BigInt(point_amount * 0.097 * Math.pow(10, 18))   // 9.7% of pointAmount COMMISSION 3%
         // @ts-ignore
         const contractInstance = caver.contract.create(ABI, CONTRACT_ADDRESS);
         //sending coin to User
