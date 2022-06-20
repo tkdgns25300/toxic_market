@@ -1,8 +1,9 @@
-import { Get, JsonController, QueryParams } from "routing-controllers";
+import { Get, JsonController, QueryParams, UseBefore } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
 import { PageResObj } from "../api";
 import { LogSearchReq } from "../api/request/LogSearchReq";
+import { checkAccessToken } from "../middlewares/AuthMiddleware";
 import { LogService } from "../service/LogService";
 
 @Service()
@@ -12,6 +13,7 @@ export class LogController {
   logService: LogService;
 
   @Get("/find")
+  @UseBefore(checkAccessToken)
   public async search(@QueryParams() params: LogSearchReq) {
     try {
       return await this.logService.search(params);
