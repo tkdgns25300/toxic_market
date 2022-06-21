@@ -1,8 +1,12 @@
+tags:
+  - name: Image
+    description: 이미지 API
+
 paths:
   /exchange/coin:
     post:
       tags:
-        - Exchange
+        - Image
       summary: Exchange coin to point
       consumes:
         - application/json

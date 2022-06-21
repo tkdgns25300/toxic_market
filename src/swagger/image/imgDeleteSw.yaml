@@ -2,7 +2,7 @@ paths:
   /exchange/coin:
     post:
       tags:
-        - Exchange
+        - Image
       summary: Exchange coin to point
       consumes:
         - application/json

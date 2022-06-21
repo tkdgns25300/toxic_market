@@ -1,8 +1,12 @@
+tags:
+  - name: Log
+    description: 기록(로그) API
+
 paths:
   /exchange/coin:
     post:
       tags:
-        - Exchange
+        - Log
       summary: Exchange coin to point
       consumes:
         - application/json
