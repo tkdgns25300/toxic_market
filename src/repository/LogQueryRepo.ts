@@ -11,15 +11,16 @@ export class LogQueryRepo extends BaseQueryRepo {
     super('log', 'Log');
   }
 
+  
   findLogs(param: LogSearchReq): Promise<[Array<any>, number]> {
     const builder = createQueryBuilder("log");
 
-    if (param.public_address) {
-      builder.andWhere("log.public_address = :public_address", {
-        public_address: param.public_address
-      });
-    }
-    
+    const filter = param.getUser;
+
+    builder.andWhere(`log.${filter} = :${filter}`, {
+      [filter]: param[filter]
+    })
+
     builder.skip(param.getOffset()).take(param.getLimit());
 
     return builder.getManyAndCount();
