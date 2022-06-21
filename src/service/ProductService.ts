@@ -3,7 +3,7 @@ import { InjectRepository } from 'typeorm-typedi-extensions';
 
 import { ProductQueryRepo } from '../repository/ProductQueryRepo';
 import { Log, Product, User } from '../entity';
-import { LogDto, ProductDto } from '../dto';
+import { ProductDto } from '../dto';
 import { PageReq, PageResList, PageResObj } from '../api';
 import { LogQueryRepo } from '../repository/LogQueryRepo';
 import { EntityManager, Transaction, TransactionManager } from 'typeorm';
@@ -57,16 +57,16 @@ export class ProductService {
 
     // 구매자 CF 줄이기
     const buyer: User = await manager.findOne(User, {public_address: public_address});
-    if (buyer.point_balance < product.price * amount) {
+    if (buyer.CF_balance < product.price * amount) {
       return new PageResObj({}, "CF가 부족합니다.");
     }
-    buyer.point_balance -= product.price * amount;
+    buyer.CF_balance -= product.price * amount;
     await manager.update(User, public_address, buyer);
 
     // 판매자 CF 올리기
-    const seller: User = await manager.findOne(User, {public_address: product.user});
-    seller.point_balance += product.price * amount;
-    await manager.update(User, product.user, seller);
+    const seller: User = await manager.findOne(User, {public_address: product.user_address});
+    seller.CF_balance += product.price * amount;
+    await manager.update(User, product.user_address, seller);
 
     // 로그 생성
     const logItem = {
@@ -75,10 +75,10 @@ export class ProductService {
       total_point: product.price * amount,
       amount: amount,
       date: Date.now(),
-      seller: seller,
-      buyer: buyer
+      seller: seller.public_address,
+      buyer: buyer.public_address
     }
-    await manager.create(Log, logItem);
+    manager.create(Log, logItem);
     return new PageResObj(logItem, "Product 구매에 성공했습니다.")
   }
 }
