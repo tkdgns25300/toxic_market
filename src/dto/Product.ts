@@ -25,6 +25,7 @@ export class ProductDto {
     @IsString({ message: "문자열이 아닙니다." })
     description: string;
 
-    @ValidateNested()
-    user: User;
+    @IsString({ message: "문자열이 아닙니다." })
+    @MaxLength(42, { message: "최대 42자까지 입력됩니다." })
+    user_address: string;
 }

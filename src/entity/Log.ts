@@ -1,15 +1,12 @@
-import { Entity, Column, CreateDateColumn, PrimaryColumn, ManyToOne } from "typeorm";
+import { Entity, Column, CreateDateColumn, PrimaryGeneratedColumn } from "typeorm";
 import { BaseEntity } from "./BaseEntity";
-import { User } from "./User";
 
 @Entity("log")
 export class Log extends BaseEntity {
-  @PrimaryColumn({
-    type: "char",
-    length: 42,
-    comment: "사용자 지갑 주소"
+  @PrimaryGeneratedColumn({
+    comment: "로그 아이디"
   })
-  public_address: string;
+  id: number;
 
   @Column({
     type: "varchar",
@@ -20,9 +17,9 @@ export class Log extends BaseEntity {
 
   @Column({
     type: "int",
-    comment: "구매(판매) 포인트"
+    comment: "구매(판매) CF"
   })
-  total_point: number;
+  total_CF: number;
 
   @Column({
     type: "int",
@@ -36,14 +33,16 @@ export class Log extends BaseEntity {
   created_at: Date;
 
   @Column({
-    type: "bool",
-    comment: "구매/판매 로그 구분",
+    type: "char",
+    length: 42,
+    comment: "판매자 지갑 주소"
   })
-  is_sale: boolean;
+  seller: string;
 
-  @ManyToOne(
-    () => User,
-    user => user.public_address
-  )
-  user: string
+  @Column({
+    type: "char",
+    length: 42,
+    comment: "구매자 지갑 주소"
+  })
+  buyer: string;
 }

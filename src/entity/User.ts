@@ -19,7 +19,7 @@ export class User extends BaseEntity {
   @Column({
     type: "int",
     default: 0,
-    comment: "포인트 수",
+    comment: "보유 CF",
   })
-  point_balance: number;
+  CF_balance: number;
 }

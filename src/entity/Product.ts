@@ -1,6 +1,5 @@
-import { Entity, Column, CreateDateColumn, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
+import { Entity, Column, CreateDateColumn, PrimaryGeneratedColumn } from "typeorm";
 import { BaseEntity } from "./BaseEntity";
-import { User } from "./User";
 
 @Entity("product")
 export class Product extends BaseEntity {
@@ -55,9 +54,10 @@ export class Product extends BaseEntity {
   })
   created_at: Date;
 
-  @ManyToOne(
-    () => User,
-    user => user.public_address
-  )
-  user: string
+  @Column({
+    type: "char",
+    length: 42,
+    comment: "사용자 아이디"
+  })
+  user_address: string
 }
