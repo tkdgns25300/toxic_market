@@ -1,6 +1,6 @@
 paths:
   /product/find/:id:
-    post:
+    get:
       tags:
         - Product
       summary: Get one product

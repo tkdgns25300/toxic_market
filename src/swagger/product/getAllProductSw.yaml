@@ -4,7 +4,7 @@ tags:
 
 paths:
   /product/find:
-    post:
+    get:
       tags:
         - Product
       summary: Get all product
