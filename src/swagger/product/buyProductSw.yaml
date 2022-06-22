@@ -1,20 +1,25 @@
 paths:
-  /exchange/coin:
+  /product/buy/:id:
     post:
       tags:
         - Product
-      summary: Exchange coin to point
+      summary: Buy a product
       consumes:
         - application/json
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                amount:
-                  type: number
-                  description: coin amount
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: product id
+          schema:
+            type: number
+        - name: amount
+          in: query
+          required: true
+          description: amount to buy
+          schema:
+            type: integer
+
       responses:
         200:
           description: "OK"
@@ -23,23 +28,18 @@ paths:
               schema:
                 type: object
                 properties:
+                  item:
+                    type: object
+                    properties:
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: Product 생성에 성공했습니다.
                   error:
                     type: boolean
                     description: error 체크
                     example: false
-                  msg:
-                    type: string
-                    description: 메시지
-                    example: TOX 코인을 포인트로 교환하는데 성공했습니다.
-                  item:
-                    type: object
-                    properties:
-                      public_address:
-                        type: string
-                      nonce:
-                        type: number
-                      point_balance:
-                        type: number
+                  
         500:
           description: "Server Error"
 

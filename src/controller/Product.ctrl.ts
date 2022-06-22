@@ -55,9 +55,9 @@ export class ProductController {
     }
   }
 
-  @Post("/buy")
+  @Post("/buy/:id")
   @UseBefore(checkAccessToken)
-  public async buy(@Param("id") id: number, @Param("amount") amount: number, @Param("public_address") public_address: string, @Res() res: Response) {
+  public async buy(@Param("id") id: number, @QueryParams() amount: number, @Res() res: Response) {
     try {
       const {aud} = res.locals.jwtPayload;
       return await this.productService.buy(id, amount, aud, null);

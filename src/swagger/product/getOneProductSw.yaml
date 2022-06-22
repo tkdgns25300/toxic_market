@@ -9,7 +9,7 @@ paths:
       parameters:
         - name: id
           in: path
-          require: true
+          required: true
           description: product id
           schema:
             type: number

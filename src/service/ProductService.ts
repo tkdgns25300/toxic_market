@@ -79,6 +79,6 @@ export class ProductService {
       buyer: buyer.public_address
     }
     manager.create(Log, logItem);
-    return new PageResObj(logItem, "Product 구매에 성공했습니다.")
+    return new PageResObj({}, "Product 구매에 성공했습니다.")
   }
 }
