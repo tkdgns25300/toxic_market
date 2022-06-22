@@ -3,22 +3,28 @@ tags:
     description: 기록(로그) API
 
 paths:
-  /exchange/coin:
-    post:
+  /log/find:
+    get:
       tags:
         - Log
-      summary: Exchange coin to point
+      summary: Find logs
       consumes:
         - application/json
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                amount:
-                  type: number
-                  description: coin amount
+      parameters:
+        - name: seller
+          in: query
+          required: false
+          description: 판매자 지갑주소(판매 로그)
+          schema:
+            type: string
+        - name: buyer
+          in: query
+          required: false
+          description: 구매자 지갑주소(구매 로그)
+          schema:
+            type: string
+
+
       responses:
         200:
           description: "OK"
@@ -27,23 +33,42 @@ paths:
               schema:
                 type: object
                 properties:
+                  totalCount:
+                    type: integer
+                    description: 전체 Log의 갯수
+                    example: 10
+                  pageSize:
+                    type: integer
+                    description: 페이지의 최대 Log 갯수; limit, pageNo 를 0으로 보낼 시 null
+                    example: 1
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: Log 목록을 찾는데 성공했습니다.
+                  items:
+                    type: array
+                    items:
+                      properties:
+                        id:
+                          type: number
+                        title:
+                          type: string
+                        total_CF:
+                          type: number
+                        amount:
+                          type: number
+                        created_at:
+                          type: string
+                          format: date
+                        seller:
+                          type: string
+                        buyer:
+                          type: string
                   error:
                     type: boolean
                     description: error 체크
                     example: false
-                  msg:
-                    type: string
-                    description: 메시지
-                    example: TOX 코인을 포인트로 교환하는데 성공했습니다.
-                  item:
-                    type: object
-                    properties:
-                      public_address:
-                        type: string
-                      nonce:
-                        type: number
-                      point_balance:
-                        type: number
+
         500:
           description: "Server Error"
 
