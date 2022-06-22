@@ -16,6 +16,7 @@ export class ProductDto {
     price: number;
 
     @IsInt()
+    @IsOptional()
     amount: number;
 
     @IsString({ message: "문자열이 아닙니다." })

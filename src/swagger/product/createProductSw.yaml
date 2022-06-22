@@ -1,9 +1,9 @@
 paths:
-  /exchange/coin:
+  /product/find/:
     post:
       tags:
         - Product
-      summary: Exchange coin to point
+      summary: Create a product
       consumes:
         - application/json
       requestBody:
@@ -12,9 +12,26 @@ paths:
             schema:
               type: object
               properties:
+                main_img_url:
+                  type: string
+                  required: true
+                sub_img_url:
+                  type: string
+                price:
+                  type: number
+                  required: true
                 amount:
                   type: number
-                  description: coin amount
+                title:
+                  type: string
+                  required: true
+                description:
+                  type: string
+                  required: true
+                user_address:
+                  type: string
+                  required: true
+
       responses:
         200:
           description: "OK"
@@ -23,23 +40,34 @@ paths:
               schema:
                 type: object
                 properties:
+                  item:
+                    type: object
+                    properties:
+                        id:
+                          type: number
+                        main_img_url:
+                          type: string
+                        sub_img_url:
+                          type: string
+                        price:
+                          type: number
+                        amount:
+                          type: number
+                        title:
+                          type: string
+                        description:
+                          type: string
+                        user_address:
+                          type: string
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: Product 생성에 성공했습니다.
                   error:
                     type: boolean
                     description: error 체크
                     example: false
-                  msg:
-                    type: string
-                    description: 메시지
-                    example: TOX 코인을 포인트로 교환하는데 성공했습니다.
-                  item:
-                    type: object
-                    properties:
-                      public_address:
-                        type: string
-                      nonce:
-                        type: number
-                      point_balance:
-                        type: number
+                  
         500:
           description: "Server Error"
 
