@@ -1,5 +1,5 @@
 paths:
-  /product/find/:
+  /product/create/:
     post:
       tags:
         - Product
