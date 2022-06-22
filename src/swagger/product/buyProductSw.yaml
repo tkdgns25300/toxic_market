@@ -1,5 +1,5 @@
 paths:
-  /product/buy/:id:
+  /product/buy/{id}:
     post:
       tags:
         - Product

@@ -1,5 +1,5 @@
 paths:
-  /product/find/:id:
+  /product/find/{id}:
     get:
       tags:
         - Product
@@ -39,6 +39,9 @@ paths:
                           type: string
                         description:
                           type: string
+                        created_at:
+                          type: string
+                          format: date
                         user_address:
                           type: string
                   msg:
