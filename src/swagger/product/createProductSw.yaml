@@ -57,6 +57,9 @@ paths:
                           type: string
                         description:
                           type: string
+                        created_at:
+                          type: string
+                          format: date
                         user_address:
                           type: string
                   msg:

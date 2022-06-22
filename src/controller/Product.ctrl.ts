@@ -14,7 +14,7 @@ export class ProductController {
   productService: ProductService;
 
   @Get("/find")
-  @UseBefore(checkAccessToken)
+  // @UseBefore(checkAccessToken)
   public async getAll(@QueryParams() param: PageReq, @Res() res: Response) {
     try {
       return await this.productService.findAll(param);
@@ -28,7 +28,7 @@ export class ProductController {
   }
 
   @Get("/find/:id")
-  @UseBefore(checkAccessToken)
+  // @UseBefore(checkAccessToken)
   public async getOne(@Param("id") id: number, @Res() res: Response) {
     try {
       return await this.productService.findOne(id);
@@ -42,7 +42,7 @@ export class ProductController {
   }
 
   @Post("/create")
-  @UseBefore(checkAccessToken)
+  // @UseBefore(checkAccessToken)
   public async create(@Body() params: ProductDto, @Res() res: Response) {
     try {
       return await this.productService.create(params);
@@ -56,7 +56,7 @@ export class ProductController {
   }
 
   @Post("/buy/:id")
-  @UseBefore(checkAccessToken)
+  // @UseBefore(checkAccessToken)
   public async buy(@Param("id") id: number, @QueryParams() amount: number, @Res() res: Response) {
     try {
       const {aud} = res.locals.jwtPayload;

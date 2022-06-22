@@ -37,9 +37,9 @@ paths:
                     type: integer
                     description: 전체 product의 갯수
                     example: 10
-                  pageSize:
+                  totalPage:
                     type: integer
-                    description: 페이지의 최대 product 갯수; limit, pageNo 를 0으로 보낼 시 null
+                    description: 전체 페이지 갯수; limit, pageNo 를 0으로 보낼 시 null
                     example: 1
                   msg:
                     type: string
@@ -63,6 +63,9 @@ paths:
                           type: string
                         description:
                           type: string
+                        created_at:
+                          type: string
+                          format: date
                         user_address:
                           type: string
                   error:
