@@ -3,7 +3,7 @@ import { InjectRepository } from 'typeorm-typedi-extensions';
 
 import { ProductQueryRepo } from '../repository/ProductQueryRepo';
 import { Log, Product, User } from '../entity';
-import { ProductDto } from '../dto';
+import { LogDto, ProductDto } from '../dto';
 import { PageReq, PageResList, PageResObj } from '../api';
 import { LogQueryRepo } from '../repository/LogQueryRepo';
 import { EntityManager, Transaction, TransactionManager } from 'typeorm';
@@ -69,16 +69,15 @@ export class ProductService {
     await manager.update(User, product.user_address, seller);
 
     // 로그 생성
-    const logItem = {
-      public_address: public_address,
+    let logItem = manager.create(Log, {
       title: product.title,
-      total_point: product.price * amount,
+      total_CF: product.price * amount,
       amount: amount,
-      date: Date.now(),
       seller: seller.public_address,
       buyer: buyer.public_address
-    }
-    manager.create(Log, logItem);
+    });
+    logItem = await manager.save(Log, logItem);
+
     return new PageResObj({}, "Product 구매에 성공했습니다.")
   }
 }

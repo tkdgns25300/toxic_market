@@ -57,10 +57,10 @@ export class ProductController {
 
   @Post("/buy/:id")
   // @UseBefore(checkAccessToken)
-  public async buy(@Param("id") id: number, @QueryParams() amount: number, @Res() res: Response) {
+  public async buy(@Param("id") id: number, @QueryParams() obj, @Res() res: Response) {
     try {
       const {aud} = res.locals.jwtPayload;
-      return await this.productService.buy(id, amount, aud, null);
+      return await this.productService.buy(id, obj.amount, aud, null);
     } catch (err) {
       if (err instanceof QueryFailedError) {
         console.log("Instance of QueryFailedError!");
