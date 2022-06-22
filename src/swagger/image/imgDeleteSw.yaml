@@ -1,9 +1,9 @@
 paths:
-  /exchange/coin:
+  /image/delete:
     post:
       tags:
         - Image
-      summary: Exchange coin to point
+      summary: delete image
       consumes:
         - application/json
       requestBody:
@@ -12,9 +12,10 @@ paths:
             schema:
               type: object
               properties:
-                amount:
-                  type: number
-                  description: coin amount
+                img_url:
+                  type: string
+                  description: 이미지의 URL 값
+
       responses:
         200:
           description: "OK"
@@ -23,23 +24,18 @@ paths:
               schema:
                 type: object
                 properties:
+                  item:
+                    type: object
+                    properties:
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: 사진 삭제에 성공했습니다.
                   error:
                     type: boolean
                     description: error 체크
                     example: false
-                  msg:
-                    type: string
-                    description: 메시지
-                    example: TOX 코인을 포인트로 교환하는데 성공했습니다.
-                  item:
-                    type: object
-                    properties:
-                      public_address:
-                        type: string
-                      nonce:
-                        type: number
-                      point_balance:
-                        type: number
+
         500:
           description: "Server Error"
 
