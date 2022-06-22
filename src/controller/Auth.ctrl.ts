@@ -12,7 +12,9 @@ import { QueryFailedError } from "typeorm";
 
 import { AuthService } from "../service/AuthService";
 import {PageResObj} from "../api";
-import { checkAccessToken } from "../middlewares/AuthMiddleware";
+import {checkAccessToken, generateAccessToken} from "../middlewares/AuthMiddleware";
+import {User} from "../entity";
+import {convertStringToEntity} from "../util/convertStringToEntity";
 
 
 @Service()
@@ -72,5 +74,22 @@ export class AuthController {
     }
   }
 
+  //TODO: delete this before deploying
+  @Get("/getjwt/:address")
+  public async getjwt(@Param("address") address: string) {
+    try {
+      const user = new User()
+
+      user.public_address = address;
+
+      const token = generateAccessToken(user);
+      return new PageResObj({token}, "로그인 성공했습니다.", false);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
 
 }
