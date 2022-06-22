@@ -34,7 +34,7 @@ paths:
                   msg:
                     type: string
                     description: 메시지
-                    example: Product 생성에 성공했습니다.
+                    example: Product 구매에 성공했습니다.
                   error:
                     type: boolean
                     description: error 체크
