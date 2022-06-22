@@ -15,7 +15,7 @@ export function useSwagger(app: express.Application) {
       info: {
         title: "TOXIC MARKET PLACE API",
         version: "1.0.0",
-        description: `<h2>로그인 기능이 스웨거로 만들기에 많이 복작해서 현재 코인 포인트 교환 기능 말고 모든 기능은 로그인 없이 체크 가능합니다.</h2>`
+        description: `<h2>Auth -> login API를 이용해 토큰 발급 후 이용 바랍니다.</h2>`
       },
       components: {
         securitySchemes: {

@@ -13,7 +13,7 @@ export class LogController {
   logService: LogService;
 
   @Get("/find")
-  // @UseBefore(checkAccessToken)
+  @UseBefore(checkAccessToken)
   public async search(@QueryParams() params: LogSearchReq) {
     try {
       return await this.logService.search(params);
