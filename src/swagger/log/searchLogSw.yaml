@@ -11,6 +11,18 @@ paths:
       consumes:
         - application/json
       parameters:
+        - name: limit
+          in: query
+          required: false
+          description: rows per page
+          schema:
+            type: integer
+        - name: pageNo
+          in: query
+          required: false
+          description: page number
+          schema:
+            type: integer
         - name: seller
           in: query
           required: false
