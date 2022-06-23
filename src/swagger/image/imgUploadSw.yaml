@@ -14,11 +14,11 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                img_base64:
-                  type: string
-                  description: 이미지의 base64 값
+              type: array
+              items:
+                properties:
+                  img_base64:
+                    type: string
 
       responses:
         200:
@@ -29,8 +29,11 @@ paths:
                 type: object
                 properties:
                   item:
-                    type: object
-                    properties:
+                    type: array
+                    items:
+                      properties:
+                        img_url:
+                          type: string
                   msg:
                     type: string
                     description: 메시지
