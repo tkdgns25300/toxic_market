@@ -1,6 +1,6 @@
 paths:
   /image/delete:
-    post:
+    delete:
       tags:
         - Image
       summary: delete image
@@ -10,11 +10,11 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                img_url:
-                  type: string
-                  description: 이미지의 URL 값
+              type: array
+              items:
+                properties:
+                  img_url:
+                    type: string
 
       responses:
         200:
@@ -26,7 +26,6 @@ paths:
                 properties:
                   item:
                     type: object
-                    properties:
                   msg:
                     type: string
                     description: 메시지

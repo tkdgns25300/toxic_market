@@ -1,5 +1,6 @@
 import {
     Body,
+    Delete,
     JsonController,
     Post,
     Res,
@@ -34,7 +35,7 @@ export class ImageUploadCtrl {
             return new PageResObj({}, err.message, true);
         }
     }
-    @Post("/delete")
+    @Delete("/delete")
     @UseBefore(checkAccessToken)
     public async delete(@Body() urlArr: ImageUploadDto[], @Res() res: Response) {
         try {
