@@ -34,6 +34,7 @@ export class ProductService {
   }
 
   async create(paramObj: ProductDto): Promise<PageResObj<Product | {}>> {
+    // 수량이 0일 경우 null : 무제한
     if (paramObj.amount === 0) paramObj.amount = null;
     const product = await this.ProductQueryRepo.create(paramObj);
     const result: Product = await this.ProductQueryRepo.findOne(
@@ -73,6 +74,7 @@ export class ProductService {
       title: product.title,
       total_CF: product.price * amount,
       amount: amount,
+      contact: product.contact,
       seller: seller.public_address,
       buyer: buyer.public_address
     });

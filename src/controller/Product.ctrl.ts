@@ -45,6 +45,9 @@ export class ProductController {
   @UseBefore(checkAccessToken)
   public async create(@Body() params: ProductDto, @Res() res: Response) {
     try {
+      // 등록시 필요한 유저 지갑은 request로 받는 게 아닌 토큰에서 추출
+      const { aud } = res.locals.jwtPayload;
+      params.user_address = aud;
       return await this.productService.create(params);
     } catch(err) {
       if (err instanceof QueryFailedError) {

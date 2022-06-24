@@ -31,9 +31,6 @@ paths:
                 contact:
                   type: string
                   required: true
-                user_address:
-                  type: string
-                  required: true
 
       responses:
         200:

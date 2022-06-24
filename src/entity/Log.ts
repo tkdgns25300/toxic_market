@@ -27,6 +27,12 @@ export class Log extends BaseEntity {
   })
   amount: number;
 
+  @Column({
+    type: "varchar",
+    comment: "판매자 연락 링크",
+  })
+  contact: string;
+
   @CreateDateColumn({
     comment: "구매(판매) 일자"
   })
