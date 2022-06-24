@@ -39,6 +39,8 @@ paths:
                           type: string
                         description:
                           type: string
+                        contact:
+                          type: string
                         created_at:
                           type: string
                           format: date

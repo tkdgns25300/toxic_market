@@ -28,6 +28,9 @@ paths:
                 description:
                   type: string
                   required: true
+                contact:
+                  type: string
+                  required: true
                 user_address:
                   type: string
                   required: true
@@ -57,6 +60,8 @@ paths:
                           type: string
                         description:
                           type: string
+                        contact:
+                          type: string  
                         created_at:
                           type: string
                           format: date

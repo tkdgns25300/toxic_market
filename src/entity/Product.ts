@@ -49,6 +49,12 @@ export class Product extends BaseEntity {
   })
   description: string;
 
+  @Column({
+    type: "varchar",
+    comment: "판매자 연락 링크",
+  })
+  contact: string;
+
   @CreateDateColumn({
     comment: "생성 시간"
   })
