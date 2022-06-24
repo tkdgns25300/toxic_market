@@ -69,6 +69,8 @@ paths:
                           type: number
                         amount:
                           type: number
+                        contact:
+                          type: string
                         created_at:
                           type: string
                           format: date
