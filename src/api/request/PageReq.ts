@@ -18,8 +18,4 @@ export class PageReq {
   getLimit(): number {
     return this.limit || 10;
   }
-
-  // getLimitWithNext(): number {
-  //   return this.take + 1;
-  // }
 }

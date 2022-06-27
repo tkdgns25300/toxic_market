@@ -1,4 +1,4 @@
-import {PageReq} from "./PageReq";
+import { PageReq } from "./PageReq";
 
 enum columnList {
   ID = "admin_id",

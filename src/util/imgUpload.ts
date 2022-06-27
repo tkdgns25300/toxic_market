@@ -4,13 +4,10 @@ import moment from "./moment";
 const bucketName = process.env.AWS_BUCKET_NAME;
 const bucketRegion = process.env.AWS_REGION;
 
-//const credentials = new AWS.SharedIniFileCredentials({profile: 'default'});
-
 AWS.config.update({
     region: bucketRegion,
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-  //  credentials
 });
 let s3 = new AWS.S3({});
 

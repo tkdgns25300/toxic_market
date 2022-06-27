@@ -34,7 +34,7 @@ export class App {
 
   // 미들웨어 셋팅
   private setMiddlewares(): void {
-    this.app.use(bodyParser.json({limit: '20mb'}));
+    this.app.use(bodyParser.json({ limit: '20mb' }));
     this.app.use(bodyParser.urlencoded({ extended: false }));
   }
 
@@ -64,7 +64,7 @@ export class App {
       require("dotenv").config({
         path: path.join(__dirname, "../.env.beta"),
       });
-    }else if (process.env.NODE_ENV === "production") {
+    } else if (process.env.NODE_ENV === "production") {
       require("dotenv").config({
         path: path.join(__dirname, "../.env.production"),
       });

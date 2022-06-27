@@ -377,4 +377,4 @@ const ABI = [
     }
 ]
 
-export {ABI, CONTRACT_ADDRESS}
+export { ABI, CONTRACT_ADDRESS }
