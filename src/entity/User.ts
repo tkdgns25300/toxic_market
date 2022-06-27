@@ -11,10 +11,11 @@ export class User extends BaseEntity {
   public_address: string;
 
   @Column({
-    type: "bigint",
+    type: "char",
+    length: 6,
     comment: "kaikas 로그인 시 필요한 논스 값",
   })
-  nonce: number;
+  nonce: string;
 
   @Column({
     type: "int",

@@ -6,7 +6,7 @@ export class UserDto {
     public_address: string;
 
     @IsNumber()
-    nonce: number;
+    nonce: string;
 
     @IsInt()
     @IsOptional()

@@ -54,7 +54,7 @@ export class AuthService {
     }
     const token = generateAccessToken(user);
     //update nonce value for safety
-    user.nonce = Math.floor(Math.random() * 1000000);
+    user.nonce = String(Math.floor(Math.random() * 1000000));
     await this.userQueryRepo.update(user, "public_address", user.public_address);
     return new PageResObj({token}, "로그인 성공했습니다.", false);
   }
@@ -82,7 +82,7 @@ export class AuthService {
     }
     const user = {
       public_address: public_address,
-      nonce: Math.floor(Math.random() * 1000000),
+      nonce: String(Math.floor(Math.random() * 1000000)),
       point_balance: 0
     }
 
