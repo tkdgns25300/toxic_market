@@ -55,7 +55,7 @@ export class BaseQueryRepo {
     return new entity_().getEntity(this.schemaClassName, result);
   }
 
-  create( paramObj: object) {
+  create(paramObj: object) {
     return createQueryBuilder()
       .insert()
       .into(convertStringToEntity(this.schemaClassName))
@@ -64,7 +64,7 @@ export class BaseQueryRepo {
   }
 
   update(
-      paramObj: object,
+    paramObj: object,
     whereKey: string,
     whereValue: string | number
   ) {

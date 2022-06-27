@@ -3,10 +3,10 @@ import { convertStringToEntity } from "../util/convertStringToEntity";
 export class BaseEntity {
   getEntity(schemaClassName: string, param: object) {
 
-    if(!param) {
+    if (!param) {
       return param
     }
-    const paramKeys =  Object.keys(param);
+    const paramKeys = Object.keys(param);
     const entity_ = convertStringToEntity(schemaClassName);
     const result = new entity_();
     paramKeys.forEach((key) => {

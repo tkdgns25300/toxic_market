@@ -11,7 +11,7 @@ export class LogQueryRepo extends BaseQueryRepo {
     super('log', 'Log');
   }
 
-  
+
   findLogs(param: LogSearchReq): Promise<[Array<any>, number]> {
     const builder = createQueryBuilder("log");
 

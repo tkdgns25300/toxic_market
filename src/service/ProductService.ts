@@ -45,9 +45,9 @@ export class ProductService {
   }
 
   @Transaction()
-  async buy(id: number, amount: number, public_address: string, @TransactionManager() manager: EntityManager ): Promise<PageResObj<Product | {}>> {
+  async buy(id: number, amount: number, public_address: string, @TransactionManager() manager: EntityManager): Promise<PageResObj<Product | {}>> {
     // 상품 수량 줄이기
-    const product: Product = await manager.findOne(Product, {"id": id});
+    const product: Product = await manager.findOne(Product, { "id": id });
     if (typeof product.amount === 'number') {
       if (product.amount < amount) return new PageResObj({}, "Product 수량이 부족합니다.");
       else {
@@ -57,7 +57,7 @@ export class ProductService {
     }
 
     // 구매자 CF 줄이기
-    const buyer: User = await manager.findOne(User, {public_address: public_address});
+    const buyer: User = await manager.findOne(User, { public_address: public_address });
     if (buyer.CF_balance < product.price * amount) {
       return new PageResObj({}, "CF가 부족합니다.");
     }
@@ -65,7 +65,7 @@ export class ProductService {
     await manager.update(User, public_address, buyer);
 
     // 판매자 CF 올리기
-    const seller: User = await manager.findOne(User, {public_address: product.user_address});
+    const seller: User = await manager.findOne(User, { public_address: product.user_address });
     seller.CF_balance += product.price * amount;
     await manager.update(User, product.user_address, seller);
 

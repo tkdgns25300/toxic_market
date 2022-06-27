@@ -1,4 +1,4 @@
-import {EntityRepository} from "typeorm";
+import { EntityRepository } from "typeorm";
 import { Service } from "typedi";
 import { User } from "../entity";
 import { BaseQueryRepo } from "./BaseQueryRepo";

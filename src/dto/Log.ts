@@ -1,4 +1,4 @@
-import { IsBoolean, IsInt, IsString, MaxLength, ValidateNested } from "class-validator";
+import { IsInt, IsString, MaxLength } from "class-validator";
 export class LogDto {
   id: number;
 
