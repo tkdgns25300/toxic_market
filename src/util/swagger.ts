@@ -15,7 +15,7 @@ export function useSwagger(app: express.Application) {
       info: {
         title: "TOXIC MARKET PLACE API",
         version: "1.0.0",
-        description: `<h2>Auth -> login API를 이용해 토큰 발급 후 이용 바랍니다.</h2>`
+        description: `<h2>Auth -> login API를 이용해 토큰 발급 후 이용 바랍니다.<br><br> - Imgage, Log, Product API모두 토큰 필요<br><br> - Auth, Exchange API는 아직 미완성</h2>`
       },
       components: {
         securitySchemes: {
