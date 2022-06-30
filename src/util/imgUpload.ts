@@ -11,7 +11,7 @@ AWS.config.update({
 });
 let s3 = new AWS.S3({});
 
-export const imageUpload = async (base64, directoryName: string) => {
+export const imageUpload = async (base64: string, directoryName: string) => {
 
     // @ts-ignore
     const base64Data = new Buffer.from(
