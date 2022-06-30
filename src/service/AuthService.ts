@@ -23,6 +23,8 @@ export class AuthService {
       "public_address",
       public_address
     );
+    // nonce값 hidden 후 전달
+    delete result.nonce;
     return new PageResObj(result, "사용자를 찾는데 성공했습니다.");
   }
   /**
