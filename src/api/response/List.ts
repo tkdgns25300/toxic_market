@@ -1,7 +1,4 @@
-import {
-  IsString,
-  IsArray,
-} from "class-validator";
+import { IsString, IsArray } from "class-validator";
 
 export class List<T> {
   @IsString()
@@ -9,11 +6,7 @@ export class List<T> {
   @IsArray()
   items: T[];
   error: boolean;
-  constructor(
-    items: T[],
-    msg: string,
-    error: boolean = false
-  ) {
+  constructor(items: T[], msg: string, error: boolean = false) {
     this.error = error;
     this.msg = msg;
     this.items = items;

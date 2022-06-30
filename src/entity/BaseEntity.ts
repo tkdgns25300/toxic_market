@@ -2,9 +2,8 @@ import { convertStringToEntity } from "../util/convertStringToEntity";
 
 export class BaseEntity {
   getEntity(schemaClassName: string, param: object) {
-
     if (!param) {
-      return param
+      return param;
     }
     const paramKeys = Object.keys(param);
     const entity_ = convertStringToEntity(schemaClassName);

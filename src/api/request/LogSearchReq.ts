@@ -13,6 +13,6 @@ export class LogSearchReq extends PageReq {
   buyer: string;
 
   get getUser() {
-    return this.seller ? 'seller' : 'buyer';
+    return this.seller ? "seller" : "buyer";
   }
 }

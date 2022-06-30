@@ -8,17 +8,14 @@ interface joinArrItem {
 }
 
 export class BaseQueryRepo {
-  schemaName: string
-  schemaClassName: string
+  schemaName: string;
+  schemaClassName: string;
   constructor(schemaName, schemaClassName) {
-    this.schemaName = schemaName
-    this.schemaClassName = schemaClassName
+    this.schemaName = schemaName;
+    this.schemaClassName = schemaClassName;
   }
 
-  findAll(
-    param: PageReq,
-    joinOpt: Array<joinArrItem> = []
-  ) {
+  findAll(param: PageReq, joinOpt: Array<joinArrItem> = []) {
     const result = createQueryBuilder(this.schemaName);
 
     if (joinOpt.length > 0) {
@@ -63,11 +60,7 @@ export class BaseQueryRepo {
       .execute();
   }
 
-  update(
-    paramObj: object,
-    whereKey: string,
-    whereValue: string | number
-  ) {
+  update(paramObj: object, whereKey: string, whereValue: string | number) {
     return createQueryBuilder()
       .update(convertStringToEntity(this.schemaClassName))
       .set(paramObj)
@@ -77,10 +70,7 @@ export class BaseQueryRepo {
       .execute();
   }
 
-  delete(
-    whereKey: string,
-    whereValue: string | number
-  ) {
+  delete(whereKey: string, whereValue: string | number) {
     const entity_ = convertStringToEntity(this.schemaClassName);
     return createQueryBuilder()
       .delete()

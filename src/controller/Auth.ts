@@ -1,7 +1,8 @@
 import {
   Body,
   Get,
-  JsonController, Param,
+  JsonController,
+  Param,
   Post,
   Res,
   UseBefore,
@@ -11,11 +12,13 @@ import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
 
 import { AuthService } from "../service/AuthService";
-import {PageResObj} from "../api";
-import {checkAccessToken, generateAccessToken} from "../middlewares/AuthMiddleware";
-import {User} from "../entity";
-import {convertStringToEntity} from "../util/convertStringToEntity";
-
+import { PageResObj } from "../api";
+import {
+  checkAccessToken,
+  generateAccessToken,
+} from "../middlewares/AuthMiddleware";
+import { User } from "../entity";
+import { convertStringToEntity } from "../util/convertStringToEntity";
 
 @Service()
 @JsonController("/auth")
@@ -37,7 +40,6 @@ export class AuthController {
     }
   }
 
-
   @Get("/login/:address")
   public async findByAddress(@Param("address") address: string) {
     try {
@@ -51,7 +53,9 @@ export class AuthController {
   }
 
   @Post("/login")
-  public async login( @Body()  data:{public_address: string, signature:string}) {
+  public async login(
+    @Body() data: { public_address: string; signature: string }
+  ) {
     try {
       return this.authService.login(data);
     } catch (err) {
@@ -78,12 +82,12 @@ export class AuthController {
   @Get("/getjwt/:address")
   public async getjwt(@Param("address") address: string) {
     try {
-      const user = new User()
+      const user = new User();
 
       user.public_address = address;
 
       const token = generateAccessToken(user);
-      return new PageResObj({token}, "로그인 성공했습니다.", false);
+      return new PageResObj({ token }, "로그인 성공했습니다.", false);
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);
@@ -91,5 +95,4 @@ export class AuthController {
       return new PageResObj({}, err.message, true);
     }
   }
-
 }

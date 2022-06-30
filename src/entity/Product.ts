@@ -1,10 +1,15 @@
-import { Entity, Column, CreateDateColumn, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Entity,
+  Column,
+  CreateDateColumn,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { BaseEntity } from "./BaseEntity";
 
 @Entity("product")
 export class Product extends BaseEntity {
   @PrimaryGeneratedColumn({
-    comment: "상품 아이디"
+    comment: "상품 아이디",
   })
   id: number;
 
@@ -56,14 +61,14 @@ export class Product extends BaseEntity {
   contact: string;
 
   @CreateDateColumn({
-    comment: "생성 시간"
+    comment: "생성 시간",
   })
   created_at: Date;
 
   @Column({
     type: "char",
     length: 42,
-    comment: "사용자 아이디"
+    comment: "사용자 아이디",
   })
-  user_address: string
+  user_address: string;
 }

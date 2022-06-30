@@ -7,7 +7,6 @@ import { BaseQueryRepo } from "./BaseQueryRepo";
 @EntityRepository(User)
 export class UserQueryRepo extends BaseQueryRepo {
   constructor() {
-    super('user', 'User');
+    super("user", "User");
   }
-
 }

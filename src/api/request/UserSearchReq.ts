@@ -16,6 +16,6 @@ export class UserSearchReq extends PageReq {
   }
 
   get getKeyword() {
-    return this.keyword ? this.keyword : '';
+    return this.keyword ? this.keyword : "";
   }
 }

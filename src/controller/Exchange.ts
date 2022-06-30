@@ -11,10 +11,8 @@
 
 // import { ExchangeService } from "../service/ExchangeService";
 // import { PageResObj } from "../api";
-// import {
-//   checkAccessToken,
-// } from "../middlewares/AuthMiddleware";
-// import {ExchangeDto} from "../dto";
+// import { checkAccessToken } from "../middlewares/AuthMiddleware";
+// import { ExchangeDto } from "../dto";
 
 // @Service()
 // @JsonController("/exchange")
@@ -26,8 +24,8 @@
 //   @UseBefore(checkAccessToken)
 //   public async toxToPoint(@Body() data: ExchangeDto, @Res() res: Response) {
 //     try {
-//       const {aud} = res.locals.jwtPayload;
-//       return await this.exchangeService.toxToPoint(data.amount, aud,null);
+//       const { aud } = res.locals.jwtPayload;
+//       return await this.exchangeService.toxToPoint(data.amount, aud, null);
 //     } catch (err) {
 //       if (err instanceof QueryFailedError) {
 //         return new PageResObj({}, err.message, true);
@@ -40,8 +38,8 @@
 //   @UseBefore(checkAccessToken)
 //   public async pointToTox(@Body() data: ExchangeDto, @Res() res: Response) {
 //     try {
-//       const {aud} = res.locals.jwtPayload;
-//       return await this.exchangeService.pointToTox(data.amount, aud,null);
+//       const { aud } = res.locals.jwtPayload;
+//       return await this.exchangeService.pointToTox(data.amount, aud, null);
 //     } catch (err) {
 //       if (err instanceof QueryFailedError) {
 //         return new PageResObj({}, err.message, true);
@@ -49,5 +47,4 @@
 //       return new PageResObj({}, err.message, true);
 //     }
 //   }
-
 // }

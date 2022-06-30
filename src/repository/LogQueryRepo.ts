@@ -8,9 +8,8 @@ import { LogSearchReq } from "../api/request/LogSearchReq";
 @EntityRepository(Log)
 export class LogQueryRepo extends BaseQueryRepo {
   constructor() {
-    super('log', 'Log');
+    super("log", "Log");
   }
-
 
   findLogs(param: LogSearchReq): Promise<[Array<any>, number]> {
     const builder = createQueryBuilder("log");
@@ -18,8 +17,8 @@ export class LogQueryRepo extends BaseQueryRepo {
     const filter = param.getUser;
 
     builder.andWhere(`log.${filter} = :${filter}`, {
-      [filter]: param[filter]
-    })
+      [filter]: param[filter],
+    });
 
     builder.skip(param.getOffset()).take(param.getLimit());
 

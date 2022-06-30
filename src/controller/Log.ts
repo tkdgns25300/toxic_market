@@ -1,4 +1,9 @@
-import { Get, JsonController, QueryParams, UseBefore } from "routing-controllers";
+import {
+  Get,
+  JsonController,
+  QueryParams,
+  UseBefore,
+} from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
 import { PageResObj } from "../api";

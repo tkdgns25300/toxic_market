@@ -73,6 +73,6 @@ export const generateAccessToken = (user: User) => {
       aud: user.public_address, // 이 토큰을 사용할 수신자
     },
     process.env.JWT_TOKEN_KEY,
-    { expiresIn: '24h' }
+    { expiresIn: "24h" }
   );
 };

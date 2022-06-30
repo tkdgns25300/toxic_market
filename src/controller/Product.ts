@@ -1,5 +1,14 @@
 import { Response } from "express";
-import { Body, Get, JsonController, Param, Post, QueryParams, Res, UseBefore } from "routing-controllers";
+import {
+  Body,
+  Get,
+  JsonController,
+  Param,
+  Post,
+  QueryParams,
+  Res,
+  UseBefore,
+} from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
 import { PageReq, PageResObj } from "../api";
@@ -49,7 +58,7 @@ export class ProductController {
       const { aud } = res.locals.jwtPayload;
       params.user_address = aud;
       return await this.productService.create(params);
-    } catch(err) {
+    } catch (err) {
       if (err instanceof QueryFailedError) {
         console.log("Instance of QueryFailedError!");
         return new PageResObj({}, err.message, true);
@@ -60,9 +69,13 @@ export class ProductController {
 
   @Post("/buy/:id")
   @UseBefore(checkAccessToken)
-  public async buy(@Param("id") id: number, @QueryParams() obj, @Res() res: Response) {
+  public async buy(
+    @Param("id") id: number,
+    @QueryParams() obj,
+    @Res() res: Response
+  ) {
     try {
-      const {aud} = res.locals.jwtPayload;
+      const { aud } = res.locals.jwtPayload;
       return await this.productService.buy(id, obj.amount, aud, null);
     } catch (err) {
       if (err instanceof QueryFailedError) {
