@@ -2,7 +2,7 @@ import { Service } from "typedi";
 import { PageResObj } from "../api";
 import { imageDelete, imageUpload } from "../util/imgUpload";
 import { ImageUploadDto } from "../dto";
-import { isValidBase64Image } from "../util/validateImage";
+import { isValidBase64Image, isValidURL } from "../util/validateImage";
 
 @Service()
 export class ImageUploadService {
@@ -14,9 +14,7 @@ export class ImageUploadService {
     // 이미지 업로드
     const result = await Promise.all(
       paramObj.map(async (el) => {
-        if (el.img_base64) {
-          return { img_url: await imageUpload(el.img_base64, "images") };
-        }
+        return { img_url: await imageUpload(el.img_base64, "images") };
       })
     );
     return new PageResObj(result, "사진 업로드에 성공했습니다.");
@@ -32,9 +30,15 @@ export class ImageUploadService {
      * 추가로 s3.deleteObject의 - bucketName과 - key값에 이상한 값 넣어서 어떤 데이터(에러)가 리턴되는지 확인
     */
 
-    paramObj.forEach(async (el) => {
-      if (el.img_url) await imageDelete(el.img_url);
-    })
-    return new PageResObj({}, "사진 삭제에 성공했습니다.");
+    // 각 요소들 validate: 하나라도 유효하지 않을 경우 Error
+    if (!isValidURL(paramObj)) {
+      return new PageResObj({}, "유효한 URL값을 입력해주세요.", true);
+    }
+    console.log(isValidURL)
+
+    // paramObj.forEach(async (el) => {
+    //   if (el.img_url) await imageDelete(el.img_url);
+    // })
+    return new PageResObj({ isValidURL }, "사진 삭제에 성공했습니다.");
   }
 }
