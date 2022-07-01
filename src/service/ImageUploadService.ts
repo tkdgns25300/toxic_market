@@ -2,34 +2,39 @@ import { Service } from "typedi";
 import { PageResObj } from "../api";
 import { imageDelete, imageUpload } from "../util/imgUpload";
 import { ImageUploadDto } from "../dto";
+import { isValidBase64Image } from "../util/validateImage";
+
 @Service()
 export class ImageUploadService {
-  // 업로드 되는 규칙(여러 이미지, 여러 파일에 대해서 비동기적으로 처리가 되어야 할 때 프론트와 백엔드의 처리 방식이 동일하지 않으면 S3 버킷에 레거시 파일 형태로 계속 남게 될 수 있다.)
-  async upload(
-    paramObj: ImageUploadDto[]
-  ): Promise<PageResObj<ImageUploadDto[] | {}>> {
-    // for문보다는 forEach문
-    for (const el of paramObj) {
-      // 업로드 에러 시나리오 부족
-
-      // 에러 캐칭을 해주어야 함
-      if (el.img_base64) {
-        el.img_url = await imageUpload(el.img_base64, "images");
-        delete el.img_base64;
-      }
+  async upload(paramObj: ImageUploadDto[]): Promise<PageResObj<ImageUploadDto[] | {}>> {
+    // 각 요소들 validate: 하나라도 유효하지 않을 경우 Error
+    if (!isValidBase64Image(paramObj)) {
+      return new PageResObj({}, "유효한 Base64 이미지 값을 입력해주세요.", true);
     }
-    return new PageResObj(paramObj, "사진 업로드에 성공했습니다.");
+    // 이미지 업로드
+    const result = await Promise.all(
+      paramObj.map(async (el) => {
+        if (el.img_base64) {
+          return { img_url: await imageUpload(el.img_base64, "images") };
+        }
+      })
+    );
+    return new PageResObj(result, "사진 업로드에 성공했습니다.");
   }
 
   async delete(paramObj: ImageUploadDto[]) {
-    // 순서
-    // 삭제될 파일이 실존하는지 먼저 확인이 필요한가?
-    // s3 -> error를 리턴하는지, 아니면 컨트롤 가능한 형태의 데이터를 리턴하는지
-    // RDS 먼저 확인을 하거나 삭제요청을 보내고 콜백된 데이터로 판별이 가능
-    for (const el of paramObj) {
+    /**
+     * TODO
+     * 삭제될 파일이 실존하는지 먼저 확인이 필요한가?
+     * s3 -> error를 리턴하는지, 아니면 컨트롤 가능한 형태의 데이터를 리턴하는지
+     * RDS 먼저 확인을 하거나 삭제요청을 보내고 콜백된 데이터로 판별이 가능
+     * delete 에서는 각 요소들 validate이후 Promise.all이용해 삭제 -> validate나 promise.all 하나라도 Error나면 PageResObj Error 리턴
+     * 추가로 s3.deleteObject의 - bucketName과 - key값에 이상한 값 넣어서 어떤 데이터(에러)가 리턴되는지 확인
+    */
+
+    paramObj.forEach(async (el) => {
       if (el.img_url) await imageDelete(el.img_url);
-    }
-    // Promise.allSettled()
+    })
     return new PageResObj({}, "사진 삭제에 성공했습니다.");
   }
 }
