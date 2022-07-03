@@ -11,6 +11,7 @@ export class ImageUploadService {
     if (!isValidBase64Image(paramObj)) {
       return new PageResObj({}, "유효한 Base64 이미지 값을 입력해주세요.", true);
     }
+
     // 이미지 업로드
     const result = await Promise.all(
       paramObj.map(async (el) => {
@@ -31,14 +32,16 @@ export class ImageUploadService {
     */
 
     // 각 요소들 validate: 하나라도 유효하지 않을 경우 Error
-    if (!isValidURL(paramObj)) {
+    if (!await isValidURL(paramObj)) {
       return new PageResObj({}, "유효한 URL값을 입력해주세요.", true);
     }
-    console.log(isValidURL)
 
-    // paramObj.forEach(async (el) => {
-    //   if (el.img_url) await imageDelete(el.img_url);
-    // })
-    return new PageResObj({ isValidURL }, "사진 삭제에 성공했습니다.");
+    // 이미지 삭제
+    await Promise.all(
+      paramObj.map(async (el) => {
+        return imageDelete(el.img_url)
+      })
+    )
+    return new PageResObj({}, "사진 삭제에 성공했습니다.");
   }
 }
