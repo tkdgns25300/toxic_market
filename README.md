@@ -1,15 +1,11 @@
-# Awesome Project Build with TypeORM
-
-###Production Setup
+# TOXIC MARKET PLACE SERVER
+Steps to run this project:
 1. Run `npm i` command
-2. Setup `.env.production` file
-3. Run `npm run build` command
-4. Run `npm run start` command
+2. Setup database settings inside `ormconfig.ts` file
+3. Run `npm start` command
 
-###Dev Setup
-1. Run `npm i` command
-2. Setup `.env.dev` file
-3. Run `npm run dev` command
-### Swagger
+## Server
+https://api.toxicnara.com
 
-base_url/api-docs/
+## Swagger
+https://api.toxicnara.com/api-docs/#
