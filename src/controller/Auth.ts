@@ -18,7 +18,6 @@ import {
   generateAccessToken,
 } from "../middlewares/AuthMiddleware";
 import { User } from "../entity";
-import { convertStringToEntity } from "../util/convertStringToEntity";
 
 @Service()
 @JsonController("/auth")

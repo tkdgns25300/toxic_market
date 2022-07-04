@@ -22,8 +22,7 @@ export class AuthService {
       "public_address",
       public_address
     );
-    // nonce값 hidden 후 전달
-    delete result.nonce;
+
     return new PageResObj(result, "사용자를 찾는데 성공했습니다.");
   }
   /**
@@ -108,7 +107,7 @@ export class AuthService {
       "0x06852d51798534dabea3b93702e6e9f476dfdb65", //FOOLKATS
       "0xf88b6de943080948331935d93abaabb71523e504", //TOXIC SPECIAL
       "0x008673da3a22888456b0ab86d15f1d313ed805e2", //SUCCUBUS
-      "0x8233167533afa3f387c81dd014a459346782d88c", //FLEXWEB //TODO: REMOVE FLEXWEB CONTRACT ON DEPLOY, IT IS FOR TESTING PURPOSE
+      "0x2CC04a78589f32FD60c384a1f574C4725e34a1FF", //marketTest //TODO: REMOVE marketTest CONTRACT ON DEPLOY, IT IS FOR TESTING PURPOSE ONLY
     ];
 
     // for each contract address make query if length is greater than 0 , then it is holder
