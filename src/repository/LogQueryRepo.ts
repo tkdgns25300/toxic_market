@@ -16,7 +16,7 @@ export class LogQueryRepo extends BaseQueryRepo {
 
     const filter = param.getUser;
 
-    builder.andWhere(`log.${filter} = :${filter}`, {
+    builder.andWhere(`${filter} = :${filter}`, {
       [filter]: param[filter],
     });
 
