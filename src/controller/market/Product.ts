@@ -11,13 +11,13 @@ import {
 } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
-import { PageReq, PageResObj } from "../api";
-import { ProductDto } from "../dto";
-import { checkAccessToken } from "../middlewares/AuthMiddleware";
-import { ProductService } from "../service/ProductService";
+import { PageReq, PageResObj } from "../../api";
+import { ProductDto } from "../../dto/market";
+import { checkAccessToken } from "../../middlewares/AuthMiddleware";
+import { ProductService } from "../../service/market/ProductService";
 
 @Service()
-@JsonController("/product")
+@JsonController("/market/product")
 export class ProductController {
   @Inject()
   productService: ProductService;

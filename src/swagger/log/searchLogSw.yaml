@@ -3,7 +3,7 @@ tags:
     description: 기록(로그) API
 
 paths:
-  /log/find:
+  /market/log/find:
     get:
       tags:
         - Log

@@ -9,12 +9,12 @@ import {
 import { Response } from "express";
 import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
-import { ImageUploadDto } from "../dto";
-import { PageResObj } from "../api";
-import { checkAccessToken } from "../middlewares/AuthMiddleware";
-import { ImageUploadService } from "../service/ImageUploadService";
+import { ImageUploadDto } from "../../dto/market";
+import { PageResObj } from "../../api";
+import { checkAccessToken } from "../../middlewares/AuthMiddleware";
+import { ImageUploadService } from "../../service/market/ImageUploadService";
 @Service()
-@JsonController("/image")
+@JsonController("/market/image")
 export class ImageUploadCtrl {
   @Inject()
   imageUploadService: ImageUploadService;

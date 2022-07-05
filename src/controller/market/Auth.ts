@@ -11,16 +11,16 @@ import { Request, Response } from "express";
 import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
 
-import { AuthService } from "../service/AuthService";
-import { PageResObj } from "../api";
+import { AuthService } from "../../service/market/AuthService";
+import { PageResObj } from "../../api";
 import {
   checkAccessToken,
   generateAccessToken,
-} from "../middlewares/AuthMiddleware";
-import { User } from "../entity";
+} from "../../middlewares/AuthMiddleware";
+import { User } from "../../entity/market";
 
 @Service()
-@JsonController("/auth")
+@JsonController("/market/auth")
 export class AuthController {
   @Inject()
   authService: AuthService;

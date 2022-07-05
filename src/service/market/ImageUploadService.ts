@@ -1,8 +1,8 @@
 import { Service } from "typedi";
-import { PageResObj } from "../api";
-import { imageDelete, imageUpload } from "../util/imgUpload";
-import { ImageUploadDto } from "../dto";
-import { isValidBase64Image, isValidURL } from "../util/validateImage";
+import { PageResObj } from "../../api";
+import { imageDelete, imageUpload } from "../../util/imgUpload";
+import { ImageUploadDto } from "../../dto/market";
+import { isValidBase64Image, isValidURL } from "../../util/validateImage";
 
 @Service()
 export class ImageUploadService {

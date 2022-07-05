@@ -1,10 +1,10 @@
 import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import Caver from "caver-js";
-import { UserQueryRepo } from "../repository/UserQueryRepo";
-import { User } from "../entity";
-import { PageResObj } from "../api";
-import { ABI, CONTRACT_ADDRESS } from "../middlewares/smartContract";
+import { UserQueryRepo } from "../../repository/market/UserQueryRepo";
+import { User } from "../../entity/market";
+import { PageResObj } from "../../api";
+import { ABI, CONTRACT_ADDRESS } from "../../middlewares/smartContract";
 import { EntityManager, Transaction, TransactionManager } from "typeorm";
 
 const caver = new Caver("https://public-node-api.klaytnapi.com/v1/cypress");

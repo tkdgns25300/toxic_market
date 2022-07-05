@@ -1,5 +1,5 @@
 paths:
-  /product/create:
+  /market/product/create:
     post:
       tags:
         - Product

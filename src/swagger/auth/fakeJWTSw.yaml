@@ -3,7 +3,7 @@ tags:
     description: 로그인 API
 
 paths:
-  /auth/getjwt/{address}:
+  /market/auth/getjwt/{address}:
     get:
       tags:
         - Auth

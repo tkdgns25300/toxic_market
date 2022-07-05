@@ -3,7 +3,7 @@ tags:
     description: 상품 API
 
 paths:
-  /product/find:
+  /market/product/find:
     get:
       tags:
         - Product

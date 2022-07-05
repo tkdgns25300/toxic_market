@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { User } from "../entity";
+import { User } from "../entity/market";
 
 require("dotenv").config();
 /**

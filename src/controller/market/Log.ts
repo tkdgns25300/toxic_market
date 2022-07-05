@@ -6,13 +6,13 @@ import {
 } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
-import { PageResObj } from "../api";
-import { LogSearchReq } from "../api/request/LogSearchReq";
-import { checkAccessToken } from "../middlewares/AuthMiddleware";
-import { LogService } from "../service/LogService";
+import { PageResObj } from "../../api";
+import { LogSearchReq } from "../../api/request/LogSearchReq";
+import { checkAccessToken } from "../../middlewares/AuthMiddleware";
+import { LogService } from "../../service/market/LogService";
 
 @Service()
-@JsonController("/log")
+@JsonController("/market/log")
 export class LogController {
   @Inject()
   logService: LogService;

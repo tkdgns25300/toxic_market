@@ -3,10 +3,10 @@ import { InjectRepository } from "typeorm-typedi-extensions";
 import axios from "axios";
 const Caver = require("caver-js");
 
-import { UserQueryRepo } from "../repository/UserQueryRepo";
-import { User } from "../entity";
-import { PageResObj } from "../api";
-import { generateAccessToken } from "../middlewares/AuthMiddleware";
+import { UserQueryRepo } from "../../repository/market/UserQueryRepo";
+import { User } from "../../entity/market";
+import { PageResObj } from "../../api";
+import { generateAccessToken } from "../../middlewares/AuthMiddleware";
 
 const caver = new Caver("https://public-node-api.klaytnapi.com/v1/cypress");
 
