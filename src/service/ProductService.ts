@@ -17,7 +17,7 @@ export class ProductService {
   ) {}
 
   async findAll(param: PageReq): Promise<PageResList<Product>> {
-    const result = await this.ProductQueryRepo.findAll(param);
+    const result = await this.ProductQueryRepo.findProducts(param);
     return new PageResList<Product>(
       result[1],
       param.limit,
