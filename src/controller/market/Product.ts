@@ -23,7 +23,6 @@ export class ProductController {
   productService: ProductService;
 
   @Get("/find")
-  @UseBefore(checkAccessToken)
   public async getAll(@QueryParams() param: PageReq, @Res() res: Response) {
     try {
       return await this.productService.findAll(param);
