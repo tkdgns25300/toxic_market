@@ -90,6 +90,7 @@ export class ProductService {
     });
     logItem = await manager.save(Log, logItem);
 
-    return new PageResObj({}, "Product 구매에 성공했습니다.");
+    const result: Product = await manager.findOne(Product, { id: id });
+    return new PageResObj(result, "Product 구매에 성공했습니다.");
   }
 }

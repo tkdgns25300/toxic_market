@@ -31,6 +31,27 @@ paths:
                   item:
                     type: object
                     properties:
+                        id:
+                          type: number
+                        main_img_url:
+                          type: string
+                        sub_img_url:
+                          type: string
+                        price:
+                          type: number
+                        amount:
+                          type: number
+                        title:
+                          type: string
+                        description:
+                          type: string
+                        contact:
+                          type: string
+                        created_at:
+                          type: string
+                          format: date
+                        user_address:
+                          type: string
                   msg:
                     type: string
                     description: 메시지
