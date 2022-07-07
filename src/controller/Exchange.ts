@@ -9,10 +9,10 @@ import { Response } from "express";
 import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
 
-import { ExchangeService } from "../../service/market/Exchange";
-import { PageResObj } from "../../api";
-import { checkAccessToken } from "../../middlewares/Auth";
-import { ExchangeDto } from "../../dto/market";
+import { ExchangeService } from "../service/Exchange";
+import { PageResObj } from "../api";
+import { checkAccessToken } from "../middlewares/Auth";
+import { ExchangeDto } from "../dto";
 
 @Service()
 @JsonController("/market/exchange")

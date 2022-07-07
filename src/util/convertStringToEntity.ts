@@ -2,7 +2,7 @@ import {
   User,
   Product,
   Log
-} from "../entity/market";
+} from "../entity";
 
 export const convertStringToEntity = (entityName: string) => {
   const convertList = {

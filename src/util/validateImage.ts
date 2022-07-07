@@ -1,4 +1,4 @@
-import { ImageUploadDto } from "../dto/market";
+import { ImageUploadDto } from "../dto";
 require("dotenv").config();
 const AWS = require("aws-sdk");
 const isBase64 = require('is-base64');

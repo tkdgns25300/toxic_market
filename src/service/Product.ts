@@ -1,11 +1,11 @@
 import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 
-import { ProductQueryRepo } from "../../repository/market/Product";
-import { Log, Product, User } from "../../entity/market";
-import { LogDto, ProductDto } from "../../dto/market";
-import { PageReq, PageResList, PageResObj } from "../../api";
-import { LogQueryRepo } from "../../repository/market/Log";
+import { ProductQueryRepo } from "../repository/Product";
+import { Log, Product, User } from "../entity";
+import { LogDto, ProductDto } from "../dto";
+import { PageReq, PageResList, PageResObj } from "../api";
+import { LogQueryRepo } from "../repository/Log";
 import { EntityManager, Transaction, TransactionManager } from "typeorm";
 
 @Service()

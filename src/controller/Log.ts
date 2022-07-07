@@ -6,10 +6,10 @@ import {
 } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
-import { PageResObj } from "../../api";
-import { LogSearchReq } from "../../api/request/LogSearchReq";
-import { checkAccessToken } from "../../middlewares/Auth";
-import { LogService } from "../../service/market/Log";
+import { PageResObj } from "../api";
+import { LogSearchReq } from "../api/request/LogSearchReq";
+import { checkAccessToken } from "../middlewares/Auth";
+import { LogService } from "../service/Log";
 
 @Service()
 @JsonController("/market/log")

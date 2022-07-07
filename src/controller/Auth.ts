@@ -11,13 +11,13 @@ import { Request, Response } from "express";
 import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
 
-import { AuthService } from "../../service/market/Auth";
-import { PageResObj } from "../../api";
+import { AuthService } from "../service/Auth";
+import { PageResObj } from "../api";
 import {
   checkAccessToken,
   generateAccessToken,
-} from "../../middlewares/Auth";
-import { User } from "../../entity/market";
+} from "../middlewares/Auth";
+import { User } from "../entity";
 
 @Service()
 @JsonController("/market/auth")

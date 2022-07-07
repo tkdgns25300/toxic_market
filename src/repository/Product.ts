@@ -1,8 +1,8 @@
 import { createQueryBuilder, EntityRepository } from "typeorm";
 import { Service } from "typedi";
-import { Product } from "../../entity/market";
+import { Product } from "../entity";
 import { BaseQueryRepo } from "./Base";
-import { PageReq } from "../../api";
+import { PageReq } from "../api";
 
 @Service()
 @EntityRepository(Product)
