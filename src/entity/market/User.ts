@@ -23,4 +23,11 @@ export class User extends BaseEntity {
     comment: "보유 CF",
   })
   CF_balance: number;
+
+  @Column({
+    type: "boolean",
+    default: false,
+    comment: "상품 판매 가능 여부"
+  })
+  isSeller: boolean;
 }

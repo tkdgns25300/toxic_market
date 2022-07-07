@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsInt,
   IsNumber,
   IsOptional,
@@ -16,5 +17,9 @@ export class UserDto {
 
   @IsInt()
   @IsOptional()
-  point_balance: number;
+  CF_balance: number;
+
+  @IsBoolean({ message: "불린값이 아닙니다."})
+  @IsOptional()
+  isSeller: boolean;
 }

@@ -1,4 +1,4 @@
-import { IsInt, IsOptional, IsString, MaxLength } from "class-validator";
+import { IsBoolean, IsInt, IsOptional, IsString, MaxLength } from "class-validator";
 
 export class ProductDto {
   id: number;
@@ -33,4 +33,8 @@ export class ProductDto {
   @MaxLength(42, { message: "최대 42자까지 입력됩니다." })
   @IsOptional()
   user_address: string;
+
+  @IsBoolean({ message: "불린값이 아닙니다."})
+  @IsOptional()
+  isVisible: boolean;
 }
