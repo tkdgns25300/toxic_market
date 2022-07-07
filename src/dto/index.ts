@@ -1,7 +1,4 @@
-import {UserDto} from "./UserDto";
-import {LoginDto} from "./LoginDto";
+import { UserDto } from "./User";
+import { LoginDto } from "./Login";
 
-export {
-    UserDto,
-    LoginDto
-}
+export { UserDto, LoginDto };
