@@ -46,6 +46,8 @@ paths:
                           format: date
                         user_address:
                           type: string
+                        isVisible:
+                          type: boolean
                   msg:
                     type: string
                     description: 메시지

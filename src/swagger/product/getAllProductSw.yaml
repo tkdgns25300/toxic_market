@@ -70,6 +70,8 @@ paths:
                           format: date
                         user_address:
                           type: string
+                        isVisible:
+                          type: boolean
                   error:
                     type: boolean
                     description: error 체크

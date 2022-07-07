@@ -27,8 +27,12 @@ paths:
                     properties:
                       public_address:
                         type: string
+                      nonce:
+                        type: string
                       CF_balance:
                         type: number
+                      isSeller:
+                        type: boolean
 
         500:
           description: "Server Error"
