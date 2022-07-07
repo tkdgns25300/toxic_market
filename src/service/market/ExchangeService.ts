@@ -76,13 +76,13 @@ export class ExchangeService {
     );
     //sending 3% coin from SavingAccount to Commission Wallet
     await contractInstance.send(
-        {
-          from: keyring.address,
-          gas: "0x4bfd200",
-        },
-        "transfer",
-        process.env.COMMISSION_WALLET,
-        `${commissionFee}`
+      {
+        from: keyring.address,
+        gas: "0x4bfd200",
+      },
+      "transfer",
+      process.env.COMMISSION_WALLET,
+      `${commissionFee}`
     );
     return new PageResObj(
       user,
