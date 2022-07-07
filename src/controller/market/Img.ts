@@ -11,8 +11,8 @@ import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
 import { ImageUploadDto } from "../../dto/market";
 import { PageResObj } from "../../api";
-import { checkAccessToken } from "../../middlewares/AuthMiddleware";
-import { ImageUploadService } from "../../service/market/ImageUploadService";
+import { checkAccessToken } from "../../middlewares/Auth";
+import { ImageUploadService } from "../../service/market/ImageUpload";
 @Service()
 @JsonController("/market/image")
 export class ImageUploadCtrl {

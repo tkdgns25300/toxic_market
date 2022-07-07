@@ -1,7 +1,7 @@
 import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import Caver from "caver-js";
-import { UserQueryRepo } from "../../repository/market/UserQueryRepo";
+import { UserQueryRepo } from "../../repository/market/User";
 import { User } from "../../entity/market";
 import { PageResObj } from "../../api";
 import { ABI, CONTRACT_ADDRESS } from "../../middlewares/smartContract";

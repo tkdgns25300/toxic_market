@@ -13,8 +13,8 @@ import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
 import { PageReq, PageResObj } from "../../api";
 import { ProductDto } from "../../dto/market";
-import { checkAccessToken } from "../../middlewares/AuthMiddleware";
-import { ProductService } from "../../service/market/ProductService";
+import { checkAccessToken } from "../../middlewares/Auth";
+import { ProductService } from "../../service/market/Product";
 
 @Service()
 @JsonController("/market/product")

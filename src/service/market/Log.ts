@@ -1,7 +1,7 @@
 import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 
-import { LogQueryRepo } from "../../repository/market/LogQueryRepo";
+import { LogQueryRepo } from "../../repository/market/Log";
 import { Log } from "../../entity/market";
 import { PageResList } from "../../api";
 import { LogSearchReq } from "../../api/request/LogSearchReq";

@@ -4,7 +4,7 @@ import {
   CreateDateColumn,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { BaseEntity } from "./BaseEntity";
+import { BaseEntity } from "./Base";
 
 @Entity("product")
 export class Product extends BaseEntity {

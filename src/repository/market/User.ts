@@ -1,7 +1,7 @@
 import { EntityRepository } from "typeorm";
 import { Service } from "typedi";
 import { User } from "../../entity/market";
-import { BaseQueryRepo } from "./BaseQueryRepo";
+import { BaseQueryRepo } from "./Base";
 
 @Service()
 @EntityRepository(User)

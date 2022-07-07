@@ -1,7 +1,7 @@
 import { createQueryBuilder, EntityRepository } from "typeorm";
 import { Service } from "typedi";
 import { Log } from "../../entity/market";
-import { BaseQueryRepo } from "./BaseQueryRepo";
+import { BaseQueryRepo } from "./Base";
 import { LogSearchReq } from "../../api/request/LogSearchReq";
 
 @Service()

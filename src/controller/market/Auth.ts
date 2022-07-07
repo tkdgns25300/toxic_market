@@ -11,12 +11,12 @@ import { Request, Response } from "express";
 import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
 
-import { AuthService } from "../../service/market/AuthService";
+import { AuthService } from "../../service/market/Auth";
 import { PageResObj } from "../../api";
 import {
   checkAccessToken,
   generateAccessToken,
-} from "../../middlewares/AuthMiddleware";
+} from "../../middlewares/Auth";
 import { User } from "../../entity/market";
 
 @Service()

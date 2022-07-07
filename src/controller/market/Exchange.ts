@@ -9,9 +9,9 @@ import { Response } from "express";
 import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
 
-import { ExchangeService } from "../../service/market/ExchangeService";
+import { ExchangeService } from "../../service/market/Exchange";
 import { PageResObj } from "../../api";
-import { checkAccessToken } from "../../middlewares/AuthMiddleware";
+import { checkAccessToken } from "../../middlewares/Auth";
 import { ExchangeDto } from "../../dto/market";
 
 @Service()

@@ -8,8 +8,8 @@ import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
 import { PageResObj } from "../../api";
 import { LogSearchReq } from "../../api/request/LogSearchReq";
-import { checkAccessToken } from "../../middlewares/AuthMiddleware";
-import { LogService } from "../../service/market/LogService";
+import { checkAccessToken } from "../../middlewares/Auth";
+import { LogService } from "../../service/market/Log";
 
 @Service()
 @JsonController("/market/log")
