@@ -1,7 +1,7 @@
 import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 
-import { UserQueryRepo } from "../repository/UserQueryRepo";
+import { UserQueryRepo } from "../repository/User";
 import { User } from "../entity";
 import { UserDto } from "../dto";
 import { UserSearchReq, PageResList, PageResObj } from "../api";
@@ -29,23 +29,15 @@ export class UserService {
   }
 
   async findOne(user_id: string): Promise<PageResObj<User | {}>> {
-    const result = await this.userQueryRepo.findOne(
-      "user_id",
-      user_id
-    );
+    const result = await this.userQueryRepo.findOne("user_id", user_id);
     return new PageResObj(result, "user를 찾는데 성공했습니다.");
   }
   async findByEmail(email: string): Promise<PageResObj<User | {}>> {
-    const result: User = await this.userQueryRepo.findOne(
-      "email",
-      email
-    );
+    const result: User = await this.userQueryRepo.findOne("email", email);
     return new PageResObj(result, "user를 찾는데 성공했습니다.");
   }
 
   async create(paramObj: UserDto): Promise<PageResObj<User | {}>> {
-
-
     const isUnique = await this.userQueryRepo.findOne(
       "user_id",
       paramObj.user_id
@@ -65,9 +57,7 @@ export class UserService {
     }
     paramObj.password = hash(paramObj.password);
 
-    const createResult = await this.userQueryRepo.create(
-      paramObj
-    );
+    const createResult = await this.userQueryRepo.create(paramObj);
     const result = await this.userQueryRepo.findOne(
       "user_id",
       createResult.identifiers[0].user_id
@@ -75,14 +65,8 @@ export class UserService {
     return new PageResObj(result, "user 생성에 성공했습니다.");
   }
 
-  async update(
-    paramObj: UserDto,
-    id: string
-  ): Promise<PageResObj<User | {}>> {
-    const candidate: User = await this.userQueryRepo.findOne(
-      "user_id",
-      id
-    );
+  async update(paramObj: UserDto, id: string): Promise<PageResObj<User | {}>> {
+    const candidate: User = await this.userQueryRepo.findOne("user_id", id);
 
     if (paramObj.getBase64Img()) {
       if (candidate.profile_img) await imageDelete(candidate.profile_img);
@@ -94,15 +78,8 @@ export class UserService {
     if (paramObj.password) {
       paramObj.password = hash(paramObj.password);
     }
-    await this.userQueryRepo.update( paramObj,
-      "user_id",
-      id
-    );
-    const result = await this.userQueryRepo.findOne(
-
-      "user_id",
-      id
-    );
+    await this.userQueryRepo.update(paramObj, "user_id", id);
+    const result = await this.userQueryRepo.findOne("user_id", id);
     return new PageResObj(result, "user 정보 수정에 성공했습니다.");
   }
 

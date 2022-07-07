@@ -13,14 +13,14 @@ import { Response } from "express";
 import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
 
-import { UserService } from "../service/UserService";
+import { UserService } from "../service/User";
 import { UserDto } from "../dto";
 import { PageReq, UserSearchReq, PageResObj } from "../api";
 import {
   checkAccessToken,
   checkSuperAccessToken,
   extractAccessToken,
-} from "../middlewares/AuthMiddleware";
+} from "../middlewares/Auth";
 
 @Service()
 @JsonController("/admin")
@@ -102,7 +102,7 @@ export class AdminController {
   }
   @Post("/delete")
   // @UseBefore(checkAccessToken)
-  public async delete(@Body() idArr: {id: string}[], @Res() res: Response) {
+  public async delete(@Body() idArr: { id: string }[], @Res() res: Response) {
     try {
       const jwtPayload = res.locals.jwtPayload;
       if (!jwtPayload.super) {

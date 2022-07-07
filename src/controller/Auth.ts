@@ -1,4 +1,4 @@
-  import {
+import {
   Body,
   Get,
   JsonController,
@@ -8,11 +8,11 @@
 } from "routing-controllers";
 import { Request, Response } from "express";
 import { Inject, Service } from "typedi";
-import { AuthService } from "../service/AuthService";
+import { AuthService } from "../service/Auth";
 import { LoginDto } from "../dto";
 import { PageResObj } from "../api";
 
-import { checkAccessToken } from "../middlewares/AuthMiddleware";
+import { checkAccessToken } from "../middlewares/Auth";
 import { QueryFailedError } from "typeorm";
 
 @Service()

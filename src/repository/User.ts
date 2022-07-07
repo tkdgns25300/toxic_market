@@ -4,13 +4,13 @@ import { Service } from "typedi";
 import { User } from "../entity";
 import { UserDto } from "../dto";
 import { PageReq, UserSearchReq } from "../api";
-import { BaseQueryRepo } from "./BaseQueryRepo";
+import { BaseQueryRepo } from "./Base";
 
 @Service()
 @EntityRepository(User)
 export class UserQueryRepo extends BaseQueryRepo {
   constructor() {
-    super('admin', 'Admin');
+    super("admin", "Admin");
   }
 
   search(param: UserSearchReq) {
