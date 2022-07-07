@@ -1,16 +1,5 @@
-import {
-  IsInt,
-  IsDate,
-  Min,
-  Max,
-  IsString,
-  IsObject,
-  ValidateNested,
-  Allow,
-  IsNotEmpty,
-  IsArray,
-  ArrayContains,
-} from "class-validator";
+import { IsInt, IsString, IsArray } from "class-validator";
+
 export class PageResList<T> {
   // pageSize: number;
   @IsInt()

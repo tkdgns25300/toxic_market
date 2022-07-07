@@ -1,0 +1,51 @@
+tags:
+  - name: Image
+    description: 이미지 API
+
+paths:
+  /market/image/upload:
+    post:
+      tags:
+        - Image
+      summary: upload image
+      consumes:
+        - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                properties:
+                  img_base64:
+                    type: string
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  item:
+                    type: array
+                    items:
+                      properties:
+                        img_url:
+                          type: string
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: 사진 업로드에 성공했습니다.
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http

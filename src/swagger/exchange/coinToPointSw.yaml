@@ -1,13 +1,9 @@
-tags:
-  - name: Auth
-    description: 로그인 API
-
 paths:
-  /market/auth/login:
+  /market/exchange/coin:
     post:
       tags:
-        - Auth
-      summary: log in
+        - Exchange
+      summary: Exchange coin to point
       consumes:
         - application/json
       requestBody:
@@ -16,13 +12,9 @@ paths:
             schema:
               type: object
               properties:
-                admin_id:
-                  type: string
-                password:
-                  type: string
-                remember:
-                  type: boolean
-
+                amount:
+                  type: number
+                  description: coin amount
       responses:
         200:
           description: "OK"
@@ -38,13 +30,16 @@ paths:
                   msg:
                     type: string
                     description: 메시지
-                    example: 로그인에 성공했습니다.
+                    example: TOX 코인을 포인트로 교환하는데 성공했습니다.
                   item:
                     type: object
                     properties:
-                      token:
+                      public_address:
                         type: string
-
+                      nonce:
+                        type: number
+                      point_balance:
+                        type: number
         500:
           description: "Server Error"
 

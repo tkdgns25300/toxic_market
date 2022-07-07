@@ -1,4 +1,4 @@
-import {PageReq} from "./PageReq";
+import { PageReq } from "./PageReq";
 
 enum columnList {
   ID = "admin_id",
@@ -16,6 +16,6 @@ export class UserSearchReq extends PageReq {
   }
 
   get getKeyword() {
-    return this.keyword ? this.keyword : '';
+    return this.keyword ? this.keyword : "";
   }
 }

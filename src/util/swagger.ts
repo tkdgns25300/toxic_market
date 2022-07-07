@@ -13,9 +13,9 @@ export function useSwagger(app: express.Application) {
     swaggerDefinition: {
       openapi: "3.0.0",
       info: {
-        title: "NFT wiki Api",
+        title: "TOXIC MARKET PLACE API",
         version: "1.0.0",
-        description: `<h2>근데 우리 문서까지 만들 시간이 없는 것 같긴 해 ㅎㅎ</h2>`
+        description: `<h2>Auth -> login API를 이용해 토큰 발급 후 이용 바랍니다.<br><br> - Imgage, Log, Product API모두 토큰 필요<br><br> - Auth, Exchange API는 아직 미완성</h2>`
       },
       components: {
         securitySchemes: {

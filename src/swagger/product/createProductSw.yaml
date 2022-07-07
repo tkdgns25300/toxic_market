@@ -1,0 +1,83 @@
+paths:
+  /market/product/create:
+    post:
+      tags:
+        - Product
+      summary: Create a product
+      consumes:
+        - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                main_img_url:
+                  type: string
+                  required: true
+                sub_img_url:
+                  type: string
+                price:
+                  type: number
+                  required: true
+                amount:
+                  type: number
+                title:
+                  type: string
+                  required: true
+                description:
+                  type: string
+                  required: true
+                contact:
+                  type: string
+                  required: true
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  item:
+                    type: object
+                    properties:
+                        id:
+                          type: number
+                        main_img_url:
+                          type: string
+                        sub_img_url:
+                          type: string
+                        price:
+                          type: number
+                        amount:
+                          type: number
+                        title:
+                          type: string
+                        description:
+                          type: string
+                        contact:
+                          type: string  
+                        created_at:
+                          type: string
+                          format: date
+                        user_address:
+                          type: string
+                        isVisible:
+                          type: boolean
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: Product 생성에 성공했습니다.
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+                  
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http

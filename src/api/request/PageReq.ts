@@ -1,7 +1,4 @@
-import {
-  IsInt,
-  IsOptional,
-} from "class-validator";
+import { IsInt, IsOptional } from "class-validator";
 
 export class PageReq {
   @IsOptional()
@@ -18,8 +15,4 @@ export class PageReq {
   getLimit(): number {
     return this.limit || 10;
   }
-
-  // getLimitWithNext(): number {
-  //   return this.take + 1;
-  // }
 }

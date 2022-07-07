@@ -1,18 +1,4 @@
-import {
-  validate,
-  validateOrReject,
-  Contains,
-  IsInt,
-  Length,
-  IsEmail,
-  IsFQDN,
-  IsDate,
-  Min,
-  Max,
-  MinLength,
-  IsString,
-  IsObject,
-} from "class-validator";
+import { IsString, IsObject } from "class-validator";
 
 export class PageResObj<T> {
   // pageSize: number;

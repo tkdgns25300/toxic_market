@@ -1,0 +1,65 @@
+paths:
+  /market/product/find/{id}:
+    get:
+      tags:
+        - Product
+      summary: Get one product
+      consumes:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: product id
+          schema:
+            type: number
+            
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  item:
+                    type: object
+                    properties:
+                        id:
+                          type: number
+                        main_img_url:
+                          type: string
+                        sub_img_url:
+                          type: string
+                        price:
+                          type: number
+                        amount:
+                          type: number
+                        title:
+                          type: string
+                        description:
+                          type: string
+                        contact:
+                          type: string
+                        created_at:
+                          type: string
+                          format: date
+                        user_address:
+                          type: string
+                        isVisible:
+                          type: boolean
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: Product 조회에 성공했습니다.
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+                  
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http

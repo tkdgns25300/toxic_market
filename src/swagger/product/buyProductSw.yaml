@@ -1,0 +1,71 @@
+paths:
+  /market/product/buy/{id}:
+    post:
+      tags:
+        - Product
+      summary: Buy a product
+      consumes:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: product id
+          schema:
+            type: number
+        - name: amount
+          in: query
+          required: true
+          description: amount to buy
+          schema:
+            type: integer
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  item:
+                    type: object
+                    properties:
+                        id:
+                          type: number
+                        main_img_url:
+                          type: string
+                        sub_img_url:
+                          type: string
+                        price:
+                          type: number
+                        amount:
+                          type: number
+                        title:
+                          type: string
+                        description:
+                          type: string
+                        contact:
+                          type: string
+                        created_at:
+                          type: string
+                          format: date
+                        user_address:
+                          type: string
+                        isVisible:
+                          type: boolean
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: Product 구매에 성공했습니다.
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+                  
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http
