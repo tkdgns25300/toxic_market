@@ -1,6 +1,6 @@
 
 paths:
-  /market/auth/info:
+  /auth/info:
     get:
       tags:
         - Auth

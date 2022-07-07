@@ -12,7 +12,7 @@ import { checkAccessToken } from "../middlewares/Auth";
 import { LogService } from "../service/Log";
 
 @Service()
-@JsonController("/market/log")
+@JsonController("/log")
 export class LogController {
   @Inject()
   logService: LogService;

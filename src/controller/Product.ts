@@ -17,7 +17,7 @@ import { checkAccessToken } from "../middlewares/Auth";
 import { ProductService } from "../service/Product";
 
 @Service()
-@JsonController("/market/product")
+@JsonController("/product")
 export class ProductController {
   @Inject()
   productService: ProductService;

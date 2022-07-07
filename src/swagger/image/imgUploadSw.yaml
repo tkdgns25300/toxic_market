@@ -3,7 +3,7 @@ tags:
     description: 이미지 API
 
 paths:
-  /market/image/upload:
+  /image/upload:
     post:
       tags:
         - Image

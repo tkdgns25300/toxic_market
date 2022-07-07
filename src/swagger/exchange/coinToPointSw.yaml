@@ -1,5 +1,5 @@
 paths:
-  /market/exchange/coin:
+  /exchange/coin:
     post:
       tags:
         - Exchange

@@ -3,7 +3,7 @@ tags:
     description: 코인*포인트 교환 API
 
 paths:
-  /market/exchange/point:
+  /exchange/point:
     post:
       tags:
         - Exchange

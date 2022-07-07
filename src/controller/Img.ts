@@ -14,7 +14,7 @@ import { PageResObj } from "../api";
 import { checkAccessToken } from "../middlewares/Auth";
 import { ImageUploadService } from "../service/ImageUpload";
 @Service()
-@JsonController("/market/image")
+@JsonController("/image")
 export class ImageUploadCtrl {
   @Inject()
   imageUploadService: ImageUploadService;

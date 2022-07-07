@@ -20,7 +20,7 @@ import {
 import { User } from "../entity";
 
 @Service()
-@JsonController("/market/auth")
+@JsonController("/auth")
 export class AuthController {
   @Inject()
   authService: AuthService;

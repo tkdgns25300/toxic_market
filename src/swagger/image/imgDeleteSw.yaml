@@ -1,5 +1,5 @@
 paths:
-  /market/image/delete:
+  /image/delete:
     delete:
       tags:
         - Image

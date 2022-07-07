@@ -15,7 +15,7 @@ import { checkAccessToken } from "../middlewares/Auth";
 import { ExchangeDto } from "../dto";
 
 @Service()
-@JsonController("/market/exchange")
+@JsonController("/exchange")
 export class ExchangeController {
   @Inject()
   exchangeService: ExchangeService;
