@@ -1,4 +1,4 @@
-const CONTRACT_ADDRESS = process.env.TOX_CONTRACT; // test tox coin
+const TOX_CONTRACT_ADDRESS = process.env.TOX_CONTRACT;
 
 const ABI = [
   {
@@ -378,4 +378,4 @@ const ABI = [
   },
 ];
 
-export { ABI, CONTRACT_ADDRESS };
+export { ABI, TOX_CONTRACT_ADDRESS };

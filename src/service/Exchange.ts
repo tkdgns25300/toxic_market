@@ -4,7 +4,7 @@ import Caver from "caver-js";
 import { UserQueryRepo } from "../repository/User";
 import { User } from "../entity";
 import { PageResObj } from "../api";
-import { ABI, CONTRACT_ADDRESS } from "../middlewares/smartContract";
+import { ABI, TOX_CONTRACT_ADDRESS } from "../middlewares/smartContract";
 import { EntityManager, Transaction, TransactionManager } from "typeorm";
 
 const caver = new Caver("https://public-node-api.klaytnapi.com/v1/cypress");
@@ -29,7 +29,7 @@ export class ExchangeService {
     @TransactionManager() manager: EntityManager
   ) {
     // @ts-ignore
-    const contractInstance = caver.contract.create(ABI, CONTRACT_ADDRESS);
+    const contractInstance = caver.contract.create(ABI, TOX_CONTRACT_ADDRESS);
     const user: User = await manager.findOne(User, {
       public_address: public_address,
     });
@@ -63,7 +63,7 @@ export class ExchangeService {
     const amountOfCoins = BigInt(point_amount * 0.097 * Math.pow(10, 18)); // 9.7% of pointAmount COMMISSION 3%
     const commissionFee = BigInt(point_amount * 0.003 * Math.pow(10, 18)); // 0.3% of pointAmount
     // @ts-ignore
-    const contractInstance = caver.contract.create(ABI, CONTRACT_ADDRESS);
+    const contractInstance = caver.contract.create(ABI, TOX_CONTRACT_ADDRESS);
     //sending 97% coin from SaveAccount to User
     await contractInstance.send(
       {
