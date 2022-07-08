@@ -33,6 +33,18 @@ paths:
                         type: number
                       is_seller:
                         type: boolean
+                      email:
+                        type: null
+                      store_name:
+                        type: null
+                      phone:
+                        type: null
+                      name:
+                        type: null
+                      verify_file_url:
+                        type: null
+                      address:
+                        type: null
                       seller_type:
                         type: null
 
