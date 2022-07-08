@@ -1,4 +1,5 @@
-const CONTRACT_ADDRESS = "0x11e4fA3F726A33573Ea73C6Cc1878009E17c5805";
+const CONTRACT_ADDRESS = process.env.TOX_CONTRACT; // test tox coin
+
 const ABI = [
   {
     constant: true,
