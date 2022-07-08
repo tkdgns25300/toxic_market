@@ -70,7 +70,7 @@ paths:
                           format: date
                         user_address:
                           type: string
-                        isVisible:
+                        is_visible:
                           type: boolean
                   error:
                     type: boolean

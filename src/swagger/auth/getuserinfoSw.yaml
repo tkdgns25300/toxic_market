@@ -31,8 +31,10 @@ paths:
                         type: string
                       CF_balance:
                         type: number
-                      isSeller:
+                      is_seller:
                         type: boolean
+                      seller_type:
+                        type: null
 
         500:
           description: "Server Error"

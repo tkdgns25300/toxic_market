@@ -36,5 +36,5 @@ export class ProductDto {
 
   @IsBoolean({ message: "불린값이 아닙니다."})
   @IsOptional()
-  isVisible: boolean;
+  is_visible: boolean;
 }

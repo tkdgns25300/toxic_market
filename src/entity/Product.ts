@@ -77,5 +77,5 @@ export class Product extends BaseEntity {
     default: true,
     comment: "상품 조회 가능 여부"
   })
-  isVisible: boolean;
+  is_visible: boolean;
 }
