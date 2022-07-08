@@ -1,5 +1,6 @@
 require("dotenv").config();
-const rootPath = process.env.NODE_ENV === "development" ? "src" : "dist"
+// const rootPath = process.env.NODE_ENV === "development" ? "src" : "dist"
+const rootPath = "src";
 
 module.exports = {
     type: "mysql",
