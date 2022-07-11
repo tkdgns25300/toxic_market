@@ -26,11 +26,12 @@ export class User extends BaseEntity {
   CF_balance: number;
 
   @Column({
-    type: "boolean",
-    default: false,
+    type: "char",
+    length: 1,
+    default: "X",
     comment: "상품 판매 가능 여부"
   })
-  is_seller: boolean;
+  is_seller: string;
 
   @Column({
     type: "varchar",

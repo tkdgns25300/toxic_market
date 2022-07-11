@@ -32,7 +32,7 @@ paths:
                       CF_balance:
                         type: number
                       is_seller:
-                        type: boolean
+                        type: string
                       email:
                         type: null
                       store_name:

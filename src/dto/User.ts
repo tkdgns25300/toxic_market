@@ -20,9 +20,10 @@ export class UserDto {
   @IsOptional()
   CF_balance: number;
 
-  @IsBoolean({ message: "불린값이 아닙니다."})
+  @IsString({ message: "문자열이 아닙니다." })
+  @MaxLength(1, { message: "최대 1자까지 입력됩니다." })
   @IsOptional()
-  is_seller: boolean;
+  is_seller: string;
 
   @IsString({ message: "문자열이 아닙니다." })
   @MaxLength(100, { message: "최대 100자까지 입력됩니다." })
