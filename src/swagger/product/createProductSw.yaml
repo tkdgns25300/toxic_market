@@ -65,7 +65,7 @@ paths:
                         user_address:
                           type: string
                         is_visible:
-                          type: boolean
+                          type: string
                   msg:
                     type: string
                     description: 메시지

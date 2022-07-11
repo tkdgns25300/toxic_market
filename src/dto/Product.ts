@@ -34,7 +34,8 @@ export class ProductDto {
   @IsOptional()
   user_address: string;
 
-  @IsBoolean({ message: "불린값이 아닙니다."})
+  @IsString({ message: "문자열이 아닙니다." })
+  @MaxLength(1, { message: "최대 1자까지 입력됩니다." })
   @IsOptional()
-  is_visible: boolean;
+  is_visible: string;
 }

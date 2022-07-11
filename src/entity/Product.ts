@@ -73,9 +73,10 @@ export class Product extends BaseEntity {
   user_address: string;
 
   @Column({
-    type: "boolean",
-    default: true,
+    type: "char",
+    length: 1,
+    default: "O",
     comment: "상품 조회 가능 여부"
   })
-  is_visible: boolean;
+  is_visible: string;
 }
