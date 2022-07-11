@@ -17,7 +17,11 @@ export class ProductQueryRepo extends BaseQueryRepo {
     let monthBeforeDate: Date = new Date();
     monthBeforeDate.setDate(monthBeforeDate.getDate() - 30);
     
-    builder.andWhere(`created_at >= :from_date`, {
+    builder
+    .andWhere('is_visible = :is_visible', {
+      is_visible: 'O'
+    })
+    .andWhere(`created_at >= :from_date`, {
       from_date: monthBeforeDate
     });
 
