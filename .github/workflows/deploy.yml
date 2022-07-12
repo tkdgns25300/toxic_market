@@ -12,10 +12,10 @@ jobs:
         uses: fifsky/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
+          user: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           port: 22
-          script: |
+          command: |
             echo 'start code deploy'
             echo 'please wait please...'
             cd toxic-market-place/
