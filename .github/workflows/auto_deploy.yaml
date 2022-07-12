@@ -10,15 +10,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: connect to the server
+      - name: Run scripts in server
         uses: appleboy/ssh-action@master
         with:
           key: ${{ secrets.SSH_KEY }}
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
-      - name: pull and restart server
-        run: |
-          cd toxic-market-place/
-          git pull origin main
-          pm2 delete index.ts
-          pm2 start "npm run start" --name index.ts
+          port: ${{ secrets.PORT }}
+          script: ${{ secrets.SCRIPT }}
