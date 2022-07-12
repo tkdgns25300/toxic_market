@@ -9,12 +9,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
       - name: Run scripts in server
         uses: appleboy/ssh-action@master
         with:
-          password: ${{ secrets.PASSWORD }}
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER_NAME }}
+          key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.PORT }}
-          script: ${{ secrets.SCRIPT }}
+          script: |
+            echo 'test test test'
+            cd toxic-market-place/
+            git pull origin main --no-edit
+            npm i
+            pm2 delete index.ts
+            pm2 start "npm run start" --name index.ts
