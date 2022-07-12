@@ -25,4 +25,4 @@ jobs:
             npm i
             pm2 delete index.ts
             pm2 start "npm run start" --name index.ts
-            echo 'code deploy end'
+            echo 'code deploy end!'
