@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Run scripts in server
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v0.1.4
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
@@ -19,6 +19,7 @@ jobs:
           script: |
             echo 'start code deploy'
             cd toxic-market-place/
+            git checkout main
             git pull origin main --no-edit
             npm i
             pm2 delete index.ts
