@@ -18,3 +18,5 @@ jobs:
           username: ${{ secrets.USER }}
           port: ${{ secrets.PORT }}
           script: ${{ secrets.SCRIPT }}
+
+# test
