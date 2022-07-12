@@ -11,9 +11,35 @@ jobs:
       - name: Run scripts in server
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secret.HOST }}
-          username: ${{ secret.USER }}
-          key: ${{ secret.SSH_KEY }}
+          host: ec2-3-36-153-204.ap-northeast-2.compute.amazonaws.com
+          username: ubuntu
+          key: -----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEAjQiSt5dQ74nYXmNn8AlYopexnFJvSQpNbg3hwotk7uX0FuW1
+0WOlloB9wo7Nae4K0hmS38uSYM9EYbJ77QjnkV11eCXAf/i6fymVEklwOapPrfRe
+ZGOwjiW6vcL9H3A3FrMufN3yKxGlmY+TQYQ0D+tISJvoQ0WdMZCAefvIDBcQbMog
+Jr+EqJ+f+88k6vt+Fw5sgt4axWTCzJz1+Y+6YzAZeBHsEdMhDUTPeRLXbog/hjYZ
+Mncfshkzzrcdecp3DJlXjhQ1tLYTL8ITlJNOJCVSt4TMovgC5/X7eTT93brrZhqF
+Ee6VFWEt1qVprdRSViuFBBCHuUX3v6IYrVK5iQIDAQABAoIBAFy1ewTWomykV6hM
+fkGrUymmwCl7gw4niJjE5Vgmm9XzMc5veGLJt0tE8eaYSu3Mfi54gzU8M+ARv+jd
+FFvQE7FaF2NApdc54RbAde8MeYpeq3w1fGtPoPsAUE53xD8LXBs+9Fs+5vdq5UoZ
+uHpD9plUWDLq0faO53NygxIs8ecHtBMVfrt8Dghz4XTWJwBnjdmbSHQm9RMM9wbS
+6jf8+mTNFRmw2eO6F7+yDrZh/N1r2uUNhILTwzSmod3W1jupYkeSBDUpSWT/AJge
+hNazTlliM05oQ1TMfkhYJbv3i5v0/SNi36x0Nbfe6QyeZsq8Ib6pyuBzAHNuJsfh
+nEqTBWUCgYEAyZa5X0yKgqUHONMjzW6g49iYb9rYQAD+WvO0OKgrJJrps+CNBZn4
+NZ73oFsoa7qV/3CQ3Fd67P+hb3bA5gzD/tSA/+kUEueY1jM/z4m0agZNHhT7Cp5O
+crCz9ytEyph1YFtm+vXJJX6F+BBGvtmfui+FqgTdZjgiyHH4WgFMEKsCgYEAsxmh
+w6U3BnGotYucX8KTn44xnVJPC2GMuiAlTZp20dktkIhA8NP/GXYNKMqo9XwGZ5t4
+LIemFopDY3Um79wf67nIrmgsGYSG11e6dNVV7spw8TdJx1wm3LGzxpA2BlaBttie
+ncbpIGPQbmPR8gRNhn3fIs7dpsynjFLoZLXh5psCgYEAnZyiwsftY8fzpZIvY+cj
+FAG87XeFrEUambIBLmsNkEkuf90JZV/EmOf5Y/7h05jGvjkciao8CiCz75pBp5xD
+gXJUicGKWF2LOa5ILdPUozDaCrMMtHihjTpq+s1xs5UP8I6GLaEN66rIw/K13XH5
+WHDfaNb0437wcxfovTZWapECgYBYeYYO9zPqjAVSwcgbCi0Q+haKaBnCPotdevnS
+j0a5PbcjmhuynJd9hXLUvuCefIlRb1z7anti0SSfIkV84lomgd2gQrfeVzihcqYa
+hzTvRLRshOp+gIh2J5butVjq4psrr3ET8ipCJOzXS5pwGy4NDWtIb7bRanIugNpq
+ver9lwKBgBNXlom1oorBb3OS3+0LuwEV3mzxasjLAUkd6SPbJxV7Cgz44q4JbNUk
+/r7Upfonr1H7Y0GF2p5YHOA19qKOk7XKbyZdmYMFV5DpsA5YeL7wCPIqmwsUGExX
+J5Er6hPhECu2cqPrfRVTCHDryuJb+U7ybeeKjihqpaQyNXpouv1r
+-----END RSA PRIVATE KEY-----
           port: 22
           script: |
             echo 'start code deploy'
