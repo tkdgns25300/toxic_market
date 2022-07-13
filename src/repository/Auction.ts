@@ -14,7 +14,7 @@ export class AuctionQueryRepo extends BaseQueryRepo {
   findAllApproved(param: PageReq): Promise<[Array<any>, number]> {
     return createQueryBuilder("auction")
         .andWhere('is_approved = :is_approved', {
-          is_approved: true
+          is_approved: "O"
         })
         .skip(param.getOffset())
         .take(param.getLimit())
@@ -23,7 +23,7 @@ export class AuctionQueryRepo extends BaseQueryRepo {
 
   findUserAuctions(param: PageReq, creator_address:string): Promise<[Array<any>, number]> {
     return createQueryBuilder("auction")
-        .andWhere('creator = :creator', {
+        .andWhere('creator_address = :creator', {
           creator: creator_address
         })
         .skip(param.getOffset())
@@ -35,7 +35,10 @@ export class AuctionQueryRepo extends BaseQueryRepo {
     return createQueryBuilder("auction")
         .leftJoinAndSelect("Auction.creator", "user")
         .andWhere('is_approved = :is_approved', {
-          is_approved: false
+          is_approved: "X"
+        })
+        .andWhere('start_at > :start_at', {
+            start_at: new Date()
         })
         .skip(param.getOffset())
         .take(param.getLimit())
@@ -45,9 +48,9 @@ export class AuctionQueryRepo extends BaseQueryRepo {
         return createQueryBuilder("auction")
             .leftJoinAndSelect("Auction.creator", "user")
             .andWhere('is_approved = :is_approved', {
-                is_approved: true
+                is_approved: "O"
             })
-            .andWhere('end_at < :end_at', {
+            .andWhere('end_at > :end_at', {
                 end_at: new Date()
             })
             .skip(param.getOffset())
@@ -58,9 +61,9 @@ export class AuctionQueryRepo extends BaseQueryRepo {
         return createQueryBuilder("auction")
             .leftJoinAndSelect("Auction.creator", "user")
             .andWhere('is_approved = :is_approved', {
-                is_approved: true
+                is_approved: "O"
             })
-            .andWhere('end_at => :end_at', {
+            .andWhere('end_at <= :end_at', {
                 end_at: new Date()
             })
             .skip(param.getOffset())

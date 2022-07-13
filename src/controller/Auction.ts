@@ -3,7 +3,7 @@ import {
   Body,
   Get,
   JsonController,
-  Param, Patch,
+  Param,
   Post,
   QueryParams,
   Res,
@@ -13,7 +13,7 @@ import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
 import { PageReq, PageResObj } from "../api";
 import {AuctionDto, BidDto} from "../dto";
-import { checkAccessToken } from "../middlewares/Auth";
+import {checkAccessToken, checkAdminAccessToken} from "../middlewares/Auth";
 import { AuctionService } from "../service/Auction";
 
 @Service()
@@ -39,6 +39,7 @@ export class AuctionController {
  *   PATCH /finish/:id  /update
  * */
   @Get("/approved")
+  @UseBefore(checkAccessToken)
   public async getAllApproved(@QueryParams() param: PageReq) {
   try {
     return await this.auctionService.findAllApproved(param);
@@ -51,6 +52,7 @@ export class AuctionController {
   }
 
   @Get("/user")
+  @UseBefore(checkAccessToken)
   public async getUserAuctions(@QueryParams() param: PageReq, @Res() res: Response) {
     try {
       const { aud } = res.locals.jwtPayload;
@@ -78,7 +80,7 @@ export class AuctionController {
   }
 
   @Get("/find/:id")
-  // @UseBefore(checkAccessToken)
+  @UseBefore(checkAccessToken)
   public async getOne(@Param("id") id: number, @Res() res: Response) {
     try {
       const { admin } = res.locals.jwtPayload;
@@ -91,12 +93,12 @@ export class AuctionController {
     }
   }
 
-  @Post("/bid/:id")
+  @Post("/bid")
   @UseBefore(checkAccessToken)
   public async bid(@Body() params: BidDto, @Res() res: Response) {
     try {
       const { aud } = res.locals.jwtPayload;
-      return await this.auctionService.bid(params, aud);
+      return await this.auctionService.bid(params, aud, null);
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);
@@ -106,6 +108,7 @@ export class AuctionController {
   }
 
   @Get("/unapproved")
+  @UseBefore(checkAdminAccessToken)
   public async getAllNotApproved(@QueryParams() param: PageReq) {
     try {
       return await this.auctionService.findAllNotApproved(param);
@@ -118,6 +121,7 @@ export class AuctionController {
   }
 
   @Get("/ongoing")
+  @UseBefore(checkAdminAccessToken)
   public async getAllApprovedAndNotFinished(@QueryParams() param: PageReq, @Res() res: Response) {
     try {
       const { aud } = res.locals.jwtPayload;
@@ -131,6 +135,7 @@ export class AuctionController {
   }
 
   @Get("/finished")
+  @UseBefore(checkAdminAccessToken)
   public async getAllApprovedAndFinished(@QueryParams() param: PageReq, @Res() res: Response) {
     try {
       return await this.auctionService.findAllApprovedAndFinished(param);
@@ -142,10 +147,24 @@ export class AuctionController {
     }
   }
 
-  @Patch("/update/:id")
-  public async update(@Param("id") id: number,@Body() paramObj: AuctionDto, @Res() res: Response) {
+  @Post("/confirm/:id")
+  @UseBefore(checkAdminAccessToken)
+  public async confirm(@Param("id") id: number,@Body() paramObj: AuctionDto, @Res() res: Response) {
     try {
-      return await this.auctionService.update(paramObj,id);
+      return await this.auctionService.confirm(paramObj,id);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
+
+  @Post("/finish/:id")
+  @UseBefore(checkAdminAccessToken)
+  public async finish(@Param("id") id: number,@Body() paramObj: AuctionDto, @Res() res: Response) {
+    try {
+      return await this.auctionService.finish(paramObj,id, null);
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);
