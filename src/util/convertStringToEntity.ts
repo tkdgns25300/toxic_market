@@ -1,14 +1,18 @@
 import {
   User,
   Product,
-  Log
+  Log,
+  Auction,
+  BidLog
 } from "../entity";
 
 export const convertStringToEntity = (entityName: string) => {
   const convertList = {
     ["User"]: User,
     ["Product"]: Product,
-    ["Log"]: Log
+    ["Log"]: Log,
+    ["Auction"]: Auction,
+    ["BidLog"]: BidLog
   };
   return convertList[entityName];
 };

@@ -26,6 +26,11 @@ export class UserDto {
   is_seller: string;
 
   @IsString({ message: "문자열이 아닙니다." })
+  @MaxLength(1, { message: "최대 1자까지 입력됩니다." })
+  @IsOptional()
+  is_admin: string;
+
+  @IsString({ message: "문자열이 아닙니다." })
   @MaxLength(100, { message: "최대 100자까지 입력됩니다." })
   @IsOptional()
   email: string;
