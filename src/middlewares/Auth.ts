@@ -71,6 +71,7 @@ export const generateAccessToken = (user: User) => {
   return jwt.sign(
     {
       aud: user.public_address, // 이 토큰을 사용할 수신자
+      admin: user.is_admin === "O"
     },
     process.env.JWT_TOKEN_KEY,
     { expiresIn: "24h" }

@@ -34,6 +34,15 @@ export class User extends BaseEntity {
   is_seller: string;
 
   @Column({
+    type: "char",
+    length: 1,
+    default: "X",
+    comment: "관리자 여부"
+  })
+  is_admin: string;
+
+
+  @Column({
     type: "varchar",
     length: 100,
     default: null,
