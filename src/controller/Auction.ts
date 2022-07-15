@@ -15,6 +15,7 @@ import { PageReq, PageResObj } from "../api";
 import {AuctionDto, BidDto} from "../dto";
 import {checkAccessToken, checkAdminAccessToken} from "../middlewares/Auth";
 import { AuctionService } from "../service/Auction";
+import {AuctionSearchReq} from "../api/request/AuctionSearchReq";
 
 @Service()
 @JsonController("/auction")
@@ -109,7 +110,7 @@ export class AuctionController {
 
   @Get("/unapproved")
   @UseBefore(checkAdminAccessToken)
-  public async getAllNotApproved(@QueryParams() param: PageReq) {
+  public async getAllNotApproved(@QueryParams() param: AuctionSearchReq) {
     try {
       return await this.auctionService.findAllNotApproved(param);
     } catch (err) {
@@ -122,7 +123,7 @@ export class AuctionController {
 
   @Get("/ongoing")
   @UseBefore(checkAdminAccessToken)
-  public async getAllApprovedAndNotFinished(@QueryParams() param: PageReq, @Res() res: Response) {
+  public async getAllApprovedAndNotFinished(@QueryParams() param: AuctionSearchReq, @Res() res: Response) {
     try {
       const { aud } = res.locals.jwtPayload;
       return await this.auctionService.findAllApprovedAndNotFinished(param);
@@ -136,7 +137,7 @@ export class AuctionController {
 
   @Get("/finished")
   @UseBefore(checkAdminAccessToken)
-  public async getAllApprovedAndFinished(@QueryParams() param: PageReq, @Res() res: Response) {
+  public async getAllApprovedAndFinished(@QueryParams() param: AuctionSearchReq, @Res() res: Response) {
     try {
       return await this.auctionService.findAllApprovedAndFinished(param);
     } catch (err) {

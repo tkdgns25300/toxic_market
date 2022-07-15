@@ -21,6 +21,20 @@ paths:
           schema:
             type: integer
 
+        - name: name
+          in: query
+          required: false
+          description: 사용자 이름
+          schema:
+            type: string
+
+        - name: title
+          in: query
+          required: false
+          description: 상품명
+          schema:
+            type: string
+
       responses:
         200:
           description: "OK"

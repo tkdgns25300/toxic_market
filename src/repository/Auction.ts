@@ -3,6 +3,7 @@ import { Service } from "typedi";
 import { Auction } from "../entity";
 import { BaseQueryRepo } from "./Base";
 import { PageReq } from "../api";
+import {AuctionSearchReq} from "../api/request/AuctionSearchReq";
 
 @Service()
 @EntityRepository(Auction)
@@ -31,9 +32,13 @@ export class AuctionQueryRepo extends BaseQueryRepo {
         .getManyAndCount();
   }
 
-  findAllNotApproved(param: PageReq): Promise<[Array<any>, number]> {
+  findAllNotApproved(param: AuctionSearchReq): Promise<[Array<any>, number]> {
     return createQueryBuilder("auction")
         .leftJoinAndSelect("Auction.creator", "user")
+        .where(`user.name like :name`, {
+            name: `%${param.getName}%`,
+        })
+        .andWhere("title like :title", {title: `%${param.getTitle}%`})
         .andWhere('is_approved = :is_approved', {
           is_approved: "X"
         })
@@ -44,9 +49,14 @@ export class AuctionQueryRepo extends BaseQueryRepo {
         .take(param.getLimit())
         .getManyAndCount();
   }
-    getAllApprovedAndNotFinished(param: PageReq): Promise<[Array<any>, number]> {
+
+    getAllApprovedAndNotFinished(param: AuctionSearchReq): Promise<[Array<any>, number]> {
         return createQueryBuilder("auction")
             .leftJoinAndSelect("Auction.creator", "user")
+            .where(`user.name like :name`, {
+                name: `%${param.getName}%`,
+            })
+            .andWhere("title like :title", {title: `%${param.getTitle}%`})
             .andWhere('is_approved = :is_approved', {
                 is_approved: "O"
             })
@@ -57,9 +67,13 @@ export class AuctionQueryRepo extends BaseQueryRepo {
             .take(param.getLimit())
             .getManyAndCount();
     }
-    getAllApprovedAndFinished(param: PageReq): Promise<[Array<any>, number]> {
+    getAllApprovedAndFinished(param: AuctionSearchReq): Promise<[Array<any>, number]> {
         return createQueryBuilder("auction")
             .leftJoinAndSelect("Auction.creator", "user")
+            .where(`user.name like :name`, {
+                name: `%${param.getName}%`,
+            })
+            .andWhere("title like :title", {title: `%${param.getTitle}%`})
             .andWhere('is_approved = :is_approved', {
                 is_approved: "O"
             })

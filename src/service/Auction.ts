@@ -1,12 +1,13 @@
 import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
+import { EntityManager, Transaction, TransactionManager } from "typeorm";
 
 import { AuctionQueryRepo } from "../repository/Auction";
 import {Auction, BidLog, User} from "../entity";
 import {AuctionDto, BidDto} from "../dto";
 import { PageReq, PageResList, PageResObj } from "../api";
-import { EntityManager, Transaction, TransactionManager } from "typeorm";
 import {UserQueryRepo} from "../repository/User";
+import {AuctionSearchReq} from "../api/request/AuctionSearchReq";
 
 @Service()
 export class AuctionService {
@@ -16,7 +17,7 @@ export class AuctionService {
     readonly userQueryRepo: UserQueryRepo,
   ) {}
 
-  async findAllApprovedAndFinished(param: PageReq): Promise<PageResList<Auction>> {
+  async findAllApprovedAndFinished(param: AuctionSearchReq): Promise<PageResList<Auction>> {
     const result = await this.auctionQueryRepo.getAllApprovedAndFinished(param);
     return new PageResList<Auction>(
         result[1],
@@ -28,7 +29,7 @@ export class AuctionService {
     );
   }
 
-  async findAllApprovedAndNotFinished(param: PageReq): Promise<PageResList<Auction>> {
+  async findAllApprovedAndNotFinished(param: AuctionSearchReq): Promise<PageResList<Auction>> {
     const result = await this.auctionQueryRepo.getAllApprovedAndNotFinished(param);
     return new PageResList<Auction>(
         result[1],
@@ -61,7 +62,7 @@ export class AuctionService {
     return new PageResObj(result, "Auction 조회에 성공했습니다.");
   }
 
-  async findAllNotApproved(param: PageReq): Promise<PageResList<Auction>> {
+  async findAllNotApproved(param: AuctionSearchReq): Promise<PageResList<Auction>> {
     const result = await this.auctionQueryRepo.findAllNotApproved(param);
     return new PageResList<Auction>(
         result[1],
