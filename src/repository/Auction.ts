@@ -3,6 +3,7 @@ import { Service } from "typedi";
 import { Auction } from "../entity";
 import { BaseQueryRepo } from "./Base";
 import { PageReq } from "../api";
+import {AuctionSearchReq} from "../api/request/AuctionSearchReq";
 
 @Service()
 @EntityRepository(Auction)
@@ -14,7 +15,7 @@ export class AuctionQueryRepo extends BaseQueryRepo {
   findAllApproved(param: PageReq): Promise<[Array<any>, number]> {
     return createQueryBuilder("auction")
         .andWhere('is_approved = :is_approved', {
-          is_approved: true
+          is_approved: "O"
         })
         .skip(param.getOffset())
         .take(param.getLimit())
@@ -23,7 +24,7 @@ export class AuctionQueryRepo extends BaseQueryRepo {
 
   findUserAuctions(param: PageReq, creator_address:string): Promise<[Array<any>, number]> {
     return createQueryBuilder("auction")
-        .andWhere('creator = :creator', {
+        .andWhere('creator_address = :creator', {
           creator: creator_address
         })
         .skip(param.getOffset())
@@ -31,36 +32,52 @@ export class AuctionQueryRepo extends BaseQueryRepo {
         .getManyAndCount();
   }
 
-  findAllNotApproved(param: PageReq): Promise<[Array<any>, number]> {
+  findAllNotApproved(param: AuctionSearchReq): Promise<[Array<any>, number]> {
     return createQueryBuilder("auction")
         .leftJoinAndSelect("Auction.creator", "user")
+        .where(`user.name like :name`, {
+            name: `%${param.getName}%`,
+        })
+        .andWhere("title like :title", {title: `%${param.getTitle}%`})
         .andWhere('is_approved = :is_approved', {
-          is_approved: false
+          is_approved: "X"
+        })
+        .andWhere('start_at > :start_at', {
+            start_at: new Date()
         })
         .skip(param.getOffset())
         .take(param.getLimit())
         .getManyAndCount();
   }
-    getAllApprovedAndNotFinished(param: PageReq): Promise<[Array<any>, number]> {
+
+    getAllApprovedAndNotFinished(param: AuctionSearchReq): Promise<[Array<any>, number]> {
         return createQueryBuilder("auction")
             .leftJoinAndSelect("Auction.creator", "user")
-            .andWhere('is_approved = :is_approved', {
-                is_approved: true
+            .where(`user.name like :name`, {
+                name: `%${param.getName}%`,
             })
-            .andWhere('end_at < :end_at', {
+            .andWhere("title like :title", {title: `%${param.getTitle}%`})
+            .andWhere('is_approved = :is_approved', {
+                is_approved: "O"
+            })
+            .andWhere('end_at > :end_at', {
                 end_at: new Date()
             })
             .skip(param.getOffset())
             .take(param.getLimit())
             .getManyAndCount();
     }
-    getAllApprovedAndFinished(param: PageReq): Promise<[Array<any>, number]> {
+    getAllApprovedAndFinished(param: AuctionSearchReq): Promise<[Array<any>, number]> {
         return createQueryBuilder("auction")
             .leftJoinAndSelect("Auction.creator", "user")
-            .andWhere('is_approved = :is_approved', {
-                is_approved: true
+            .where(`user.name like :name`, {
+                name: `%${param.getName}%`,
             })
-            .andWhere('end_at => :end_at', {
+            .andWhere("title like :title", {title: `%${param.getTitle}%`})
+            .andWhere('is_approved = :is_approved', {
+                is_approved: "O"
+            })
+            .andWhere('end_at <= :end_at', {
                 end_at: new Date()
             })
             .skip(param.getOffset())

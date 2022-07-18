@@ -84,7 +84,7 @@ export class AuthController {
       const user = new User();
 
       user.public_address = address;
-
+      user.is_admin = "O"
       const token = generateAccessToken(user);
       return new PageResObj({ token }, "로그인 성공했습니다.", false);
     } catch (err) {

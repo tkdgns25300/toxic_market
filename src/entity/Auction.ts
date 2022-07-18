@@ -46,6 +46,7 @@ export class Auction extends BaseEntity {
 
   @Column({
     type: "varchar",
+    length: 200,
     comment: "판매자 연락 링크",
   })
   contact: string;
@@ -73,7 +74,7 @@ export class Auction extends BaseEntity {
   @Column({
     type: "char",
     length: 1,
-    default: "O",
+    default: "X",
     comment: "관리자 허락 여부"
   })
   is_approved: string;
@@ -81,7 +82,7 @@ export class Auction extends BaseEntity {
   @Column({
     type: "char",
     length: 1,
-    default: "O",
+    default: "X",
     comment: "경매의 성공적인 마무리 여부"
   })
   is_succeed: string;
@@ -90,6 +91,7 @@ export class Auction extends BaseEntity {
     type: "char",
     length: 42,
     comment: "제일 높은 금액을 입찰한 사용자 주소",
+    nullable: true
   })
   bidder: string;
 
@@ -102,9 +104,17 @@ export class Auction extends BaseEntity {
   @OneToMany(() => BidLog, (detail) => detail.auction_id)
   bid_logs: BidLog[];
 
-  @ManyToOne(() => User, (admin) => admin.public_address, {
+  @Column({
+    type: "char",
+    length: 42,
+    comment: "생성한 사용자",
+    nullable: true
+  })
+  creator_address: string;
+
+  @ManyToOne(() => User, (user) => user.public_address, {
     createForeignKeyConstraints: false,
   })
-  @JoinColumn({ name: "creator" })
+  @JoinColumn({ name: "creator_address" })
   creator: string;
 }

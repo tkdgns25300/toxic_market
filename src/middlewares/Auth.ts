@@ -45,7 +45,7 @@ export const checkAccessToken = (
  * @param res
  * @param next
  */
-export const checkSuperAccessToken = (
+export const checkAdminAccessToken = (
   req: Request,
   res: Response,
   next: NextFunction
@@ -53,11 +53,12 @@ export const checkSuperAccessToken = (
   const token = extractAccessToken(req);
   try {
     const jwtPayload = jwt.verify(token, process.env.JWT_TOKEN_KEY);
-    if (!jwtPayload.is_super) {
+    res.locals.jwtPayload = jwtPayload;
+    if (!jwtPayload.admin) {
       throw new Error();
     }
   } catch (error) {
-    return res.status(401).send({ message: "슈퍼 관리자가 아닙니다." });
+    return res.status(401).send({ message: "관리자가 아닙니다." });
   }
 
   next();
