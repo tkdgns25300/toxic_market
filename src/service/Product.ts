@@ -7,12 +7,15 @@ import { ProductDto } from "../dto";
 import { PageReq, PageResList, PageResObj } from "../api";
 import { LogQueryRepo } from "../repository/Log";
 import { EntityManager, Transaction, TransactionManager } from "typeorm";
+import {UserQueryRepo} from "../repository/User";
+import {UserSellerType} from "../enum";
 
 @Service()
 export class ProductService {
   constructor(
     @InjectRepository()
     readonly ProductQueryRepo: ProductQueryRepo,
+    readonly userQueryRepo: UserQueryRepo,
     readonly LogQueryRepo: LogQueryRepo
   ) {}
 
@@ -45,12 +48,19 @@ export class ProductService {
   }
 
   async update(paramObj: ProductDto, id: number): Promise<PageResObj<Product | {}>> {
-    // 수량이 0일 경우 null : 무제한
-    if (paramObj.amount === 0) paramObj.amount = null;
+
     let product = await this.ProductQueryRepo.findOne("id", id);
     if(product.user_address !== paramObj.user_address) {
       return new PageResObj({}, "상품을 생성한 사용자만 수정 가능합니다.", true);
     }
+
+    let user = await this.userQueryRepo.findOne("public_address", paramObj.user_address)
+    if(user.seller_type === UserSellerType.INDIVIDUAL) {
+      delete paramObj?.price
+      delete paramObj?.amount
+      delete paramObj?.title
+    }
+
     await this.ProductQueryRepo.update(paramObj,"id", id);
     return new PageResObj({}, "Product 생성에 성공했습니다.");
   }
