@@ -3,7 +3,7 @@ import { InjectRepository } from "typeorm-typedi-extensions";
 
 import { ProductQueryRepo } from "../repository/Product";
 import { Log, Product, User } from "../entity";
-import { LogDto, ProductDto } from "../dto";
+import { ProductDto } from "../dto";
 import { PageReq, PageResList, PageResObj } from "../api";
 import { LogQueryRepo } from "../repository/Log";
 import { EntityManager, Transaction, TransactionManager } from "typeorm";
@@ -42,6 +42,17 @@ export class ProductService {
       product.identifiers[0].id
     );
     return new PageResObj(result, "Product 생성에 성공했습니다.");
+  }
+
+  async update(paramObj: ProductDto, id: number): Promise<PageResObj<Product | {}>> {
+    // 수량이 0일 경우 null : 무제한
+    if (paramObj.amount === 0) paramObj.amount = null;
+    let product = await this.ProductQueryRepo.findOne("id", id);
+    if(product.user_address !== paramObj.user_address) {
+      return new PageResObj({}, "상품을 생성한 사용자만 수정 가능합니다.", true);
+    }
+    await this.ProductQueryRepo.update(paramObj,"id", id);
+    return new PageResObj({}, "Product 생성에 성공했습니다.");
   }
 
   @Transaction()
@@ -88,7 +99,7 @@ export class ProductService {
       seller: seller.public_address,
       buyer: buyer.public_address,
     });
-    logItem = await manager.save(Log, logItem);
+    await manager.save(Log, logItem);
 
     const result: Product = await manager.findOne(Product, { id: id });
     return new PageResObj(result, "Product 구매에 성공했습니다.");

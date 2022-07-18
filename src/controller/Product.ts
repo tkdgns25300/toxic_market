@@ -3,7 +3,7 @@ import {
   Body,
   Get,
   JsonController,
-  Param,
+  Param, Patch,
   Post,
   QueryParams,
   Res,
@@ -42,7 +42,6 @@ export class ProductController {
       return await this.productService.findOne(id);
     } catch (err) {
       if (err instanceof QueryFailedError) {
-        console.log("Instance of QueryFailedError!");
         return new PageResObj({}, err.message, true);
       }
       return new PageResObj({}, err.message, true);
@@ -59,7 +58,21 @@ export class ProductController {
       return await this.productService.create(params);
     } catch (err) {
       if (err instanceof QueryFailedError) {
-        console.log("Instance of QueryFailedError!");
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
+
+  @Patch("/update/:id")
+  @UseBefore(checkAccessToken)
+  public async update(@Param("id") id: number,@Body() params: ProductDto, @Res() res: Response) {
+    try {
+      const { aud } = res.locals.jwtPayload;
+      params.user_address = aud;
+      return await this.productService.update(params, id);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);
       }
       return new PageResObj({}, err.message, true);
@@ -78,7 +91,6 @@ export class ProductController {
       return await this.productService.buy(id, obj.amount, aud, null);
     } catch (err) {
       if (err instanceof QueryFailedError) {
-        console.log("Instance of QueryFailedError!");
         return new PageResObj({}, err.message, true);
       }
       return new PageResObj({}, err.message, true);
