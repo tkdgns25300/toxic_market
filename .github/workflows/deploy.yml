@@ -1,0 +1,29 @@
+name: deploy
+
+on:
+  push:
+    branches: [ "main" ]
+jobs:
+  AUTO_DEPLOY:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run scripts in server
+        uses: fifsky/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          user: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          command: |
+            echo 'start code deploy'
+            echo 'please wait please...'
+            cd toxic-market-place/
+            git checkout main
+            git pull origin main --no-edit
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
+            npm i
+            pm2 delete index.ts
+            pm2 start "npm run start" --name index.ts
+            echo 'code deploy end!'
