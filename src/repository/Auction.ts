@@ -17,6 +17,9 @@ export class AuctionQueryRepo extends BaseQueryRepo {
         .andWhere('is_approved = :is_approved', {
           is_approved: "O"
         })
+        .andWhere('start_at < :start_at', {
+            start_at: new Date()
+        })
         .skip(param.getOffset())
         .take(param.getLimit())
         .getManyAndCount();
