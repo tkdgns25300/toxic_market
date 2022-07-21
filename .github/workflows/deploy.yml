@@ -20,6 +20,7 @@ jobs:
             echo 'please wait please...'
             cd toxic-market-place/
             git checkout main
+            git stash
             git pull origin main --no-edit
             export NVM_DIR=~/.nvm
             source ~/.nvm/nvm.sh
