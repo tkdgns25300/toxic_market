@@ -39,6 +39,21 @@ export class AuctionController {
  *   PATCH /confirm/:id  /update
  *   PATCH /finish/:id  /update
  * */
+
+  @Get("/newest")
+  @UseBefore(checkAccessToken)
+  public async getNewest() {
+  try {
+    return await this.auctionService.getNewest();
+  } catch (err) {
+    if (err instanceof QueryFailedError) {
+      return new PageResObj({}, err.message, true);
+    }
+    return new PageResObj({}, err.message, true);
+  }
+}
+
+
   @Get("/approved")
   @UseBefore(checkAccessToken)
   public async getAllApproved(@QueryParams() param: PageReq) {
@@ -125,7 +140,6 @@ export class AuctionController {
   @UseBefore(checkAdminAccessToken)
   public async getAllApprovedAndNotFinished(@QueryParams() param: AuctionSearchReq, @Res() res: Response) {
     try {
-      const { aud } = res.locals.jwtPayload;
       return await this.auctionService.findAllApprovedAndNotFinished(param);
     } catch (err) {
       if (err instanceof QueryFailedError) {

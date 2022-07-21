@@ -2,7 +2,7 @@ import {
   Entity,
   Column,
   CreateDateColumn,
-  PrimaryGeneratedColumn, OneToMany, OneToOne, JoinColumn, ManyToOne,
+  PrimaryGeneratedColumn, OneToMany, JoinColumn, ManyToOne,
 } from "typeorm";
 import { BaseEntity } from "./Base";
 import {BidLog} from "./BidLog";
@@ -74,7 +74,8 @@ export class Auction extends BaseEntity {
   @Column({
     type: "char",
     length: 1,
-    default: "X",
+    nullable: true,
+    default: null,
     comment: "관리자 허락 여부"
   })
   is_approved: string;
@@ -82,7 +83,8 @@ export class Auction extends BaseEntity {
   @Column({
     type: "char",
     length: 1,
-    default: "X",
+    nullable: true,
+    default: null,
     comment: "경매의 성공적인 마무리 여부"
   })
   is_succeed: string;

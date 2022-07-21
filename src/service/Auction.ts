@@ -16,6 +16,16 @@ export class AuctionService {
     readonly auctionQueryRepo: AuctionQueryRepo,
     readonly userQueryRepo: UserQueryRepo,
   ) {}
+  async getNewest(): Promise<PageResObj<Auction | {}>> {
+
+    const result = await this.auctionQueryRepo.getNewest( );
+      result?.bid_logs?.map(a => {
+        a.bidder = `${a.bidder.slice(0,3)}******${a.bidder.slice(-3)}`
+      })
+
+    return new PageResObj(result, "Auction 조회에 성공했습니다.");
+  }
+
 
   async findAllApprovedAndFinished(param: AuctionSearchReq): Promise<PageResList<Auction>> {
     const result = await this.auctionQueryRepo.getAllApprovedAndFinished(param);
