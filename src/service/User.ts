@@ -4,7 +4,7 @@ import { InjectRepository } from "typeorm-typedi-extensions";
 import { UserQueryRepo } from "../repository/User";
 import { User } from "../entity";
 import { UserDto } from "../dto";
-import { PageReq, PageResList, PageResObj } from "../api";
+import { PageResList, PageResObj, UserSearchReq} from "../api";
 
 @Service()
 export class UserService {
@@ -13,8 +13,8 @@ export class UserService {
     readonly userQueryRepo: UserQueryRepo,
   ) {}
 
-  async findAll(param: PageReq): Promise<PageResList<User>> {
-    const result = await this.userQueryRepo.findAll(param);
+  async findAll(param: UserSearchReq): Promise<PageResList<User>> {
+    const result = await this.userQueryRepo.search(param);
     return new PageResList<User>(
       result[1],
       param.limit,

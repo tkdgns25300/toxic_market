@@ -76,7 +76,7 @@ export class AuctionService {
     );
   }
 
-  
+
   async findOne(id: number, withUser: boolean): Promise<PageResObj<Auction | {}>> {
     let joinTable = [{property: "Auction.bid_logs", alias: "bid_log"}]
     if(withUser) { //Available for managers
