@@ -24,7 +24,7 @@ jobs:
             git pull origin main --no-edit
             export NVM_DIR=~/.nvm
             source ~/.nvm/nvm.sh
-            npm i
+            npm i --force
             pm2 delete index.ts
             pm2 start "npm run start" --name index.ts
             echo 'code deploy end!'
