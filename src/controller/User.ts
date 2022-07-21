@@ -11,7 +11,7 @@ import {
 } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
-import { PageReq, PageResObj } from "../api";
+import { PageResObj, UserSearchReq} from "../api";
 import { UserDto } from "../dto";
 import {checkAdminAccessToken} from "../middlewares/Auth";
 import { UserService } from "../service/User";
@@ -24,7 +24,7 @@ export class UserController {
 
   @Get("/find")
   @UseBefore(checkAdminAccessToken)
-  public async getAll(@QueryParams() param: PageReq, @Res() res: Response) {
+  public async getAll(@QueryParams() param: UserSearchReq, @Res() res: Response) {
     try {
       return await this.userService.findAll(param);
     } catch (err) {

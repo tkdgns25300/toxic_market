@@ -64,19 +64,29 @@ export class AuctionService {
   }
 
 
-  async findBidLogs(param: PageReq, creator_address: string): Promise<PageResList<Auction>> {
+  async findBidLogs(param: PageReq, creator_address: string): Promise<PageResList<BidLog>> {
     const result = await this.auctionQueryRepo.getBidLogs(param, creator_address);
-    return new PageResList<Auction>(
+    let auctions = {}
+    let filtered = result[0].map((el: BidLog) => {
+
+      // @ts-ignore
+      if(auctions[`${el.auction_id.id}`]){
+        return null
+      }
+      // @ts-ignore
+      auctions[`${el.auction_id.id}`] = el.auction_id.id;
+      return el;
+    })
+
+    return new PageResList<BidLog>(
         result[1],
         param.limit,
-        result[0].map((el: Auction) => {
-          return el;
-        }),
+        filtered.filter((el: BidLog) => (el !== null)),
         "Auction 목록을 찾는데 성공했습니다."
     );
   }
 
-  
+
   async findOne(id: number, withUser: boolean): Promise<PageResObj<Auction | {}>> {
     let joinTable = [{property: "Auction.bid_logs", alias: "bid_log"}]
     if(withUser) { //Available for managers

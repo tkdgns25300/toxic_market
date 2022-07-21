@@ -23,7 +23,21 @@ paths:
           required: false
           description: page number
           schema:
-            type: integer     
+            type: integer
+
+        - name: name
+          in: query
+          required: false
+          description: 사용자 이름
+          schema:
+            type: string
+
+        - name: public_address
+          in: query
+          required: false
+          description: 지갑 주소
+          schema:
+            type: string
 
       responses:
         200:
