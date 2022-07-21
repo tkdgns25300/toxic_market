@@ -10,7 +10,6 @@ import {
 import { routingControllerOptions } from "./util/RoutingConfig";
 import { useSwagger } from "./util/swagger";
 import path from "path";
-const cors = require('cors');
 
 export class App {
   public app: express.Application;
@@ -37,12 +36,7 @@ export class App {
   private setMiddlewares(): void {
     this.app.use(bodyParser.json({ limit: '20mb' }));
     this.app.use(bodyParser.urlencoded({ extended: false }));
-    this.app.use(cors({
-      origin: 'https://www.toxicnara.com',
-      credentials: true
-    }))
   }
-
 
   // express 서버 스타트
   public async createExpressServer(): Promise<void> {
