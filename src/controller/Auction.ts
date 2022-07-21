@@ -40,6 +40,21 @@ export class AuctionController {
  *   PATCH /finish/:id  /update
  * */
 
+@Get("/bids")
+@UseBefore(checkAccessToken)
+public async getBids(@QueryParams() param: PageReq, @Res() res: Response) {
+  try {
+    const { aud } = res.locals.jwtPayload;
+    return await this.auctionService.findBidLogs(param, aud);
+  } catch (err) {
+    if (err instanceof QueryFailedError) {
+      return new PageResObj({}, err.message, true);
+    }
+    return new PageResObj({}, err.message, true);
+  }
+}
+
+
   @Get("/newest")
   @UseBefore(checkAccessToken)
   public async getNewest() {

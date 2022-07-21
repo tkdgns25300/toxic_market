@@ -72,8 +72,7 @@ export class User extends BaseEntity {
   @Column({
     type: "varchar",
     length: 20,
-    default: null,
-    nullable: true,
+    default: "",
     comment: "판매자 이름"
   })
   name: string;

@@ -63,6 +63,20 @@ export class AuctionService {
     );
   }
 
+
+  async findBidLogs(param: PageReq, creator_address: string): Promise<PageResList<Auction>> {
+    const result = await this.auctionQueryRepo.getBidLogs(param, creator_address);
+    return new PageResList<Auction>(
+        result[1],
+        param.limit,
+        result[0].map((el: Auction) => {
+          return el;
+        }),
+        "Auction 목록을 찾는데 성공했습니다."
+    );
+  }
+
+  
   async findOne(id: number, withUser: boolean): Promise<PageResObj<Auction | {}>> {
     let joinTable = [{property: "Auction.bid_logs", alias: "bid_log"}]
     if(withUser) { //Available for managers
@@ -135,7 +149,9 @@ export class AuctionService {
       return new PageResObj({}, "경매를 생성하는 사람은 입찰할 수 없습니다.", true);
     }
     let newBidder = await manager.findOne(User, {public_address: public_address})
-
+    if(public_address === auction.bidder) {
+      paramObj.bid_amount -= auction.bid
+    }
     if(newBidder.CF_balance < paramObj.bid_amount) {
       return new PageResObj({}, "잔액이 부족합니다.", true);
     }
@@ -147,7 +163,9 @@ export class AuctionService {
     }
     newBidder.CF_balance -= paramObj.bid_amount;
     await manager.update(User, {public_address: newBidder.public_address}, newBidder);
-
+    if(public_address === auction.bidder) {
+      paramObj.bid_amount += auction.bid
+    }
     let bidLog = {
       bidder: public_address,
       bid: paramObj.bid_amount,
@@ -166,8 +184,12 @@ export class AuctionService {
     return new PageResObj(result, "입찰하는데 성공했습니다.");
   }
 
-  async confirm(paramObj: AuctionDto, id:number): Promise<PageResObj<Auction | {}>> {
 
+  async confirm(paramObj: AuctionDto, id:number): Promise<PageResObj<Auction | {}>> {
+    if(!paramObj.is_approved){
+      await this.auctionQueryRepo.delete("id",id)
+      return new PageResObj({}, "경메 신청을 거부하는데 성공했습니다.");
+    }
     let auction = await this.auctionQueryRepo.findOne("id", id);
     auction.is_approved = paramObj.is_approved
     await this.auctionQueryRepo.update(auction,"id", id);

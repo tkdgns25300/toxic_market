@@ -13,7 +13,7 @@ export class AuctionQueryRepo extends BaseQueryRepo {
     super("auction", "Auction");
   }
 
-    async getNewest() {
+  async getNewest() {
         let result =await createQueryBuilder("auction")
             .leftJoinAndSelect("Auction.bid_logs", "bid_log")
             .andWhere('is_approved = :is_approved', {
@@ -31,6 +31,17 @@ export class AuctionQueryRepo extends BaseQueryRepo {
         return new entity_().getEntity(this.schemaClassName, result);
     }
 
+  getBidLogs(param: PageReq, address: string): Promise<[Array<any>, number]> {
+        return createQueryBuilder("bid_log")
+            .leftJoinAndSelect("BidLog.auction_id", "auction")
+            .andWhere('BidLog.bidder = :bidder', {
+                bidder: address
+            })
+            .orderBy('BidLog.created_at', 'DESC')
+            .skip(param.getOffset())
+            .take(param.getLimit())
+            .getManyAndCount();
+    }
 
   findAllApproved(param: PageReq): Promise<[Array<any>, number]> {
     return createQueryBuilder("auction")
@@ -71,7 +82,7 @@ export class AuctionQueryRepo extends BaseQueryRepo {
         .getManyAndCount();
   }
 
-    getAllApprovedAndNotFinished(param: AuctionSearchReq): Promise<[Array<any>, number]> {
+  getAllApprovedAndNotFinished(param: AuctionSearchReq): Promise<[Array<any>, number]> {
         return createQueryBuilder("auction")
             .leftJoinAndSelect("Auction.creator", "user")
             .where(`user.name like :name`, {
@@ -88,7 +99,8 @@ export class AuctionQueryRepo extends BaseQueryRepo {
             .take(param.getLimit())
             .getManyAndCount();
     }
-    getAllApprovedAndFinished(param: AuctionSearchReq): Promise<[Array<any>, number]> {
+
+  getAllApprovedAndFinished(param: AuctionSearchReq): Promise<[Array<any>, number]> {
         return createQueryBuilder("auction")
             .leftJoinAndSelect("Auction.creator", "user")
             .where(`user.name like :name`, {
