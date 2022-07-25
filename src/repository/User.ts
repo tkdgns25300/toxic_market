@@ -13,7 +13,7 @@ export class UserQueryRepo extends BaseQueryRepo {
 
     search(param: UserSearchReq): Promise<[Array<any>, number]> {
       return createQueryBuilder("user")
-          .where(`user.name like :name`, {
+          .where(`name like :name`, {
             name: `%${param.getName}%`,
           })
           .andWhere("public_address like :public_address", {public_address: `%${param.getAddress}%`})
