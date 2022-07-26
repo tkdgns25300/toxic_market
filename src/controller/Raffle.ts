@@ -95,5 +95,17 @@ export class RaffleController {
     }
   }
 
-
+  @Get("/find/:id")
+  @UseBefore(checkAccessToken)
+  public async getOne(@Param("id") id: number, @Res() res: Response) {
+    try {
+      const { admin } = res.locals.jwtPayload;
+      return await this.raffleService.findOne(id, admin);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
 }

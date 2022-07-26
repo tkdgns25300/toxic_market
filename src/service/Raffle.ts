@@ -88,4 +88,5 @@ export class RaffleService {
     );
   }
 
+  async findOne(id: number)
 }
