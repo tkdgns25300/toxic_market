@@ -2,7 +2,7 @@ import { Response } from "express";
 import { Body, Get, JsonController, Param, Post, QueryParams, Res, UseBefore } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
-import { PageResObj } from "../api";
+import { PageReq, PageResObj } from "../api";
 import { RaffleSearchReq } from "../api/request/RaffleSearchReq";
 import { RaffleConfirmDto, RaffleDto } from "../dto/Raffle";
 import { checkAccessToken, checkAdminAccessToken } from "../middlewares/Auth";
@@ -30,6 +30,19 @@ export class RaffleController {
     }
   }
 
+  @Post("/confirm/:id")
+  @UseBefore(checkAdminAccessToken)
+  public async confirm(@Param("id") id: number, @Body() params: RaffleConfirmDto) {
+    try {
+      return await this.raffleService.confirm(params, id);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
+
   @Get("/unapproved")
   @UseBefore(checkAdminAccessToken)
   public async getAllNotApproved(@QueryParams() params: RaffleSearchReq) {
@@ -43,9 +56,35 @@ export class RaffleController {
     }
   }
 
+  @Get("/ongoing")
+  @UseBefore(checkAdminAccessToken)
+  public async getAllApprovedAndNotFinished(@QueryParams() params: RaffleSearchReq) {
+    try {
+      return await this.raffleService.findAllApprovedAndNotFinished(params);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
+
+  @Get("/finished")
+  @UseBefore(checkAdminAccessToken)
+  public async getAllApprovedAndFinished(@QueryParams() params: RaffleSearchReq) {
+    try {
+      return await this.raffleService.findAllApprovedAndFinished(params);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
+
   @Get("/approved")
   @UseBefore(checkAdminAccessToken)
-  public async getAllApproved(@QueryParams() params: RaffleSearchReq) {
+  public async getAllApproved(@QueryParams() params: PageReq) {
     try {
       return await this.raffleService.findAllApproved(params);
     } catch (err) {
@@ -56,16 +95,5 @@ export class RaffleController {
     }
   }
 
-  @Post("/confirm/:id")
-  @UseBefore(checkAdminAccessToken)
-  public async confirm(@Param("id") id: number, @Body() params: RaffleConfirmDto) {
-    try {
-      return await this.raffleService.confirm(params, id);
-    } catch (err) {
-      if (err instanceof QueryFailedError) {
-        return new PageResObj({}, err.message, true);
-      }
-      return new PageResObj({}, err.message, true);
-    }
-  }
+
 }

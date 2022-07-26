@@ -1,5 +1,6 @@
 import { Service } from "typedi";
 import { createQueryBuilder, EntityRepository } from "typeorm";
+import { PageReq } from "../api";
 import { RaffleSearchReq } from "../api/request/RaffleSearchReq";
 import { Raffle } from "../entity";
 import { BaseQueryRepo } from "./Base";
@@ -36,7 +37,62 @@ export class RaffleQueryRepo extends BaseQueryRepo {
     return builder.getManyAndCount();
   }
 
-  findAllApproved(param: RaffleSearchReq): Promise<[Array<any>, number]> {
+  
+  getAllApprovedAndNotFinished(param: RaffleSearchReq): Promise<[Array<any>, number]> {
+    const builder = createQueryBuilder("raffle");
+    
+    builder
+    .leftJoinAndSelect("Raffle.creator", "user")
+    .select([
+      "Raffle",
+      "user.name"
+    ])
+    .where('is_approved = :is_approved', {
+      is_approved: "O"
+    })
+    .andWhere('end_at > :end_at', {
+      end_at: new Date()
+    })
+
+    if (param.name) {
+      builder.andWhere('name like :name', { name: `%${param.name}%` });
+    }
+    if (param.title) {
+      builder.andWhere('title like :title', { title: `%${param.title}%` });
+    }
+
+    builder.skip(param.getOffset()).take(param.getLimit());
+    return builder.getManyAndCount();
+  }
+  
+  getAllApprovedAndFinished(param: RaffleSearchReq): Promise<[Array<any>, number]> {
+    const builder = createQueryBuilder("raffle");
+    
+    builder
+    .leftJoinAndSelect("Raffle.creator", "user")
+    .select([
+      "Raffle",
+      "user.name"
+    ])
+    .where('is_approved = :is_approved', {
+      is_approved: "O"
+    })
+    .andWhere('end_at <= :end_at', {
+      end_at: new Date()
+    })
+
+    if (param.name) {
+      builder.andWhere('name like :name', { name: `%${param.name}%` });
+    }
+    if (param.title) {
+      builder.andWhere('title like :title', { title: `%${param.title}%` });
+    }
+
+    builder.skip(param.getOffset()).take(param.getLimit());
+    return builder.getManyAndCount();
+  }
+
+  findAllApproved(param: PageReq): Promise<[Array<any>, number]> {
     const builder = createQueryBuilder("raffle");
     
     builder
