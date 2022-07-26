@@ -33,16 +33,32 @@ export class ExchangeService {
     const user: User = await manager.findOne(User, {
       public_address: public_address,
     });
-    user.CF_balance = user.CF_balance + amount * 10; // 1 TOX = 10 POINT
+    user.CF_balance = user.CF_balance + amount * 10 * 0.95; // 1 TOX = 10 POINT - 5% commission
     await manager.update(User, public_address, user);
+
+    const amountOfCoins = BigInt(amount * 0.95 * Math.pow(10, 18)); // 95% of coin COMMISSION 5%
+    const commissionFee = BigInt(amount * 0.05 * Math.pow(10, 18)); // 5% of coin
+
     //sending coin from user to Save Account
     await contractInstance.send(
       { from: keyring.address, gas: "0x4bfd200" },
       "transferFrom",
       public_address,
       keyring.address,
-      `${BigInt(amount * Math.pow(10, 18))}`
+        `${amountOfCoins}`
     );
+    //sending 5% coin from SavingAccount to Commission Wallet
+    await contractInstance.send(
+        {
+          from: keyring.address,
+          gas: "0x4bfd200",
+        },
+        "transferFrom",
+        public_address,
+        process.env.COMMISSION_WALLET,
+        `${commissionFee}`
+    );
+
     return new PageResObj(user, "TOX 코인을 포인트로 교환하는데 성공했습니다.");
   }
 
@@ -60,8 +76,8 @@ export class ExchangeService {
     }
     user.CF_balance = user.CF_balance - point_amount;
     await manager.update(User, public_address, user);
-    const amountOfCoins = BigInt(point_amount * 0.097 * Math.pow(10, 18)); // 9.7% of pointAmount COMMISSION 3%
-    const commissionFee = BigInt(point_amount * 0.003 * Math.pow(10, 18)); // 0.3% of pointAmount
+    const amountOfCoins = BigInt(point_amount * 0.090 * Math.pow(10, 18)); // 9% of pointAmount COMMISSION 3%
+    const commissionFee = BigInt(point_amount * 0.010 * Math.pow(10, 18)); // 1% of pointAmount
     // @ts-ignore
     const contractInstance = caver.contract.create(ABI, TOX_CONTRACT_ADDRESS);
     //sending 97% coin from SaveAccount to User
