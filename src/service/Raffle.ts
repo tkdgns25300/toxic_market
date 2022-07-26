@@ -1,6 +1,7 @@
 import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
-import { PageResObj } from "../api";
+import { PageResList, PageResObj } from "../api";
+import { RaffleSearchReq } from "../api/request/RaffleSearchReq";
 import { RaffleDto } from "../dto";
 import { RaffleConfirmDto } from "../dto/Raffle";
 import { Raffle, User } from "../entity";
@@ -26,6 +27,22 @@ export class RaffleService {
       newRaffle.identifiers[0].id
     );
     return new PageResObj(result, "추첨 생성에 성공했습니다.")
+  }
+
+  async findAllNotApproved(paramObj: RaffleSearchReq): Promise<PageResList<Raffle>> {
+    const result = await this.raffleQueryRepo.findAllNotApproved(paramObj);
+    return new PageResList<Raffle> (
+        result[1],
+        paramObj.limit,
+        result[0].map((el: Raffle) => {
+          return el;
+        }),
+        "Raffle 목록을 찾는데 성공했습니다."
+    );
+  }
+
+  async findAllApproved() {
+
   }
 
   async confirm(paramObj: RaffleConfirmDto, id: number): Promise<PageResObj<Raffle | {}>> {

@@ -1,8 +1,9 @@
 import { Response } from "express";
-import { Body, JsonController, Param, Post, Res, UseBefore } from "routing-controllers";
+import { Body, Get, JsonController, Param, Post, QueryParams, Res, UseBefore } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
 import { PageResObj } from "../api";
+import { RaffleSearchReq } from "../api/request/RaffleSearchReq";
 import { RaffleConfirmDto, RaffleDto } from "../dto/Raffle";
 import { checkAccessToken, checkAdminAccessToken } from "../middlewares/Auth";
 import { RaffleService } from "../service/Raffle";
@@ -21,6 +22,19 @@ export class RaffleController {
       const { aud } = res.locals.jwtPayload;
       params.creator_address = aud;
       return await this.raffleService.create(params);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
+
+  @Get("/unapproved")
+  @UseBefore(checkAdminAccessToken)
+  public async getAllNotApproved(@QueryParams() params: RaffleSearchReq) {
+    try {
+      return await this.raffleService.findAllNotApproved(params);
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);

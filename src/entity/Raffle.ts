@@ -4,9 +4,12 @@ import {
   CreateDateColumn,
   PrimaryGeneratedColumn,
   OneToMany,
+  ManyToOne,
+  JoinColumn,
 } from "typeorm";
 import { BaseEntity } from "./Base";
 import { RaffleLog } from "./RaffleLog";
+import { User } from "./User";
 
 @Entity("raffle")
 export class Raffle extends BaseEntity {
@@ -57,13 +60,6 @@ export class Raffle extends BaseEntity {
   created_at: Date;
 
   @Column({
-    type: "char",
-    length: 42,
-    comment: "등록자 지갑주소",
-  })
-  creator_address: string;
-
-  @Column({
     type: "varchar",
     length: 200,
     nullable: true,
@@ -98,4 +94,10 @@ export class Raffle extends BaseEntity {
 
   @OneToMany(() => RaffleLog, (raffle_log) => raffle_log.id, { cascade: true })
   raffle_logs: RaffleLog[];
+
+  @ManyToOne(() => User, (user) => user.public_address, {
+    createForeignKeyConstraints: false
+  })
+  @JoinColumn({ name: "creator_address" })
+  creator: string;
 }
