@@ -43,6 +43,19 @@ export class RaffleController {
     }
   }
 
+  @Get("/approved")
+  @UseBefore(checkAdminAccessToken)
+  public async getAllApproved(@QueryParams() params: RaffleSearchReq) {
+    try {
+      return await this.raffleService.findAllApproved(params);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
+
   @Post("/confirm/:id")
   @UseBefore(checkAdminAccessToken)
   public async confirm(@Param("id") id: number, @Body() params: RaffleConfirmDto) {

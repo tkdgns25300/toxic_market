@@ -16,9 +16,13 @@ export class RaffleQueryRepo extends BaseQueryRepo {
     
     builder
     .leftJoinAndSelect("Raffle.creator", "user")
+    .select([
+      "Raffle",
+      "user.name"
+    ])
     .where('is_approved IS NULL')
-    .andWhere('start_at > :start_at', {
-      start_at: new Date()
+    .andWhere('end_at > :end_at', {
+      end_at: new Date()
     })
 
     if (param.name) {
@@ -27,6 +31,18 @@ export class RaffleQueryRepo extends BaseQueryRepo {
     if (param.title) {
       builder.andWhere('title like :title', { title: `%${param.title}%` });
     }
+    
+    builder.skip(param.getOffset()).take(param.getLimit());
+    return builder.getManyAndCount();
+  }
+
+  findAllApproved(param: RaffleSearchReq): Promise<[Array<any>, number]> {
+    const builder = createQueryBuilder("raffle");
+    
+    builder
+    .where('is_approved = :is_approved', {
+      is_approved: "O"
+    })
     
     builder.skip(param.getOffset()).take(param.getLimit());
     return builder.getManyAndCount();

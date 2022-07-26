@@ -41,8 +41,16 @@ export class RaffleService {
     );
   }
 
-  async findAllApproved() {
-
+  async findAllApproved(paramObj: RaffleSearchReq): Promise<PageResList<Raffle>> {
+    const result = await this.raffleQueryRepo.findAllApproved(paramObj);
+    return new PageResList<Raffle> (
+        result[1],
+        paramObj.limit,
+        result[0].map((el: Raffle) => {
+          return el;
+        }),
+        "Raffle 목록을 찾는데 성공했습니다."
+    );
   }
 
   async confirm(paramObj: RaffleConfirmDto, id: number): Promise<PageResObj<Raffle | {}>> {
