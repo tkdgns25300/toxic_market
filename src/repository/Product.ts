@@ -23,7 +23,8 @@ export class ProductQueryRepo extends BaseQueryRepo {
     })
     .andWhere(`created_at >= :from_date`, {
       from_date: monthBeforeDate
-    });
+    })
+    .orderBy('created_at', 'DESC');
 
     builder.skip(param.getOffset()).take(param.getLimit());
 
