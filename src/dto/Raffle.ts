@@ -47,3 +47,9 @@ export class RaffleDto {
   @IsOptional()
   is_succeed: string;
 }
+
+export class RaffleConfirmDto {
+  @IsString({ message: "문자열이 아닙니다." })
+  @IsOptional()
+  is_approved: string;
+}

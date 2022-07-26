@@ -3,7 +3,7 @@ import { Body, JsonController, Param, Post, Res, UseBefore } from "routing-contr
 import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
 import { PageResObj } from "../api";
-import { RaffleDto } from "../dto/Raffle";
+import { RaffleConfirmDto, RaffleDto } from "../dto/Raffle";
 import { checkAccessToken, checkAdminAccessToken } from "../middlewares/Auth";
 import { RaffleService } from "../service/Raffle";
 
@@ -29,7 +29,16 @@ export class RaffleController {
     }
   }
 
-  // @Post("/confirm/:id")
-  // @UseBefore(checkAdminAccessToken)
-  // public async confirm(@Param("id") id: number)
+  @Post("/confirm/:id")
+  @UseBefore(checkAdminAccessToken)
+  public async confirm(@Param("id") id: number, @Body() params: RaffleConfirmDto) {
+    try {
+      return await this.raffleService.confirm(params, id);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
 }
