@@ -19,7 +19,8 @@ export class RaffleQueryRepo extends BaseQueryRepo {
     .leftJoinAndSelect("Raffle.creator", "user")
     .select([
       "Raffle",
-      "user.name"
+      "user.name",
+      "user.phone"
     ])
     .where('is_approved IS NULL')
     .andWhere('end_at > :end_at', {
@@ -45,7 +46,8 @@ export class RaffleQueryRepo extends BaseQueryRepo {
     .leftJoinAndSelect("Raffle.creator", "user")
     .select([
       "Raffle",
-      "user.name"
+      "user.name",
+      "user.phone"
     ])
     .where('is_approved = :is_approved', {
       is_approved: "O"
@@ -72,7 +74,8 @@ export class RaffleQueryRepo extends BaseQueryRepo {
     .leftJoinAndSelect("Raffle.creator", "user")
     .select([
       "Raffle",
-      "user.name"
+      "user.name",
+      "user.phone"
     ])
     .where('is_approved = :is_approved', {
       is_approved: "O"
