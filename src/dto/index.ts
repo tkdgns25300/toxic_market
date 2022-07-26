@@ -5,5 +5,7 @@ import { ExchangeDto } from "./Exchange";
 import { ImageUploadDto } from "./ImageUpload";
 import { AuctionDto } from "./Auction";
 import { BidDto } from "./Bid";
+import { RaffleDto } from "./Raffle";
+import { RaffleLogDto } from "./RaffleLog";
 
-export { ExchangeDto, UserDto, ProductDto, LogDto, ImageUploadDto, AuctionDto, BidDto };
+export { ExchangeDto, UserDto, ProductDto, LogDto, ImageUploadDto, AuctionDto, BidDto, RaffleDto, RaffleLogDto };

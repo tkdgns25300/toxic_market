@@ -79,7 +79,7 @@ export class Raffle extends BaseEntity {
 
   @Column({
     type: "text",
-    default: "",
+    nullable: true,
     comment: "서브 이미지 주소",
   })
   sub_img_url: string;
