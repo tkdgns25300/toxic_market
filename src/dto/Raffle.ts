@@ -7,9 +7,6 @@ export class RaffleDto {
   @IsInt()
   price: number;
 
-  @IsInt()
-  amount: number;
-
   @IsDate()
   @Type(() => Date)
   start_at: Date;

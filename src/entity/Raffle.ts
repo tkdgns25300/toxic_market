@@ -21,12 +21,6 @@ export class Raffle extends BaseEntity {
   })
   price: number;
 
-  @Column({
-    type: "int",
-    comment: "수량",
-  })
-  amount: number;
-
   @CreateDateColumn({
     comment: "추첨 시작일",
   })
