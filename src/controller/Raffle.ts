@@ -4,7 +4,7 @@ import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
 import { PageReq, PageResObj } from "../api";
 import { RaffleSearchReq } from "../api/request/RaffleSearchReq";
-import { RaffleConfirmDto, RaffleDto } from "../dto/Raffle";
+import { ApplyDto, RaffleConfirmDto, RaffleDto } from "../dto/Raffle";
 import { checkAccessToken, checkAdminAccessToken } from "../middlewares/Auth";
 import { RaffleService } from "../service/Raffle";
 
@@ -20,7 +20,7 @@ export class RaffleController {
     try {
       // 등록시 필요한 유저 지갑은 request로 받는 게 아닌 토큰에서 추출
       const { aud } = res.locals.jwtPayload;
-      params.creator_address = aud;
+      params.creator = aud;
       return await this.raffleService.create(params);
     } catch (err) {
       if (err instanceof QueryFailedError) {
@@ -83,7 +83,7 @@ export class RaffleController {
   }
 
   @Get("/approved")
-  @UseBefore(checkAdminAccessToken)
+  @UseBefore(checkAccessToken)
   public async getAllApproved(@QueryParams() params: PageReq) {
     try {
       return await this.raffleService.findAllApproved(params);
@@ -95,12 +95,12 @@ export class RaffleController {
     }
   }
 
-  @Get("/find/:id")
+  @Post("/apply")
   @UseBefore(checkAccessToken)
-  public async getOne(@Param("id") id: number, @Res() res: Response) {
+  public async aply(@Body() params: ApplyDto, @Res() res: Response) {
     try {
-      const { admin } = res.locals.jwtPayload;
-      return await this.raffleService.findOne(id, admin);
+      const { aud } = res.locals.jwtPayload;
+      return await this.raffleService.apply(params, aud, null);
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);
@@ -108,4 +108,17 @@ export class RaffleController {
       return new PageResObj({}, err.message, true);
     }
   }
+
+  // @Get("/find/:id")
+  // @UseBefore(checkAccessToken)
+  // public async getOne(@Param("id") id: number, @Res() res: Response) {
+  //   try {
+  //     return await this.raffleService.getOne(id);
+  //   } catch (err) {
+  //     if (err instanceof QueryFailedError) {
+  //       return new PageResObj({}, err.message, true);
+  //     }
+  //     return new PageResObj({}, err.message, true);
+  //   }
+  // }
 }

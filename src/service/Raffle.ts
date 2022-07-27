@@ -1,10 +1,11 @@
 import { Service } from "typedi";
+import { EntityManager, Transaction, TransactionManager } from "typeorm";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { PageReq, PageResList, PageResObj } from "../api";
 import { RaffleSearchReq } from "../api/request/RaffleSearchReq";
 import { RaffleDto } from "../dto";
-import { RaffleConfirmDto } from "../dto/Raffle";
-import { Raffle, User } from "../entity";
+import { ApplyDto, RaffleConfirmDto } from "../dto/Raffle";
+import { Raffle, RaffleLog, User } from "../entity";
 import { RaffleQueryRepo } from "../repository/Raffle";
 import { UserQueryRepo } from "../repository/User";
 
@@ -17,7 +18,7 @@ export class RaffleService {
   ) {}
 
   async create(paramObj: RaffleDto): Promise<PageResObj<Raffle | {}>> {
-    const user: User = await this.userQueryRepo.findOne("public_address", paramObj.creator_address);
+    const user: User = await this.userQueryRepo.findOne("public_address", paramObj.creator);
     if (user.is_seller !== 'O') {
       return new PageResObj({}, "판매자 권한이 없습니다.", true);
     }
@@ -88,5 +89,38 @@ export class RaffleService {
     );
   }
 
-  async findOne(id: number)
+  @Transaction()
+  async apply(paramObj: ApplyDto, public_address: string, @TransactionManager() manager: EntityManager): Promise<PageResObj<Raffle | {}>> {
+    let raffle = await manager.query('select * from raffle where id = ?', [paramObj.raffle_id])
+    raffle = raffle[0]
+    // 추첨 기간에만 응모가능
+    const today = new Date();
+    if (raffle.start_at > today || raffle.end_at < today) {
+      return new PageResObj({}, "추첨 기간이 아닙니다.", true);
+    }
+    // 추첨 생성자는 입찰 불가
+    if (raffle.creator_address === public_address) {
+      return new PageResObj({}, "추첨 생성자는 참가할 수 없습니다.", true);
+    }
+    // 포인트 빼기 (잔액 확인)
+    const applicant = await manager.findOne(User, public_address);
+    if (applicant.CF_balance < raffle.price * paramObj.apply_amount) {
+      return new PageResObj({}, "잔액이 부족합니다.", true);
+    }
+    applicant.CF_balance -= raffle.price * paramObj.apply_amount
+    await manager.update(User, { public_address: applicant.public_address }, applicant);
+    // 로그 생성
+    const raffleLog = {
+      applicant: applicant.public_address,
+      amount: paramObj.apply_amount,
+      raffle_id: paramObj.raffle_id
+    }
+    await manager.save(RaffleLog, raffleLog);
+    const result: Raffle = await manager.findOne(Raffle, raffle.id);
+    return new PageResObj(result, "응모에 성공했습니다.");
+  }
+
+  // async getOne(id: number): Promise<PageResObj<Raffle | {}>> {
+  //   return new PageResObj({}, "판매자 권한이 없습니다.", true);
+  // }
 }
