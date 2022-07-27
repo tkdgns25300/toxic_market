@@ -4,7 +4,7 @@ import { EntityManager, Transaction, TransactionManager } from "typeorm";
 
 import { AuctionQueryRepo } from "../repository/Auction";
 import {Auction, BidLog, Product, User} from "../entity";
-import {AuctionDto, BidDto, ProductDto} from "../dto";
+import {AuctionDto, BidDto} from "../dto";
 import { PageReq, PageResList, PageResObj } from "../api";
 import {UserQueryRepo} from "../repository/User";
 import {AuctionSearchReq} from "../api/request/AuctionSearchReq";
@@ -248,19 +248,19 @@ export class AuctionService {
   async update(paramObj: AuctionDto, id: number): Promise<PageResObj<Product | {}>> {
 
     let product = await this.auctionQueryRepo.findOne("id", id);
-    let user = await this.userQueryRepo.findOne("public_address", paramObj.creator_address)
-    if(product.creator_address !== paramObj.creator_address) {
+    if(product.creator_address.toLowerCase() !== paramObj.creator_address.toLocaleLowerCase()) {
       return new PageResObj({}, "상품을 생성한 사용자만 수정 가능합니다.", true);
     }
-
+    let user = await this.userQueryRepo.findOne("public_address", paramObj.creator_address)
 
     if(user.seller_type === UserSellerType.INDIVIDUAL) {
       delete paramObj?.price
+      delete paramObj?.start_at
       delete paramObj?.end_at
       delete paramObj?.title
     }
 
     await this.auctionQueryRepo.update(paramObj,"id", id);
-    return new PageResObj({}, "Product 생성에 성공했습니다.");
+    return new PageResObj({}, "경매 편집에 성공했습니다.");
   }
 }
