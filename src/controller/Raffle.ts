@@ -122,4 +122,17 @@ export class RaffleController {
       return new PageResObj({}, err.message, true);
     }
   }
+
+  @Post("/select/:id")
+  @UseBefore(checkAdminAccessToken)
+  public async selectWinner(@Param("id") id: number) {
+    try {
+      return await this.raffleService.selectWinner(id);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
 }

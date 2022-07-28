@@ -122,7 +122,7 @@ export class RaffleService {
     return new PageResObj(result, "응모에 성공했습니다.");
   }
 
-  async getOne(id: number, is_admin: boolean): Promise<PageResObj<Raffle | {}>> {
+  async getOne(id: number, is_admin: boolean): Promise<PageResObj<any | {}>> {
     const result: any = await this.raffleQueryRepo.getOne(id)
     // 관리자가 아닌 경우 응모자 지갑 별표처리
     if (!is_admin) {
@@ -131,5 +131,25 @@ export class RaffleService {
       })
     }
     return new PageResObj(result, "Raffle 조회에 성공했습니다.");
+  }
+
+  async selectWinner(raffle_id: number): Promise<PageResObj<Raffle | {}>> {
+    // 끝난 응모인지 확인
+    const raffle: any = await this.raffleQueryRepo.getOne(raffle_id);
+    // if (raffle.end_at >= new Date()) {
+    //   return new PageResObj({}, "아직 응모기간이 종료되지 않았습니다.", true);  
+    // }
+    // 응모자가 1명 이상인지 확인
+    if (raffle.raffle_logs.length === 0) {
+      // 자동으로 응모실패 처리
+      await this.raffleQueryRepo.update({ is_succeed: "X" } , "id", raffle_id);
+      return new PageResObj({}, "응모자 0명으로 응모실패 처리하였습니다.", true);  
+    }
+    // 당첨자 선정
+    const ranNum = Math.floor(Math.random() * raffle.raffle_logs.length);
+    const winnerLogId = raffle.raffle_logs[ranNum].id;
+    await this.raffleLogQueryRepo.selectWinner(raffle_id, winnerLogId);
+    const result = await this.raffleQueryRepo.getOne(raffle_id);
+    return new PageResObj(result, "당첨자 선정에 성공하였습니다.");
   }
 }
