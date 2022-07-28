@@ -7,6 +7,7 @@ import { RaffleDto } from "../dto";
 import { ApplyDto, RaffleConfirmDto } from "../dto/Raffle";
 import { Raffle, RaffleLog, User } from "../entity";
 import { RaffleQueryRepo } from "../repository/Raffle";
+import { RaffleLogQueryRepo } from "../repository/RaffleLog";
 import { UserQueryRepo } from "../repository/User";
 
 @Service()
@@ -14,7 +15,8 @@ export class RaffleService {
   constructor(
     @InjectRepository()
     readonly raffleQueryRepo: RaffleQueryRepo,
-    readonly userQueryRepo: UserQueryRepo
+    readonly userQueryRepo: UserQueryRepo,
+    readonly raffleLogQueryRepo: RaffleLogQueryRepo
   ) {}
 
   async create(paramObj: RaffleDto): Promise<PageResObj<Raffle | {}>> {
@@ -120,7 +122,14 @@ export class RaffleService {
     return new PageResObj(result, "응모에 성공했습니다.");
   }
 
-  // async getOne(id: number): Promise<PageResObj<Raffle | {}>> {
-  //   return new PageResObj({}, "판매자 권한이 없습니다.", true);
-  // }
+  async getOne(id: number, is_admin: boolean): Promise<PageResObj<Raffle | {}>> {
+    const result: any = await this.raffleQueryRepo.getOne(id)
+    // 관리자가 아닌 경우 응모자 지갑 별표처리
+    if (!is_admin) {
+      result.raffle_logs.map(r => {
+        r.applicant = `${r.applicant.slice(0,3)}******${r.applicant.slice(-3)}`
+      })
+    }
+    return new PageResObj(result, "Raffle 조회에 성공했습니다.");
+  }
 }

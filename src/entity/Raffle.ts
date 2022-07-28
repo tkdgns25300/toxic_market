@@ -92,7 +92,7 @@ export class Raffle extends BaseEntity {
   })
   is_succeed: string;
 
-  @OneToMany(() => RaffleLog, (raffle_log) => raffle_log.id, { cascade: true })
+  @OneToMany(() => RaffleLog, (detail) => detail.raffle_id, { cascade: true })
   raffle_logs: RaffleLog[];
 
   @ManyToOne(() => User, (user) => user.public_address, {

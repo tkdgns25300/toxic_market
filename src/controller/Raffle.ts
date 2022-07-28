@@ -109,16 +109,17 @@ export class RaffleController {
     }
   }
 
-  // @Get("/find/:id")
-  // @UseBefore(checkAccessToken)
-  // public async getOne(@Param("id") id: number, @Res() res: Response) {
-  //   try {
-  //     return await this.raffleService.getOne(id);
-  //   } catch (err) {
-  //     if (err instanceof QueryFailedError) {
-  //       return new PageResObj({}, err.message, true);
-  //     }
-  //     return new PageResObj({}, err.message, true);
-  //   }
-  // }
+  @Get("/find/:id")
+  @UseBefore(checkAccessToken)
+  public async getOne(@Param("id") id: number, @Res() res: Response) {
+    try {
+      const is_admin = res.locals.jwtPayload.admin;
+      return await this.raffleService.getOne(id, is_admin);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
 }

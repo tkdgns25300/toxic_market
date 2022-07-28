@@ -106,4 +106,23 @@ export class RaffleQueryRepo extends BaseQueryRepo {
     builder.skip(param.getOffset()).take(param.getLimit());
     return builder.getManyAndCount();
   }
+
+  getOne(id: number) {
+    const builder = createQueryBuilder("raffle");
+
+    builder
+    .leftJoinAndSelect("Raffle.raffle_logs", "raffle_log")
+    .leftJoinAndSelect("Raffle.creator", "user")
+    .select([
+      "Raffle",
+      "user.name",
+      "user.phone",
+      "raffle_log"
+    ])
+    .where('Raffle.id = :id', {
+      id: id
+    })
+
+    return builder.getOne();
+  }
 }

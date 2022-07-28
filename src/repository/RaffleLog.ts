@@ -7,6 +7,6 @@ import { BaseQueryRepo } from "./Base";
 @EntityRepository(RaffleLog)
 export class RaffleLogQueryRepo extends BaseQueryRepo {
   constructor() {
-    super("rafflt_log", "RaffleLog");
+    super("raffle_log", "RaffleLog");
   }
 }
