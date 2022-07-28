@@ -123,7 +123,7 @@ export class RaffleService {
     return new PageResObj(result, "응모에 성공했습니다.");
   }
 
-  async getOne(id: number, is_admin: boolean): Promise<PageResObj<any | {}>> {
+  async getOne(id: number, is_admin: boolean): Promise<PageResObj<Raffle | {}>> {
     const result: any = await this.raffleQueryRepo.getOne(id)
     // 관리자가 아닌 경우 응모자 지갑 별표처리
     if (!is_admin) {
@@ -154,13 +154,12 @@ export class RaffleService {
     return new PageResObj(result, "당첨자 선정에 성공하였습니다.");
   }
 
-  // async findRaffleLogs(paramObj: RaffleLogSearchReq): Promise<PageResList<any>> {
-  async findRaffleLogs(paramObj: RaffleLogSearchReq) {
+  async findRaffleLogs(paramObj: RaffleLogSearchReq): Promise<PageResList<Raffle | {}>> {
     if (
       (paramObj.buyer === undefined && paramObj.seller === undefined) ||
       (paramObj.buyer !== undefined && paramObj.seller !== undefined)
     ) {
-      return new PageResObj({}, "buyer와 seller중 한 가지만 입력해주세요.", true);  
+      return new PageResList(0, 0, [], "buyer와 seller중 한 가지만 입력해주세요.", true)
     }
     const result = await this.raffleQueryRepo.getRaffleLogs(paramObj);
     return new PageResList<any>(
@@ -171,5 +170,17 @@ export class RaffleService {
       }),
       "Raffle Log 목록을 찾는데 성공했습니다."
     );
+  }
+
+  async findUserRaffles(param: PageReq, creator_address: string): Promise<PageResList<Raffle>> {
+    const result = await this.raffleQueryRepo.findUserRaffles(param, creator_address);
+    return new PageResList<Raffle>(
+      result[1],
+      param.limit,
+      result[0].map((el: Raffle) => {
+        return el;
+      }),
+      "Raffle 목록을 찾는데 성공했습니다."
+  );
   }
 }

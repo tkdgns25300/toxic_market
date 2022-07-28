@@ -149,4 +149,18 @@ export class RaffleController {
       return new PageResObj({}, err.message, true);
     }
   }
+
+  @Get("/user")
+  @UseBefore(checkAccessToken)
+  public async getUserAuctions(@QueryParams() param: PageReq, @Res() res: Response) {
+    try {
+      const { aud } = res.locals.jwtPayload;
+      return await this.raffleService.findUserRaffles(param, aud);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
 }

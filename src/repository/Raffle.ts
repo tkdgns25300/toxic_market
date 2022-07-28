@@ -152,6 +152,18 @@ export class RaffleQueryRepo extends BaseQueryRepo {
         buyer: param.buyer
       })
     }
+
+    builder.skip(param.getOffset()).take(param.getLimit());
+    return builder.getManyAndCount();
+  }
+
+  findUserRaffles(param: PageReq, creator_address:string): Promise<[Array<any>, number]> {
+    const builder = createQueryBuilder("raffle");
+    
+    builder
+    .where('creator_address = :creator', {
+      creator: creator_address
+    })
     
     builder.skip(param.getOffset()).take(param.getLimit());
     return builder.getManyAndCount();
