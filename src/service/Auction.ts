@@ -190,7 +190,7 @@ export class AuctionService {
     let end = new Date(auction.end_at).getTime() //TODO: check the difference between sql server and server
    let seconds = end - date;
     if(seconds < 60000 && seconds > 0) {
-      auction.end_at = new Date(end + 60000)  // add one minute
+      auction.end_at = new Date(end + 60000 - seconds)  // add one minute
     }
 
     await manager.update(Auction,  auction.id, auction)
