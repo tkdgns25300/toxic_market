@@ -186,14 +186,12 @@ export class AuctionService {
     await manager.save(BidLog, bid)
     auction.bid = paramObj.bid_amount;
     auction.bidder = public_address;
-    let date = new Date()//.getTime();
-    let end = new Date(auction.end_at)//.getTime() //TODO: check the difference between sql server and server
-//    let seconds = end- date;
-    console.log(date, end)
-    // if(seconds < 60000) {
-    //   auction.end_at = new Date(date + 60000)  // add one minute
-    // }
-
+    let date = new Date().getTime() + 32400000; // TODO: remove +32400000 (9hours) when dates are synchronized
+    let end = new Date(auction.end_at).getTime() //TODO: check the difference between sql server and server
+   let seconds = end - date;
+    if(seconds < 60000) {
+      auction.end_at = new Date(end + 60000)  // add one minute
+    }
 
     await manager.update(Auction,  auction.id, auction)
 
