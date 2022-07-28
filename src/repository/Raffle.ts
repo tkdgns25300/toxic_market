@@ -1,5 +1,5 @@
-import { EntityRepository } from "typeorm";
 import { Service } from "typedi";
+import { EntityRepository } from "typeorm";
 import { Raffle } from "../entity";
 import { BaseQueryRepo } from "./Base";
 
@@ -7,6 +7,6 @@ import { BaseQueryRepo } from "./Base";
 @EntityRepository(Raffle)
 export class RaffleQueryRepo extends BaseQueryRepo {
   constructor() {
-    super("raffle", "Raffle");
+    super("raffle", "Raffle")
   }
 }

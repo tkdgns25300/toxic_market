@@ -25,7 +25,7 @@ export class ExchangeController {
   public async toxToPoint(@Body() data: ExchangeDto, @Res() res: Response) {
     try {
       const { aud } = res.locals.jwtPayload;
-      return await this.exchangeService.toxToPoint(data.amount, aud, null);
+      return await this.exchangeService.toxToPoint(data.amount, aud);
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);

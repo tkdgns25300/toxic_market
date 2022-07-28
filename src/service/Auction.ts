@@ -3,11 +3,12 @@ import { InjectRepository } from "typeorm-typedi-extensions";
 import { EntityManager, Transaction, TransactionManager } from "typeorm";
 
 import { AuctionQueryRepo } from "../repository/Auction";
-import {Auction, BidLog, User} from "../entity";
+import {Auction, BidLog, Product, User} from "../entity";
 import {AuctionDto, BidDto} from "../dto";
 import { PageReq, PageResList, PageResObj } from "../api";
 import {UserQueryRepo} from "../repository/User";
 import {AuctionSearchReq} from "../api/request/AuctionSearchReq";
+import {UserSellerType} from "../enum";
 
 @Service()
 export class AuctionService {
@@ -185,6 +186,15 @@ export class AuctionService {
     await manager.save(BidLog, bid)
     auction.bid = paramObj.bid_amount;
     auction.bidder = public_address;
+    let date = new Date()//.getTime();
+    let end = new Date(auction.end_at)//.getTime() //TODO: check the difference between sql server and server
+//    let seconds = end- date;
+    console.log(date, end)
+    // if(seconds < 60000) {
+    //   auction.end_at = new Date(date + 60000)  // add one minute
+    // }
+
+
     await manager.update(Auction,  auction.id, auction)
 
     const result: Auction = await manager.findOne(
@@ -235,4 +245,22 @@ export class AuctionService {
 
   }
 
+  async update(paramObj: AuctionDto, id: number): Promise<PageResObj<Product | {}>> {
+
+    let product = await this.auctionQueryRepo.findOne("id", id);
+    if(product.creator_address.toLowerCase() !== paramObj.creator_address.toLocaleLowerCase()) {
+      return new PageResObj({}, "상품을 생성한 사용자만 수정 가능합니다.", true);
+    }
+    let user = await this.userQueryRepo.findOne("public_address", paramObj.creator_address)
+
+    if(user.seller_type === UserSellerType.INDIVIDUAL) {
+      delete paramObj?.price
+      delete paramObj?.start_at
+      delete paramObj?.end_at
+      delete paramObj?.title
+    }
+
+    await this.auctionQueryRepo.update(paramObj,"id", id);
+    return new PageResObj({}, "경매 편집에 성공했습니다.");
+  }
 }
