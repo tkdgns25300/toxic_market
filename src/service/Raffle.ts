@@ -5,7 +5,7 @@ import { PageReq, PageResList, PageResObj } from "../api";
 import { RaffleLogSearchReq } from "../api/request/RaffleLogSearchReq";
 import { RaffleSearchReq } from "../api/request/RaffleSearchReq";
 import { RaffleDto } from "../dto";
-import { ApplyDto, RaffleConfirmDto } from "../dto/Raffle";
+import { ApplyDto, RaffleConfirmDto, RaffleFinishDto } from "../dto/Raffle";
 import { Raffle, RaffleLog, User } from "../entity";
 import { RaffleQueryRepo } from "../repository/Raffle";
 import { RaffleLogQueryRepo } from "../repository/RaffleLog";
@@ -181,6 +181,22 @@ export class RaffleService {
         return el;
       }),
       "Raffle 목록을 찾는데 성공했습니다."
-  );
+    );
+  }
+
+  @Transaction()
+  async finish(paramObj: RaffleFinishDto, id:number, @TransactionManager() manager: EntityManager): Promise<PageResObj<Raffle | {}>> {
+    const raffle = await manager.findOne(Raffle, id);
+    // 응모가 종료되어야 finish 가능
+    if (raffle.end_at >= new Date()) {
+      return new PageResObj({}, "응모기간이 끝나지 않았습니다.", true);
+    }
+    if (paramObj.is_succeed === "O") {
+      
+    } else {
+
+    }
+
+    return new PageResObj({}, "정상 작동 중!");
   }
 }
