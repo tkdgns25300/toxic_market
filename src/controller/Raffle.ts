@@ -3,6 +3,7 @@ import { Body, Get, JsonController, Param, Post, QueryParams, Res, UseBefore } f
 import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
 import { PageReq, PageResObj } from "../api";
+import { RaffleLogSearchReq } from "../api/request/RaffleLogSearchReq";
 import { RaffleSearchReq } from "../api/request/RaffleSearchReq";
 import { ApplyDto, RaffleConfirmDto, RaffleDto } from "../dto/Raffle";
 import { checkAccessToken, checkAdminAccessToken } from "../middlewares/Auth";
@@ -128,6 +129,19 @@ export class RaffleController {
   public async selectWinner(@Param("id") id: number) {
     try {
       return await this.raffleService.selectWinner(id);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
+
+  @Get("/raffle_logs")
+  @UseBefore(checkAccessToken)
+  public async getBids(@QueryParams() param: RaffleLogSearchReq) {
+    try {
+      return await this.raffleService.findRaffleLogs(param);
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);

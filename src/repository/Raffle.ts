@@ -1,6 +1,7 @@
 import { Service } from "typedi";
 import { createQueryBuilder, EntityRepository } from "typeorm";
 import { PageReq } from "../api";
+import { RaffleLogSearchReq } from "../api/request/RaffleLogSearchReq";
 import { RaffleSearchReq } from "../api/request/RaffleSearchReq";
 import { Raffle } from "../entity";
 import { BaseQueryRepo } from "./Base";
@@ -124,5 +125,35 @@ export class RaffleQueryRepo extends BaseQueryRepo {
     })
 
     return builder.getOne();
+  }
+
+  getRaffleLogs(param: RaffleLogSearchReq): Promise<[Array<any>, number]> {
+    const builder = createQueryBuilder("raffle");
+
+    builder
+    .leftJoinAndSelect("Raffle.raffle_logs", "raffle_log")
+    .leftJoinAndSelect("Raffle.creator", "user")
+    .select([
+      "Raffle",
+      "user.public_address",
+      "raffle_log"
+    ])
+
+    // seller 필터링
+    if (param.seller !== undefined) {
+      builder.where('user.public_address = :seller', {
+        seller: param.seller
+      })
+    }
+
+    // buyer 필터링
+    if (param.buyer !== undefined) {
+      builder.where(`raffle_log.applicant = :buyer`, {
+        buyer: param.buyer
+      })
+    }
+    
+    builder.skip(param.getOffset()).take(param.getLimit());
+    return builder.getManyAndCount();
   }
 }

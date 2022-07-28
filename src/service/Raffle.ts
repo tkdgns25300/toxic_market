@@ -2,6 +2,7 @@ import { Service } from "typedi";
 import { EntityManager, Transaction, TransactionManager } from "typeorm";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { PageReq, PageResList, PageResObj } from "../api";
+import { RaffleLogSearchReq } from "../api/request/RaffleLogSearchReq";
 import { RaffleSearchReq } from "../api/request/RaffleSearchReq";
 import { RaffleDto } from "../dto";
 import { ApplyDto, RaffleConfirmDto } from "../dto/Raffle";
@@ -136,9 +137,9 @@ export class RaffleService {
   async selectWinner(raffle_id: number): Promise<PageResObj<Raffle | {}>> {
     // 끝난 응모인지 확인
     const raffle: any = await this.raffleQueryRepo.getOne(raffle_id);
-    // if (raffle.end_at >= new Date()) {
-    //   return new PageResObj({}, "아직 응모기간이 종료되지 않았습니다.", true);  
-    // }
+    if (raffle.end_at >= new Date()) {
+      return new PageResObj({}, "아직 응모기간이 종료되지 않았습니다.", true);  
+    }
     // 응모자가 1명 이상인지 확인
     if (raffle.raffle_logs.length === 0) {
       // 자동으로 응모실패 처리
@@ -151,5 +152,24 @@ export class RaffleService {
     await this.raffleLogQueryRepo.selectWinner(raffle_id, winnerLogId);
     const result = await this.raffleQueryRepo.getOne(raffle_id);
     return new PageResObj(result, "당첨자 선정에 성공하였습니다.");
+  }
+
+  // async findRaffleLogs(paramObj: RaffleLogSearchReq): Promise<PageResList<any>> {
+  async findRaffleLogs(paramObj: RaffleLogSearchReq) {
+    if (
+      (paramObj.buyer === undefined && paramObj.seller === undefined) ||
+      (paramObj.buyer !== undefined && paramObj.seller !== undefined)
+    ) {
+      return new PageResObj({}, "buyer와 seller중 한 가지만 입력해주세요.", true);  
+    }
+    const result = await this.raffleQueryRepo.getRaffleLogs(paramObj);
+    return new PageResList<any>(
+      result[1],
+      paramObj.limit,
+      result[0].map((el: Raffle) => {
+        return el;
+      }),
+      "Raffle Log 목록을 찾는데 성공했습니다."
+    );
   }
 }
