@@ -185,18 +185,40 @@ export class RaffleService {
   }
 
   @Transaction()
-  async finish(paramObj: RaffleFinishDto, id:number, @TransactionManager() manager: EntityManager): Promise<PageResObj<Raffle | {}>> {
-    const raffle = await manager.findOne(Raffle, id);
+  async finish(paramObj: RaffleFinishDto, id:number, @TransactionManager() manager: EntityManager): Promise<PageResObj<{}>> {
+    let raffle = await manager.query('select * from raffle where id = ?', [id])
+    raffle = raffle[0]
     // 응모가 종료되어야 finish 가능
-    if (raffle.end_at >= new Date()) {
-      return new PageResObj({}, "응모기간이 끝나지 않았습니다.", true);
-    }
+    // if (raffle.end_at >= new Date()) {
+    //   return new PageResObj({}, "응모기간이 끝나지 않았습니다.", true);
+    // }
+    // 거래 완료
     if (paramObj.is_succeed === "O") {
-      
-    } else {
-
+      // 포인트 지급 및 추첨 is_succeed = 'O' 처리
+      const creator = await manager.findOne(User, { public_address: raffle.creator_address })
+      const raffleLog = await manager.find(RaffleLog, { raffle_id: raffle.id })
+      let totalPoint = 0;
+      raffleLog.forEach(log => totalPoint += raffle.price * log.amount);
+      creator.CF_balance += totalPoint;
+      raffle.is_succeed = "O";
+      await manager.update(User, {public_address: raffle.creator_address}, creator);
+      delete raffle.creator_address
+      await manager.update(Raffle, id, raffle);
+      return new PageResObj({}, "포인트 지급에 성공했습니다.");
     }
-
-    return new PageResObj({}, "정상 작동 중!");
+    // 응모 실패
+    else {
+      // 포인트 반송 및 추첨 is_succeed = 'X' 처리
+      const raffleLog = await manager.find(RaffleLog, { raffle_id: raffle.id })
+      for (let log of raffleLog) {
+        let applicant = await manager.findOne(User, { public_address: log.applicant })
+        applicant.CF_balance += raffle.price * log.amount
+        await manager.update(User, {public_address: log.applicant}, applicant);
+      }
+      raffle.is_succeed = "X";
+      delete raffle.creator_address;
+      await manager.update(Raffle, id, raffle);
+      return new PageResObj({}, "포인트 반송에 성공했습니다.");
+    }
   }
 }
