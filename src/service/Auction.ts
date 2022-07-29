@@ -97,7 +97,7 @@ export class AuctionService {
     if(!withUser) {
       result.bid_logs.map(a => {
         a.bidder = `${a.bidder.slice(0,3)}******${a.bidder.slice(-3)}`
-      })
+      }).reverse()
     }
     return new PageResObj(result, "Auction 조회에 성공했습니다.");
   }
