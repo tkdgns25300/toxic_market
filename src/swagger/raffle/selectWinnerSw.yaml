@@ -1,0 +1,81 @@
+paths:
+  /raffle/select/:id:
+    post:
+      tags:
+        - Raffle
+      summary: Get newest auction
+      consumes:
+        - application/json
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  item:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      price:
+                        type: number
+                      start_at:
+                        type: string
+                        format: date
+                      end_at:
+                        type: string
+                        format: date
+                      title:
+                        type: string
+                      contact:
+                        type: string
+                      description:
+                        type: string
+                      main_img_url:
+                        type: string
+                      sub_img_url:
+                        type: string
+                      bidder:
+                        type: string
+                      bid:
+                        type: number
+                      is_approved:
+                        type: string
+                      is_succeed:
+                        type: string
+                      bid_logs:
+                        type: array
+                        items:
+                          properties:
+                            id:
+                              type: number
+                            bidder:
+                              type: string
+                            bid:
+                              type: number
+                            created_at:
+                              type: string
+                              format: date
+                            auction_id:
+                              type: number
+                      created_at:
+                        type: string
+                        format: date
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: Auction 조회에 성공했습니다.
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http

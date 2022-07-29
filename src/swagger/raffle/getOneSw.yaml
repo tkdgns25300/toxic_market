@@ -1,0 +1,111 @@
+paths:
+  /raffle/find/{id}:
+    get:
+      tags:
+        - Raffle
+      summary: Get one auction
+      consumes:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: auction id
+          schema:
+            type: number
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  item:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      price:
+                        type: number
+                      start_at:
+                        type: string
+                        format: date
+                      end_at:
+                        type: string
+                        format: date
+                      title:
+                        type: string
+                      contact:
+                        type: string
+                      description:
+                        type: string
+                      main_img_url:
+                        type: string
+                      sub_img_url:
+                        type: string
+                      bidder:
+                        type: string
+                      bid:
+                        type: number
+                      is_approved:
+                        type: string
+                      is_succeed:
+                        type: string
+                      creator:
+                        type: object
+                        properties:
+                          public_address:
+                            type: string
+                          CF_balance:
+                            type: number
+                          is_seller:
+                            type: string
+                          email:
+                            type: string
+                          store_name:
+                            type: string
+                          phone:
+                            type: string
+                          name:
+                            type: string
+                          verify_file_url:
+                            type: string
+                          address:
+                            type: string
+                          seller_type:
+                            type: string
+                      bid_logs:
+                        type: array
+                        items:
+                          properties:
+                            id:
+                              type: number
+                            bidder:
+                              type: string
+                            bid:
+                              type: number
+                            created_at:
+                              type: string
+                              format: date
+                            auction_id:
+                              type: number
+                      created_at:
+                        type: string
+                        format: date
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: Auction 조회에 성공했습니다.
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http

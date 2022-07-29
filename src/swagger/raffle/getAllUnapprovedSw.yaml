@@ -1,0 +1,126 @@
+paths:
+  /raffle/unapproved:
+    get:
+      tags:
+        - Raffle
+      summary: 아직 승인이 안 된 경매 목록
+      consumes:
+        - application/json
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          description: rows per page
+          schema:
+            type: integer
+
+        - name: pageNo
+          in: query
+          required: false
+          description: page number
+          schema:
+            type: integer
+
+        - name: name
+          in: query
+          required: false
+          description: 사용자 이름
+          schema:
+            type: string
+
+        - name: title
+          in: query
+          required: false
+          description: 상품명
+          schema:
+            type: string
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalCount:
+                    type: integer
+                    description: 전체 auction의 갯수
+                    example: 10
+                  totalPage:
+                    type: integer
+                    description: 전체 페이지 갯수; limit, pageNo 를 0으로 보낼 시 null
+                    example: 1
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: Auction 목록을 찾는데 성공했습니다.
+                  items:
+                    type: array
+                    items:
+                      properties:
+                        id:
+                          type: number
+                        price:
+                          type: number
+                        start_at:
+                          type: string
+                          format: date
+                        end_at:
+                          type: string
+                          format: date
+                        title:
+                          type: string
+                        contact:
+                          type: string
+                        description:
+                          type: string
+                        main_img_url:
+                          type: string
+                        sub_img_url:
+                          type: string
+                        bidder:
+                          type: string
+                        bid:
+                          type: number
+                        is_approved:
+                          type: string
+                        is_succeed:
+                          type: string
+                        creator:
+                          type: object
+                          properties:
+                            public_address:
+                              type: string
+                            CF_balance:
+                              type: number
+                            is_seller:
+                              type: string
+                            email:
+                              type: string
+                            store_name:
+                              type: string
+                            phone:
+                              type: string
+                            name:
+                              type: string
+                            verify_file_url:
+                              type: string
+                            address:
+                              type: string
+                            seller_type:
+                              type: string
+                        created_at:
+                          type: string
+                          format: date
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http
