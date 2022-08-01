@@ -7,9 +7,6 @@ export class RaffleDto {
   @IsInt()
   price: number;
 
-  @IsInt()
-  amount: number;
-
   @IsDate()
   @Type(() => Date)
   start_at: Date;
@@ -30,11 +27,6 @@ export class RaffleDto {
   contact: string;
 
   @IsString({ message: "문자열이 아닙니다." })
-  @MaxLength(42, { message: "최대 42자까지 입력됩니다." })
-  @IsOptional()
-  creator_address: string;
-
-  @IsString({ message: "문자열이 아닙니다." })
   @MaxLength(200, { message: "최대 200자까지 입력됩니다." })
   main_img_url: string;
 
@@ -49,4 +41,29 @@ export class RaffleDto {
   @IsString({ message: "문자열이 아닙니다." })
   @IsOptional()
   is_succeed: string;
+
+  @IsString({ message: "문자열이 아닙니다." })
+  @MaxLength(42, { message: "최대 42자까지 입력됩니다." })
+  @IsOptional()
+  creator: string;
+}
+
+export class RaffleConfirmDto {
+  @IsString({ message: "문자열이 아닙니다." })
+  @IsOptional()
+  is_approved: string;
+}
+
+export class RaffleFinishDto {
+  @IsString({ message: "문자열이 아닙니다." })
+  @IsOptional()
+  is_succeed: string;
+}
+
+export class ApplyDto {
+  @IsInt()
+  apply_amount: number;
+
+  @IsInt()
+  raffle_id: number;
 }

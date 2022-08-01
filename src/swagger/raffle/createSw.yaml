@@ -1,0 +1,98 @@
+tags:
+  - name: Raffle
+    description: 추첨 API
+
+
+paths:
+  /raffle/create:
+    post:
+      tags:
+        - Raffle
+      summary: Create a Raffle
+      consumes:
+        - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                price:
+                  type: number
+                  required: true
+                start_at:
+                  type: string
+                  format: date
+                  required: true
+                end_at:
+                  type: string
+                  format: date
+                  required: true
+                title:
+                  type: string
+                  required: true
+                contact:
+                  type: string
+                  required: true
+                description:
+                  type: string
+                  required: true
+                main_img_url:
+                  type: string
+                  required: true
+                sub_img_url:
+                  type: string
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  item:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      price:
+                        type: number
+                      start_at:
+                        type: string
+                        format: date
+                      end_at:
+                        type: string
+                        format: date
+                      title:
+                        type: string
+                      description:
+                        type: string
+                      contact:
+                        type: string
+                      main_img_url:
+                        type: string
+                      sub_img_url:
+                        type: string
+                      is_approved:
+                        type: string
+                      is_succeed:
+                        type: string
+                      created_at:
+                        type: string
+                        format: date
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: 추첨 생성에 성공했습니다.
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http

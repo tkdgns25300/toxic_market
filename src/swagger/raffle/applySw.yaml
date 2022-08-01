@@ -1,0 +1,75 @@
+paths:
+  /raffle/apply:
+    post:
+      tags:
+        - Raffle
+      summary: Apply to raffle
+      consumes:
+        - application/json
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                raffle_id:
+                  type: number
+                  required: true
+                apply_amount:
+                  type: number
+                  required: true
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  item:
+                    type: object
+                    properties:
+                        id:
+                          type: number
+                        price:
+                          type: number
+                        start_at:
+                          type: string
+                          format: date
+                        end_at:
+                          type: string
+                          format: date
+                        title:
+                          type: string
+                        description:
+                          type: string
+                        contact:
+                          type: string
+                        main_img_url:
+                          type: string
+                        sub_img_url:
+                          type: string
+                        is_approved:
+                          type: string
+                        is_succeed:
+                          type: string
+                        created_at:
+                          type: string
+                          format: date
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: 응모에 성공했습니다.
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http

@@ -46,6 +46,6 @@ export class RaffleLog extends BaseEntity {
   @ManyToOne(() => Raffle, (raffle) => raffle.id, {
     onDelete: "CASCADE",
   })
-  @JoinColumn()
+  @JoinColumn({ name: "raffle_id" })
   raffle_id: number;
 }

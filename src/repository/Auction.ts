@@ -74,8 +74,8 @@ export class AuctionQueryRepo extends BaseQueryRepo {
         })
         .andWhere("title like :title", {title: `%${param.getTitle}%`})
         .andWhere('is_approved IS NULL')
-        .andWhere('start_at > :start_at', {
-            start_at: new Date()
+        .andWhere('end_at > :end_at', {
+            end_at: new Date()
         })
         .skip(param.getOffset())
         .take(param.getLimit())
