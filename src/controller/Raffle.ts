@@ -1,5 +1,5 @@
 import { Response } from "express";
-import { Body, Get, JsonController, Param, Post, QueryParams, Res, UseBefore } from "routing-controllers";
+import { Body, Get, JsonController, Param, Patch, Post, QueryParams, Res, UseBefore } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
 import { PageReq, PageResObj } from "../api";
@@ -166,9 +166,24 @@ export class RaffleController {
 
   @Post("/finish/:id")
   @UseBefore(checkAdminAccessToken)
-  public async finish(@Param("id") id: number, @Body() paramObj: RaffleFinishDto, @Res() res: Response) {
+  public async finish(@Param("id") id: number, @Body() param: RaffleFinishDto, @Res() res: Response) {
     try {
-      return await this.raffleService.finish(paramObj, id, null);
+      return await this.raffleService.finish(param, id, null);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
+
+  @Patch("/update/:id")
+  @UseBefore(checkAccessToken)
+  public async update(@Param("id") id: number, @Body() param: RaffleDto, @Res() res: Response) {
+    try {
+      const { aud } = res.locals.jwtPayload;
+      param.creator = aud;
+      return await this.raffleService.update(param, id);
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);

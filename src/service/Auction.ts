@@ -246,7 +246,7 @@ export class AuctionService {
   async update(paramObj: AuctionDto, id: number): Promise<PageResObj<Product | {}>> {
 
     let product = await this.auctionQueryRepo.findOne("id", id);
-    if(product.creator_address.toLowerCase() !== paramObj.creator_address.toLocaleLowerCase()) {
+    if(product.creator_address.toLowerCase() !== paramObj.creator_address.toLowerCase()) {
       return new PageResObj({}, "상품을 생성한 사용자만 수정 가능합니다.", true);
     }
     let user = await this.userQueryRepo.findOne("public_address", paramObj.creator_address)
@@ -259,6 +259,6 @@ export class AuctionService {
     }
 
     await this.auctionQueryRepo.update(paramObj,"id", id);
-    return new PageResObj({}, "경매 편집에 성공했습니다.");
+    return new PageResObj({}, "경매 수정에 성공했습니다.");
   }
 }

@@ -1,5 +1,5 @@
 import { Service } from "typedi";
-import { EntityManager, Transaction, TransactionManager } from "typeorm";
+import { EntityManager, getManager, Transaction, TransactionManager } from "typeorm";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { PageReq, PageResList, PageResObj } from "../api";
 import { RaffleLogSearchReq } from "../api/request/RaffleLogSearchReq";
@@ -7,6 +7,7 @@ import { RaffleSearchReq } from "../api/request/RaffleSearchReq";
 import { RaffleDto } from "../dto";
 import { ApplyDto, RaffleConfirmDto, RaffleFinishDto } from "../dto/Raffle";
 import { Raffle, RaffleLog, User } from "../entity";
+import { UserSellerType } from "../enum";
 import { RaffleQueryRepo } from "../repository/Raffle";
 import { RaffleLogQueryRepo } from "../repository/RaffleLog";
 import { UserQueryRepo } from "../repository/User";
@@ -220,5 +221,28 @@ export class RaffleService {
       await manager.update(Raffle, id, raffle);
       return new PageResObj({}, "포인트 반송에 성공했습니다.");
     }
+  }
+
+  async update(paramObj: RaffleDto, id: number): Promise<PageResObj<Raffle | {}>> {
+    const entityManager = getManager();
+    let raffle = await entityManager.query("SELECT * FROM raffle WHERE id = ?", [id])
+    raffle = raffle[0]
+    console.log(raffle.creator_address)
+    console.log(paramObj.creator)
+    if (raffle.creator_address.toLowerCase() !== paramObj.creator.toLowerCase()) {
+      return new PageResObj({}, "추첨을 생성한 사용자만 수정 가능합니다.", true);
+    }
+    const user = await this.userQueryRepo.findOne("public_address", paramObj.creator)
+    console.log(paramObj)
+    if (user.seller_type === UserSellerType.INDIVIDUAL) {
+      delete paramObj?.price
+      delete paramObj?.title
+      delete paramObj?.end_at
+      delete paramObj?.start_at
+    }
+    delete paramObj.creator;
+    console.log(paramObj)
+    await this.raffleQueryRepo.update(paramObj, "id", id);
+    return new PageResObj({}, "추첨 수정에 성공했습니다.");
   }
 }
