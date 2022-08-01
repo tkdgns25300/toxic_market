@@ -38,7 +38,7 @@ paths:
                   msg:
                     type: string
                     description: 메시지
-                    example: 경매 생성에 성공했습니다.
+                    example: 포인트 지급에 성공했습니다.
                   error:
                     type: boolean
                     description: error 체크
