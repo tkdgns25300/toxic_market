@@ -3,7 +3,7 @@ paths:
     post:
       tags:
         - Raffle
-      summary: 포인트 지급/반송 API
+      summary: Finish a raffle
       consumes:
         - application/json
       parameters:
@@ -35,40 +35,6 @@ paths:
                 properties:
                   item:
                     type: object
-                    properties:
-                      id:
-                        type: number
-                      price:
-                        type: number
-                      start_at:
-                        type: string
-                        format: date
-                      end_at:
-                        type: string
-                        format: date
-                      title:
-                        type: string
-                      contact:
-                        type: string
-                      description:
-                        type: string
-                      main_img_url:
-                        type: string
-                      sub_img_url:
-                        type: string
-                      bidder:
-                        type: string
-                      bid:
-                        type: number
-                      is_approved:
-                        type: string
-                      is_succeed:
-                        type: string
-                      creator:
-                        type: string
-                      created_at:
-                        type: string
-                        format: date
                   msg:
                     type: string
                     description: 메시지

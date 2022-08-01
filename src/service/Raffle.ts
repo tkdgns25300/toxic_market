@@ -189,9 +189,9 @@ export class RaffleService {
     let raffle = await manager.query('select * from raffle where id = ?', [id])
     raffle = raffle[0]
     // 응모가 종료되어야 finish 가능
-    // if (raffle.end_at >= new Date()) {
-    //   return new PageResObj({}, "응모기간이 끝나지 않았습니다.", true);
-    // }
+    if (raffle.end_at >= new Date()) {
+      return new PageResObj({}, "응모기간이 끝나지 않았습니다.", true);
+    }
     // 거래 완료
     if (paramObj.is_succeed === "O") {
       // 포인트 지급 및 추첨 is_succeed = 'O' 처리

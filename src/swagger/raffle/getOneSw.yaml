@@ -3,14 +3,14 @@ paths:
     get:
       tags:
         - Raffle
-      summary: Get one auction
+      summary: Get one raffle
       consumes:
         - application/json
       parameters:
         - name: id
           in: path
           required: true
-          description: auction id
+          description: raffle id
           schema:
             type: number
 
@@ -37,67 +37,48 @@ paths:
                         format: date
                       title:
                         type: string
-                      contact:
-                        type: string
                       description:
+                        type: string
+                      contact:
                         type: string
                       main_img_url:
                         type: string
                       sub_img_url:
                         type: string
-                      bidder:
-                        type: string
-                      bid:
-                        type: number
                       is_approved:
                         type: string
                       is_succeed:
                         type: string
+                      created_at:
+                        type: string
+                        format: date
                       creator:
                         type: object
                         properties:
-                          public_address:
-                            type: string
-                          CF_balance:
-                            type: number
-                          is_seller:
-                            type: string
-                          email:
-                            type: string
-                          store_name:
-                            type: string
                           phone:
                             type: string
                           name:
                             type: string
-                          verify_file_url:
-                            type: string
-                          address:
-                            type: string
-                          seller_type:
-                            type: string
-                      bid_logs:
+                      raffle_logs:
                         type: array
                         items:
                           properties:
                             id:
                               type: number
-                            bidder:
+                            applicant:
                               type: string
-                            bid:
+                            amount:
                               type: number
+                            is_winner:
+                              type: string
+                              enum: [O, X]
                             created_at:
                               type: string
                               format: date
-                            auction_id:
-                              type: number
-                      created_at:
-                        type: string
-                        format: date
                   msg:
                     type: string
                     description: 메시지
-                    example: Auction 조회에 성공했습니다.
+                    example: Raffle 조회에 성공했습니다.
                   error:
                     type: boolean
                     description: error 체크
