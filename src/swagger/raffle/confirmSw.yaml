@@ -3,14 +3,14 @@ paths:
     post:
       tags:
         - Raffle
-      summary: 추첨 승인/거부 API
+      summary: Confirm a raffle
       consumes:
         - application/json
       parameters:
         - name: id
           in: path
           required: true
-          description: auction id
+          description: raffle id
           schema:
             type: number
 
@@ -48,23 +48,17 @@ paths:
                         format: date
                       title:
                         type: string
-                      contact:
-                        type: string
                       description:
+                        type: string
+                      contact:
                         type: string
                       main_img_url:
                         type: string
                       sub_img_url:
                         type: string
-                      bidder:
-                        type: string
-                      bid:
-                        type: number
                       is_approved:
                         type: string
                       is_succeed:
-                        type: string
-                      creator:
                         type: string
                       created_at:
                         type: string
@@ -72,7 +66,7 @@ paths:
                   msg:
                     type: string
                     description: 메시지
-                    example: 경매 생성에 성공했습니다.
+                    example: 추첨 등록을 승인했습니다.
                   error:
                     type: boolean
                     description: error 체크

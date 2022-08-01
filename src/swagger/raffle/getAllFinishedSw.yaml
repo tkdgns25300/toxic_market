@@ -3,7 +3,7 @@ paths:
     get:
       tags:
         - Raffle
-      summary: 입찰 목록
+      summary: Find all finished raffles
       consumes:
         - application/json
       parameters:
@@ -46,7 +46,7 @@ paths:
                 properties:
                   totalCount:
                     type: integer
-                    description: 전체 auction의 갯수
+                    description: 전체 raffle의 갯수
                     example: 10
                   totalPage:
                     type: integer
@@ -55,7 +55,7 @@ paths:
                   msg:
                     type: string
                     description: 메시지
-                    example: Auction 목록을 찾는데 성공했습니다.
+                    example: Raffle 목록을 찾는데 성공했습니다.
                   items:
                     type: array
                     items:
@@ -72,48 +72,28 @@ paths:
                           format: date
                         title:
                           type: string
-                        contact:
-                          type: string
                         description:
+                          type: string
+                        contact:
                           type: string
                         main_img_url:
                           type: string
                         sub_img_url:
                           type: string
-                        bidder:
-                          type: string
-                        bid:
-                          type: number
                         is_approved:
                           type: string
                         is_succeed:
                           type: string
+                        created_at:
+                          type: string
+                          format: date
                         creator:
                           type: object
                           properties:
-                            public_address:
-                              type: string
-                            CF_balance:
-                              type: number
-                            is_seller:
-                              type: string
-                            email:
-                              type: string
-                            store_name:
-                              type: string
                             phone:
                               type: string
                             name:
                               type: string
-                            verify_file_url:
-                              type: string
-                            address:
-                              type: string
-                            seller_type:
-                              type: string
-                        created_at:
-                          type: string
-                          format: date
                   error:
                     type: boolean
                     description: error 체크
