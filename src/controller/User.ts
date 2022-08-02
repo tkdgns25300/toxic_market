@@ -35,6 +35,19 @@ export class UserController {
     }
   }
 
+  @Get("/seller")
+  @UseBefore(checkAdminAccessToken)
+  public async getAllSeller(@QueryParams() param: UserSearchReq, @Res() res: Response) {
+    try {
+      return await this.userService.findAllSeller(param);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
+
   @Get("/find/:public_address")
   @UseBefore(checkAdminAccessToken)
   public async getOne(@Param("public_address") public_address: string, @Res() res: Response) {

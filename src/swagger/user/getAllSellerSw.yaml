@@ -1,0 +1,104 @@
+paths:
+  /user/seller:
+    get:
+      tags:
+        - User
+      summary: Get all seller
+      consumes:
+        - application/json
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          description: rows per page
+          schema:
+            type: integer
+
+        - name: pageNo
+          in: query
+          required: false
+          description: page number
+          schema:
+            type: integer
+
+        - name: name
+          in: query
+          required: false
+          description: 사용자 이름
+          schema:
+            type: string
+
+        - name: public_address
+          in: query
+          required: false
+          description: 지갑 주소
+          schema:
+            type: string
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalCount:
+                    type: integer
+                    description: 전체 user의 갯수
+                    example: 10
+                  totalPage:
+                    type: integer
+                    description: 전체 페이지 갯수; limit, pageNo 를 0으로 보낼 시 null
+                    example: 1
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: Product 목록을 찾는데 성공했습니다.
+                  items:
+                    type: array
+                    items:
+                      properties:
+                        public_address:
+                          type: string
+                          required: true
+                        CF_balance:
+                          type: number
+                          required: true
+                        is_seller:
+                          type: string
+                          enum: [ O,X ]
+                        is_admin:
+                          type: string
+                          enum: [ O,X ]
+                        email:
+                          type: string
+                        store_name:
+                          type: string
+                        phone:
+                          type: sring
+                        name:
+                          type: string
+                          required: true
+                        verify_file_url:
+                          type: string
+                          description: 법인 등기부등본, 본인 신분증 사본
+                        address:
+                          type: string
+                          description: 사업자 주소지
+                        seller_type:
+                          type: string
+                          enum: [ 개인사업자,법인,개인 ]
+                          description: 판매자 종류
+
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http
