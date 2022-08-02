@@ -72,6 +72,22 @@ paths:
                         created_at:
                           type: string
                           format: date
+                        raffle_logs:
+                          type: array
+                          items:
+                            properties:
+                              id:
+                                type: number
+                              applicant:
+                                type: string
+                              amount:
+                                type: number
+                              is_winner:
+                                type: string
+                                enum: [O, X]
+                              created_at:
+                                type: string
+                                format: date
                   error:
                     type: boolean
                     description: error 체크
