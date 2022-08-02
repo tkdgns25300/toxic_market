@@ -13,7 +13,8 @@ import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
 import { PageResObj, UserSearchReq} from "../api";
 import { UserDto } from "../dto";
-import {checkAdminAccessToken} from "../middlewares/Auth";
+import { UserIdPasswordDto } from "../dto/User";
+import {checkAccessToken, checkAdminAccessToken} from "../middlewares/Auth";
 import { UserService } from "../service/User";
 
 @Service()
@@ -74,4 +75,9 @@ export class UserController {
     }
   }
 
+  @Post("/register")
+  @UseBefore(checkAccessToken)
+  public async register(@Body() params: UserIdPasswordDto) {
+    
+  }
 }

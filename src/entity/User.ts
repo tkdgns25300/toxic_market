@@ -103,4 +103,22 @@ export class User extends BaseEntity {
     comment: "판매자 종류"
   })
   seller_type: UserSellerType;
+
+  @Column({
+    type: "varchar",
+    length: 20,
+    default: null,
+    nullable: true,
+    comment: "아이디"
+  })
+  id: string;
+
+  @Column({
+    type: "varchar",
+    length: 100,
+    default: null,
+    nullable: true,
+    comment: "비밀번호(해시 암호화)"
+  })
+  passwordHash: string;
 }

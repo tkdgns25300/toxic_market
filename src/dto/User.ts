@@ -62,4 +62,24 @@ export class UserDto {
 
   @IsOptional()
   seller_type: UserSellerType;
+
+  @IsString({ message: "문자열이 아닙니다." })
+  @MaxLength(20, { message: "최대 20자까지 입력됩니다." })
+  @IsOptional()
+  id: string
+
+  @IsString({ message: "문자열이 아닙니다." })
+  @MaxLength(100, { message: "최대 100자까지 입력됩니다." })
+  @IsOptional()
+  passwordHash: string
+}
+
+export class UserIdPasswordDto {
+  @IsString({ message: "문자열이 아닙니다." })
+  @MaxLength(20, { message: "최대 20자까지 입력됩니다." })
+  id: string
+
+  @IsString({ message: "문자열이 아닙니다." })
+  @MaxLength(100, { message: "최대 100자까지 입력됩니다." })
+  password: string
 }
