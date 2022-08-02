@@ -149,9 +149,7 @@ export class RaffleService {
       return new PageResObj({}, "응모자 0명으로 응모실패 처리하였습니다.", true);  
     }
     // 당첨자 선정
-    selectWinner(raffle.raffle_logs)
-    const ranNum = Math.floor(Math.random() * raffle.raffle_logs.length);
-    const winnerLogId = raffle.raffle_logs[ranNum].id;
+    const winnerLogId = selectWinner(raffle.raffle_logs)
     await this.raffleLogQueryRepo.selectWinner(raffle_id, winnerLogId);
     const result = await this.raffleQueryRepo.getOne(raffle_id);
     return new PageResObj(result, "당첨자 선정에 성공하였습니다.");
