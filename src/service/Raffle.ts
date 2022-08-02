@@ -104,9 +104,9 @@ export class RaffleService {
       return new PageResObj({}, "추첨 기간이 아닙니다.", true);
     }
     // 추첨 생성자는 입찰 불가
-    if (raffle.creator_address === public_address) {
-      return new PageResObj({}, "추첨 생성자는 참가할 수 없습니다.", true);
-    }
+    // if (raffle.creator_address === public_address) {
+    //   return new PageResObj({}, "추첨 생성자는 참가할 수 없습니다.", true);
+    // }
     // 포인트 빼기 (잔액 확인)
     const applicant = await manager.findOne(User, public_address);
     if (applicant.CF_balance < raffle.price * paramObj.apply_amount) {
