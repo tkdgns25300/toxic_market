@@ -114,13 +114,20 @@ export class RaffleService {
     }
     applicant.CF_balance -= raffle.price * paramObj.apply_amount
     await manager.update(User, { public_address: applicant.public_address }, applicant);
-    // 로그 생성
-    const raffleLog = {
-      applicant: applicant.public_address,
-      amount: paramObj.apply_amount,
-      raffle_id: paramObj.raffle_id
+    // 로그 생성: 이미 응모한 기록이 있는 경우 amount만 업데이트
+    const oldRaffleLog = await manager.findOne(RaffleLog, {applicant: public_address})
+    if (oldRaffleLog) {
+      oldRaffleLog.amount += paramObj.apply_amount;
+      await manager.update(RaffleLog, { id: oldRaffleLog.id }, oldRaffleLog)
     }
-    await manager.save(RaffleLog, raffleLog);
+    else {
+      const raffleLog = {
+        applicant: applicant.public_address,
+        amount: paramObj.apply_amount,
+        raffle_id: paramObj.raffle_id
+      }
+      await manager.save(RaffleLog, raffleLog);
+    }
     const result: Raffle = await manager.findOne(Raffle, raffle.id);
     return new PageResObj(result, "응모에 성공했습니다.");
   }
