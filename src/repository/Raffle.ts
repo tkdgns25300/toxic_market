@@ -72,11 +72,13 @@ export class RaffleQueryRepo extends BaseQueryRepo {
     const builder = createQueryBuilder("raffle");
     
     builder
+    .leftJoinAndSelect("Raffle.raffle_logs", "raffle_log")
     .leftJoinAndSelect("Raffle.creator", "user")
     .select([
       "Raffle",
       "user.name",
-      "user.phone"
+      "user.phone",
+      "raffle_log"
     ])
     .where('is_approved = :is_approved', {
       is_approved: "O"
