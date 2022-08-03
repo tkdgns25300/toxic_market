@@ -49,6 +49,8 @@ paths:
                           type: number
                         price:
                           type: number
+                        limit:
+                          type: number
                         start_at:
                           type: string
                           format: date

@@ -107,6 +107,15 @@ export class RaffleService {
     // if (raffle.creator_address === public_address) {
     //   return new PageResObj({}, "추첨 생성자는 참가할 수 없습니다.", true);
     // }
+    // 응모 가능한지 limit 확인
+    const allRaffleLogs = await manager.findAndCount(RaffleLog, { raffle_id: paramObj.raffle_id });
+    let currentRaffleAmount = 0
+    allRaffleLogs[0].forEach(log => {
+      currentRaffleAmount += log.amount
+    })
+    if (raffle.limit < currentRaffleAmount + paramObj.apply_amount) {
+      return new PageResObj({}, "응모 제한 수량을 넘었습니다.", true);
+    }
     // 포인트 빼기 (잔액 확인)
     const applicant = await manager.findOne(User, public_address);
     if (applicant.CF_balance < raffle.price * paramObj.apply_amount) {
@@ -246,6 +255,7 @@ export class RaffleService {
       delete paramObj?.title
       delete paramObj?.end_at
       delete paramObj?.start_at
+      delete paramObj?.limit
     }
     delete paramObj.creator;
     console.log(paramObj)

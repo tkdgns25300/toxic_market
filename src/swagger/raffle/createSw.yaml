@@ -20,6 +20,9 @@ paths:
                 price:
                   type: number
                   required: true
+                limit:
+                  type: number
+                  required: true
                 start_at:
                   type: string
                   format: date
@@ -57,6 +60,8 @@ paths:
                       id:
                         type: number
                       price:
+                        type: number
+                      limit:
                         type: number
                       start_at:
                         type: string

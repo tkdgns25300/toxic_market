@@ -7,6 +7,10 @@ export class RaffleDto {
   @IsInt()
   price: number;
 
+  @IsInt()
+  @IsOptional()
+  limit: number;
+
   @IsDate()
   @Type(() => Date)
   start_at: Date;
