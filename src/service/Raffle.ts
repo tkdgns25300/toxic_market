@@ -158,11 +158,14 @@ export class RaffleService {
     if (raffle.end_at >= new Date()) {
       return new PageResObj({}, "아직 응모기간이 종료되지 않았습니다.", true);  
     }
+    if (raffle.is_succeed === 'O') {
+      return new PageResObj({}, "이미 종료된 응모입니다.", true);
+    }
     // 응모자가 1명 이상인지 확인
     if (raffle.raffle_logs.length === 0) {
       // 자동으로 응모실패 처리
       await this.raffleQueryRepo.update({ is_succeed: "X" } , "id", raffle_id);
-      return new PageResObj({}, "응모자 0명으로 응모실패 처리하였습니다.", true);  
+      return new PageResObj({}, "응모자 0명으로 응모실패 처리하였습니다.", true);
     }
     // 당첨자 선정
     const winnerLogId = selectWinner(raffle.raffle_logs)
