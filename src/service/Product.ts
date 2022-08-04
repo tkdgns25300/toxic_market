@@ -20,11 +20,14 @@ export class ProductService {
   ) {}
 
   async findAll(param: PageReq): Promise<PageResList<Product>> {
-    const result = await this.ProductQueryRepo.findProducts(param);
+    let [result1, result2] = await this.ProductQueryRepo.findProducts(param);
+    result1 = await result1;
+    result2 = await result2;
+    const unionArr = result1[0].concat(result2[0])
     return new PageResList<Product>(
-      result[1],
+      result1[1] + result2[1],
       param.limit,
-      result[0].map((el: Product) => {
+      unionArr.map((el: Product) => {
         return el;
       }),
       "Product 목록을 찾는데 성공했습니다."
@@ -60,9 +63,12 @@ export class ProductService {
       delete paramObj?.amount
       delete paramObj?.title
     }
+    if (paramObj.amount === 0) {
+      paramObj.amount = null;
+    }
 
     await this.ProductQueryRepo.update(paramObj,"id", id);
-    return new PageResObj({}, "Product 생성에 성공했습니다.");
+    return new PageResObj({}, "Product 수정에 성공했습니다.");
   }
 
   @Transaction()
