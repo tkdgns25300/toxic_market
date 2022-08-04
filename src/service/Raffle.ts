@@ -249,13 +249,14 @@ export class RaffleService {
     const entityManager = getManager();
     let raffle = await entityManager.query("SELECT * FROM raffle WHERE id = ?", [id])
     raffle = raffle[0]
-    console.log(raffle.creator_address)
-    console.log(paramObj.creator)
     if (raffle.creator_address.toLowerCase() !== paramObj.creator.toLowerCase()) {
       return new PageResObj({}, "추첨을 생성한 사용자만 수정 가능합니다.", true);
     }
     const user = await this.userQueryRepo.findOne("public_address", paramObj.creator)
-    console.log(paramObj)
+    // 마감시간 이후 마감시간은 수정 불가
+    if (raffle.end_at <= new Date()) {
+      delete paramObj?.end_at
+    }
     if (user.seller_type === UserSellerType.INDIVIDUAL) {
       delete paramObj?.price
       delete paramObj?.title
@@ -264,7 +265,6 @@ export class RaffleService {
       delete paramObj?.limit
     }
     delete paramObj.creator;
-    console.log(paramObj)
     await this.raffleQueryRepo.update(paramObj, "id", id);
     return new PageResObj({}, "추첨 수정에 성공했습니다.");
   }

@@ -253,7 +253,10 @@ export class AuctionService {
       return new PageResObj({}, "상품을 생성한 사용자만 수정 가능합니다.", true);
     }
     let user = await this.userQueryRepo.findOne("public_address", paramObj.creator_address)
-
+    // 마감시간 이후 마감시간은 수정 불가
+    if (product.end_at <= new Date()) {
+      delete paramObj?.end_at
+    }
     if(user.seller_type === UserSellerType.INDIVIDUAL) {
       delete paramObj?.price
       delete paramObj?.start_at
