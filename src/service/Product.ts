@@ -20,6 +20,7 @@ export class ProductService {
   ) {}
 
   async findAll(param: PageReq): Promise<PageResList<Product>> {
+    /*
     let [result1, result2] = await this.ProductQueryRepo.findProducts(param);
     result1 = await result1;
     result2 = await result2;
@@ -28,6 +29,16 @@ export class ProductService {
       result1[1] + result2[1],
       param.limit,
       unionArr.map((el: Product) => {
+        return el;
+      }),
+      "Product 목록을 찾는데 성공했습니다."
+    );
+    */
+    let result = await this.ProductQueryRepo.findProducts(param);
+    return new PageResList<Product>(
+      result[1],
+      param.limit,
+      result[0].map((el: Product) => {
         return el;
       }),
       "Product 목록을 찾는데 성공했습니다."
