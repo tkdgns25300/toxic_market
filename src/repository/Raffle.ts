@@ -168,6 +168,11 @@ export class RaffleQueryRepo extends BaseQueryRepo {
     const builder = createQueryBuilder("raffle");
     
     builder
+    .leftJoinAndSelect("Raffle.raffle_logs", "raffle_log")
+    .select([
+      "Raffle",
+      "raffle_log"
+    ])
     .where('creator_address = :creator', {
       creator: creator_address
     })
