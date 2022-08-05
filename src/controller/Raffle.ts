@@ -5,7 +5,7 @@ import { QueryFailedError } from "typeorm";
 import { PageReq, PageResObj } from "../api";
 import { RaffleLogSearchReq } from "../api/request/RaffleLogSearchReq";
 import { RaffleSearchReq } from "../api/request/RaffleSearchReq";
-import { ApplyDto, RaffleConfirmDto, RaffleDto, RaffleFinishDto } from "../dto/Raffle";
+import { AgreeRaffleServiceDto, ApplyDto, RaffleConfirmDto, RaffleDto, RaffleFinishDto } from "../dto/Raffle";
 import { checkAccessToken, checkAdminAccessToken } from "../middlewares/Auth";
 import { RaffleService } from "../service/Raffle";
 
@@ -184,6 +184,20 @@ export class RaffleController {
       const { aud } = res.locals.jwtPayload;
       param.creator = aud;
       return await this.raffleService.update(param, id);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
+
+  @Post("/agree")
+  @UseBefore(checkAccessToken)
+  public async agree(@Body() param: AgreeRaffleServiceDto, @Res() res: Response) {
+    try {
+      const { aud } = res.locals.jwtPayload;
+      return await this.raffleService.agree(param, aud);
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);

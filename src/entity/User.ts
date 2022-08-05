@@ -121,4 +121,12 @@ export class User extends BaseEntity {
     comment: "비밀번호(해시 암호화)"
   })
   passwordHash: string;
+
+  @Column({
+    type: "char",
+    length: 1,
+    default: "X",
+    comment: "응모 시스템 이용약관 동의 여부"
+  })
+  agreeRaffleService: string;
 }

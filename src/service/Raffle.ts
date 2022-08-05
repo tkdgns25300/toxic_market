@@ -5,7 +5,7 @@ import { PageReq, PageResList, PageResObj } from "../api";
 import { RaffleLogSearchReq } from "../api/request/RaffleLogSearchReq";
 import { RaffleSearchReq } from "../api/request/RaffleSearchReq";
 import { RaffleDto } from "../dto";
-import { ApplyDto, RaffleConfirmDto, RaffleFinishDto } from "../dto/Raffle";
+import { AgreeRaffleServiceDto, ApplyDto, RaffleConfirmDto, RaffleFinishDto } from "../dto/Raffle";
 import { Raffle, RaffleLog, User } from "../entity";
 import { UserSellerType } from "../enum";
 import { RaffleQueryRepo } from "../repository/Raffle";
@@ -274,5 +274,15 @@ export class RaffleService {
     delete paramObj.creator;
     await this.raffleQueryRepo.update(paramObj, "id", id);
     return new PageResObj({}, "추첨 수정에 성공했습니다.");
+  }
+  
+  async agree(paramObj: AgreeRaffleServiceDto, public_address: string): Promise<PageResObj<{}>> {
+    if (paramObj.agreeRaffleService === 'X') {
+      return new PageResObj({}, "약관에 동의해주세요.", true);
+    }
+    else if (paramObj.agreeRaffleService === 'O') {
+      await this.userQueryRepo.update(paramObj, "public_address", public_address);
+      return new PageResObj({}, "약관에 동의하였습니다.");
+    }
   }
 }

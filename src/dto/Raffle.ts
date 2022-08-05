@@ -54,13 +54,11 @@ export class RaffleDto {
 
 export class RaffleConfirmDto {
   @IsString({ message: "문자열이 아닙니다." })
-  @IsOptional()
   is_approved: string;
 }
 
 export class RaffleFinishDto {
   @IsString({ message: "문자열이 아닙니다." })
-  @IsOptional()
   is_succeed: string;
 }
 
@@ -70,4 +68,9 @@ export class ApplyDto {
 
   @IsInt()
   raffle_id: number;
+}
+
+export class AgreeRaffleServiceDto {
+  @IsString({ message: "문자열이 아닙니다." })
+  agreeRaffleService: string;
 }
