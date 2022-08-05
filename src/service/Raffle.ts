@@ -117,8 +117,10 @@ export class RaffleService {
       return new PageResObj({}, "응모 제한 수량을 넘었습니다.", true);
     }
     // 30회를 초과하여 응모하는 지갑인지 확인
+    let max = 30;
     const userRaffleLog = await manager.findOne(RaffleLog, { applicant: public_address, raffle_id: paramObj.raffle_id })
-    if (userRaffleLog.amount + paramObj.apply_amount > 30) {
+    if (userRaffleLog) max -= userRaffleLog.amount;
+    if (paramObj.apply_amount > max) {
       return new PageResObj({}, "한 지갑당 30회만 응모 가능합니다.", true);
     }
     // 포인트 빼기 (잔액 확인)
