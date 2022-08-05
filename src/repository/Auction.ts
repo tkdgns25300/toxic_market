@@ -51,6 +51,7 @@ export class AuctionQueryRepo extends BaseQueryRepo {
         .andWhere('start_at < :start_at', {
             start_at: new Date()
         })
+        .orderBy('end_at', "DESC")
         .skip(param.getOffset())
         .take(param.getLimit())
         .getManyAndCount();
