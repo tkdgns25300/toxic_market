@@ -116,6 +116,11 @@ export class RaffleService {
     if (raffle.limit < currentRaffleAmount + paramObj.apply_amount) {
       return new PageResObj({}, "응모 제한 수량을 넘었습니다.", true);
     }
+    // 30회를 초과하여 응모하는 지갑인지 확인
+    const userRaffleLog = await manager.findOne(RaffleLog, { applicant: public_address, raffle_id: paramObj.raffle_id })
+    if (userRaffleLog.amount + paramObj.apply_amount > 30) {
+      return new PageResObj({}, "한 지갑당 30회만 응모 가능합니다.", true);
+    }
     // 포인트 빼기 (잔액 확인)
     const applicant = await manager.findOne(User, public_address);
     if (applicant.CF_balance < raffle.price * paramObj.apply_amount) {
@@ -124,7 +129,7 @@ export class RaffleService {
     applicant.CF_balance -= raffle.price * paramObj.apply_amount
     await manager.update(User, { public_address: applicant.public_address }, applicant);
     // 로그 생성: 이미 응모한 기록이 있는 경우 amount만 업데이트
-    const oldRaffleLog = await manager.findOne(RaffleLog, {applicant: public_address})
+    const oldRaffleLog = await manager.findOne(RaffleLog, {applicant: public_address, raffle_id: paramObj.raffle_id})
     if (oldRaffleLog) {
       oldRaffleLog.amount += paramObj.apply_amount;
       await manager.update(RaffleLog, { id: oldRaffleLog.id }, oldRaffleLog)
