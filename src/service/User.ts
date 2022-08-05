@@ -44,7 +44,9 @@ export class UserService {
 
   async create(paramObj: UserDto): Promise<PageResObj<User | {}>> {
     let user = await this.userQueryRepo.findOne("public_address", paramObj.public_address)
-    
+    if (paramObj.store_name === '') {
+      delete paramObj.store_name
+    }
     if(user){
       await this.userQueryRepo.update(paramObj, "public_address", paramObj.public_address)
       return new PageResObj(paramObj, "판매자 등록에 성공했습니다.");
@@ -57,5 +59,4 @@ export class UserService {
     );
     return new PageResObj(result, "판매자 등록에 성공했습니다.");
   }
-
 }
