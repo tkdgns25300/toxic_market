@@ -110,6 +110,7 @@ export class RaffleQueryRepo extends BaseQueryRepo {
     .where('is_approved = :is_approved', {
       is_approved: "O"
     })
+    .orderBy('Raffle.end_at', 'DESC')
     
     builder.skip(param.getOffset()).take(param.getLimit());
     return builder.getManyAndCount();
