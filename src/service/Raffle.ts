@@ -125,9 +125,9 @@ export class RaffleService {
       return new PageResObj({}, "추첨 기간이 아닙니다.", true);
     }
     // 추첨 생성자는 입찰 불가
-    // if (raffle.creator_address === public_address) {
-    //   return new PageResObj({}, "추첨 생성자는 참가할 수 없습니다.", true);
-    // }
+    if (raffle.creator_address === public_address) {
+      return new PageResObj({}, "추첨 생성자는 참가할 수 없습니다.", true);
+    }
     // 응모 가능한지 limit 확인
     const allRaffleLogs = await manager.findAndCount(RaffleLog, { raffle_id: paramObj.raffle_id });
     let currentRaffleAmount = 0
