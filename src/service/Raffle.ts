@@ -12,6 +12,8 @@ import { RaffleQueryRepo } from "../repository/Raffle";
 import { RaffleLogQueryRepo } from "../repository/RaffleLog";
 import { UserQueryRepo } from "../repository/User";
 import { selectWinner } from "../util/selectWinner";
+import schedule from 'node-schedule';
+import { dateToCron } from "../util/dateToCron";
 
 @Service()
 export class RaffleService {
@@ -35,6 +37,22 @@ export class RaffleService {
       "id",
       newRaffle.identifiers[0].id
     );
+    // schedule 생성
+    const endDate = new Date(result.end_at)
+    const cronDate = dateToCron(endDate);
+    const raffle: any = await this.raffleQueryRepo.getOne(result.id);
+    schedule.scheduleJob('' + raffle.id, cronDate, async () => {
+      // 응모자가 1명 이상인지 확인
+      if (raffle.raffle_logs.length === 0) {
+        return await this.raffleQueryRepo.update({ is_succeed: "X" } , "id", result.id);
+      }
+      // 이미 당첨자가 있는 경우 거르기
+      if (raffle.raffle_logs[0].is_winner === null) {
+        // 당첨자 선정
+        const winnerLogId = selectWinner(raffle.raffle_logs)
+        await this.raffleLogQueryRepo.selectWinner(result.id, winnerLogId);
+      }
+    })
     return new PageResObj(result, "추첨 생성에 성공했습니다.")
   }
 
@@ -256,10 +274,8 @@ export class RaffleService {
   }
 
   async update(paramObj: RaffleDto, id: number): Promise<PageResObj<Raffle | {}>> {
-    const entityManager = getManager();
-    let raffle = await entityManager.query("SELECT * FROM raffle WHERE id = ?", [id])
-    raffle = raffle[0]
-    if (raffle.creator_address.toLowerCase() !== paramObj.creator.toLowerCase()) {
+    const raffle: any = await this.raffleQueryRepo.getOne(id);
+    if (raffle.creator.public_address.toLowerCase() !== paramObj.creator.toLowerCase()) {
       return new PageResObj({}, "추첨을 생성한 사용자만 수정 가능합니다.", true);
     }
     const user = await this.userQueryRepo.findOne("public_address", paramObj.creator)
@@ -276,6 +292,28 @@ export class RaffleService {
     }
     delete paramObj.creator;
     await this.raffleQueryRepo.update(paramObj, "id", id);
+    // 마감시간 수정 시 schedule 수정
+    if (paramObj.end_at !== undefined) {
+      // schedule 삭제
+      const myJob = schedule.scheduledJobs['' + raffle.id]
+      if (myJob) {
+        myJob.cancel();
+      } 
+      // schedule 생성
+      const cronDate = dateToCron(paramObj.end_at);
+      schedule.scheduleJob('' + raffle.id, cronDate, async () => {
+        // 응모자가 1명 이상인지 확인
+        if (raffle.raffle_logs.length === 0) {
+          return await this.raffleQueryRepo.update({ is_succeed: "X" } , "id", id);
+        }
+        // 이미 당첨자가 있는 경우 거르기
+        if (raffle.raffle_logs[0].is_winner === null) {
+          // 당첨자 선정
+          const winnerLogId = selectWinner(raffle.raffle_logs)
+          await this.raffleLogQueryRepo.selectWinner(id, winnerLogId);
+        }
+      })
+    }
     return new PageResObj({}, "추첨 수정에 성공했습니다.");
   }
   

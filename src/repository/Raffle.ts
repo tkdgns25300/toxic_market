@@ -125,6 +125,7 @@ export class RaffleQueryRepo extends BaseQueryRepo {
     .select([
       "Raffle",
       "user.name",
+      "user.public_address",
       "user.phone",
       "raffle_log"
     ])
