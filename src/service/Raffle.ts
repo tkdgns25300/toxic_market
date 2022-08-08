@@ -27,6 +27,9 @@ export class RaffleService {
     if (user.is_seller !== 'O') {
       return new PageResObj({}, "판매자 권한이 없습니다.", true);
     }
+    if (paramObj.price%10 !== 0) {
+      return new PageResObj({}, "10TP단위로 입찰해주세요.", true);
+    }
     const newRaffle = await this.raffleQueryRepo.create(paramObj);
     const result: Raffle = await this.raffleQueryRepo.findOne(
       "id",
