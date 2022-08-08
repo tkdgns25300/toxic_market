@@ -40,6 +40,18 @@ export class AuthController {
     }
   }
 
+  @Get("/login/:address")
+  public async findByAddress(@Param("address") address: string) {
+    try {
+      return this.authService.findOne(address);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
+
   @Post("/login")
   // @Post("/login/wallet")
   public async walletLogin(
