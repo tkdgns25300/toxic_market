@@ -40,16 +40,16 @@ export class RaffleService {
     // schedule 생성
     const endDate = new Date(result.end_at)
     const cronDate = dateToCron(endDate);
-    const raffle: any = await this.raffleQueryRepo.getOne(result.id);
-    schedule.scheduleJob('' + raffle.id, cronDate, async () => {
+    schedule.scheduleJob('' + result.id, cronDate, async () => {
       // 응모자가 1명 이상인지 확인
-      if (raffle.raffle_logs.length === 0) {
+      const currentRaffle: any = await this.raffleQueryRepo.getOne(result.id);
+      if (currentRaffle.raffle_logs.length === 0) {
         return await this.raffleQueryRepo.update({ is_succeed: "X" } , "id", result.id);
       }
       // 이미 당첨자가 있는 경우 거르기
-      if (raffle.raffle_logs[0].is_winner === null) {
+      if (currentRaffle.raffle_logs[0].is_winner === null) {
         // 당첨자 선정
-        const winnerLogId = selectWinner(raffle.raffle_logs)
+        const winnerLogId = selectWinner(currentRaffle.raffle_logs)
         await this.raffleLogQueryRepo.selectWinner(result.id, winnerLogId);
       }
     })
@@ -302,14 +302,15 @@ export class RaffleService {
       // schedule 생성
       const cronDate = dateToCron(paramObj.end_at);
       schedule.scheduleJob('' + raffle.id, cronDate, async () => {
+        const currentRaffle: any = await this.raffleQueryRepo.getOne(raffle.id);
         // 응모자가 1명 이상인지 확인
-        if (raffle.raffle_logs.length === 0) {
+        if (currentRaffle.raffle_logs.length === 0) {
           return await this.raffleQueryRepo.update({ is_succeed: "X" } , "id", id);
         }
         // 이미 당첨자가 있는 경우 거르기
-        if (raffle.raffle_logs[0].is_winner === null) {
+        if (currentRaffle.raffle_logs[0].is_winner === null) {
           // 당첨자 선정
-          const winnerLogId = selectWinner(raffle.raffle_logs)
+          const winnerLogId = selectWinner(currentRaffle.raffle_logs)
           await this.raffleLogQueryRepo.selectWinner(id, winnerLogId);
         }
       })
