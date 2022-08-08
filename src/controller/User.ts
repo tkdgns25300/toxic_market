@@ -77,7 +77,15 @@ export class UserController {
 
   @Post("/register")
   @UseBefore(checkAccessToken)
-  public async register(@Body() params: UserIdPasswordDto) {
-    
+  public async register(@Body() params: UserIdPasswordDto, @Res() res: Response) {
+    try {
+      const { aud } = res.locals.jwtPayload;
+      return await this.userService.register(params, aud);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
   }
 }
