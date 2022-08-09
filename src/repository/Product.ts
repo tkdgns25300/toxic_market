@@ -31,4 +31,17 @@ export class ProductQueryRepo extends BaseQueryRepo {
 
 		return [result, totalCount];
 	}
+
+	findUserProducts(param: PageReq, creator_address:string): Promise<[Array<any>, number]> {
+		const builder = createQueryBuilder("product");
+
+		builder
+		.select()
+		.where(`user_address = :user_address`, {
+			user_address: creator_address
+		})
+
+		builder.skip(param.getOffset()).take(param.getLimit());
+    	return builder.getManyAndCount();
+	}
 }

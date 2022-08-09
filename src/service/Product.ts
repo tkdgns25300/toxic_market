@@ -117,4 +117,16 @@ export class ProductService {
     const result: Product = await manager.findOne(Product, { id: id });
     return new PageResObj(result, "Product 구매에 성공했습니다.");
   }
+
+  async findUserProducts(param: PageReq, creator_address: string): Promise<PageResList<Product>> {
+    const result = await this.ProductQueryRepo.findUserProducts(param, creator_address);
+    return new PageResList<Product>(
+      result[1],
+      param.limit,
+      result[0].map((el: Product) => {
+        return el;
+      }),
+      "Product 목록을 찾는데 성공했습니다."
+    );
+  }
 }
