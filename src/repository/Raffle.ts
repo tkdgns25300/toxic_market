@@ -98,10 +98,11 @@ export class RaffleQueryRepo extends BaseQueryRepo {
     return builder.getManyAndCount();
   }
 
-  findAllApproved(param: PageReq): Promise<[Array<any>, number]> {
+  async findAllApproved(param: PageReq): Promise<[Array<any>, number]> {
     const builder = createQueryBuilder("raffle");
     
-    builder
+    // 진행중인 응모 (start_at 정렬)
+    const ongoingRaffle = await createQueryBuilder("raffle")
     .leftJoinAndSelect("Raffle.raffle_logs", "raffle_log")
     .select([
       "Raffle",
@@ -110,10 +111,35 @@ export class RaffleQueryRepo extends BaseQueryRepo {
     .where('is_approved = :is_approved', {
       is_approved: "O"
     })
+    .andWhere('end_at > :end_at', {
+      end_at: new Date()
+    })
+    .orderBy('Raffle.start_at', 'DESC')
+    .getManyAndCount()
+
+    // 마감된 응모 (end_at 정렬)
+    const finishedRaffle = await createQueryBuilder("raffle")
+    .leftJoinAndSelect("Raffle.raffle_logs", "raffle_log")
+    .select([
+      "Raffle",
+      "raffle_log"
+    ])
+    .where('is_approved = :is_approved', {
+      is_approved: "O"
+    })
+    .andWhere('end_at <= :end_at', {
+      end_at: new Date()
+    })
     .orderBy('Raffle.end_at', 'DESC')
+    .getManyAndCount()
     
-    builder.skip(param.getOffset()).take(param.getLimit());
-    return builder.getManyAndCount();
+    // Offset, Limit 적용 후 리턴
+    let raffleArr = ongoingRaffle[0].concat(finishedRaffle[0]);
+    raffleArr = raffleArr.slice(param.getOffset(), param.getOffset() + param.getLimit());
+    const totalCount = ongoingRaffle[1] + finishedRaffle[1];
+    console.log(raffleArr)
+    console.log(totalCount)
+    return [raffleArr, totalCount]
   }
 
   getOne(id: number) {
