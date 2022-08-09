@@ -26,7 +26,7 @@ export class ProductQueryRepo extends BaseQueryRepo {
 		);
 
     // Product 총 갯수
-		let totalCount = await entityManager.query(`SELECT COUNT(*) FROM product`);
+		let totalCount = await entityManager.query(`SELECT COUNT(*) FROM product WHERE is_visible = 'O'`);
 		totalCount = Number(totalCount[0]["COUNT(*)"]);
 
 		return [result, totalCount];
