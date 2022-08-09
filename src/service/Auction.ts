@@ -265,6 +265,10 @@ export class AuctionService {
       delete paramObj?.end_at
       delete paramObj?.title
     }
+    // start_at, end_at 수정
+    if (paramObj.start_at === null || paramObj.end_at === null) {
+      return new PageResObj({}, "유효한 날짜값을 입력해주세요.", true);
+    }
 
     await this.auctionQueryRepo.update(paramObj,"id", id);
     return new PageResObj({}, "경매 수정에 성공했습니다.");

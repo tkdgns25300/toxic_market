@@ -290,6 +290,10 @@ export class RaffleService {
       delete paramObj?.start_at
       delete paramObj?.limit
     }
+    // start_at, end_at 수정
+    if (paramObj.start_at === null || paramObj.end_at === null) {
+      return new PageResObj({}, "유효한 날짜값을 입력해주세요.", true);
+    }
     delete paramObj.creator;
     await this.raffleQueryRepo.update(paramObj, "id", id);
     // 마감시간 수정 시 schedule 수정
