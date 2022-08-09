@@ -7,6 +7,7 @@ import { UserQueryRepo } from "../repository/User";
 import { User } from "../entity";
 import { PageResObj } from "../api";
 import { generateAccessToken } from "../middlewares/Auth";
+import { UserIdPasswordDto } from "../dto/User";
 
 const caver = new Caver("https://public-node-api.klaytnapi.com/v1/cypress");
 
@@ -31,7 +32,7 @@ export class AuthService {
    * checks if public Address in DB is the same with public address that has signed the message
    * if True, then it creates JWT token with public address and updates nonce value
    * */
-  async login(data: { public_address: string; signature: string }) {
+  async walletLogin(data: { public_address: string; signature: string }) {
     const user: User = await this.userQueryRepo.findOne(
       "public_address",
       data.public_address.toLowerCase()
@@ -65,6 +66,10 @@ export class AuthService {
     );
     return new PageResObj({ token }, "로그인 성공했습니다.", false);
   }
+
+  // async generalLogin(paramObj: UserIdPasswordDto): Promise<PageResObj<User | {}>> {
+    
+  // }
 
   async signup(public_address: string): Promise<PageResObj<User | {}>> {
     let isHolder = await this.isHolder(public_address);

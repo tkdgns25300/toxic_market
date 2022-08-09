@@ -13,7 +13,8 @@ import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
 import { PageResObj, UserSearchReq} from "../api";
 import { UserDto } from "../dto";
-import {checkAdminAccessToken} from "../middlewares/Auth";
+import { UserIdPasswordDto } from "../dto/User";
+import {checkAccessToken, checkAdminAccessToken} from "../middlewares/Auth";
 import { UserService } from "../service/User";
 
 @Service()
@@ -27,6 +28,19 @@ export class UserController {
   public async getAll(@QueryParams() param: UserSearchReq, @Res() res: Response) {
     try {
       return await this.userService.findAll(param);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
+
+  @Get("/seller")
+  @UseBefore(checkAdminAccessToken)
+  public async getAllSeller(@QueryParams() param: UserSearchReq, @Res() res: Response) {
+    try {
+      return await this.userService.findAllSeller(param);
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);
@@ -61,4 +75,17 @@ export class UserController {
     }
   }
 
+  @Post("/register")
+  @UseBefore(checkAccessToken)
+  public async register(@Body() params: UserIdPasswordDto, @Res() res: Response) {
+    try {
+      const { aud } = res.locals.jwtPayload;
+      return await this.userService.register(params, aud);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
 }

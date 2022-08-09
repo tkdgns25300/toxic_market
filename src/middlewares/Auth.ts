@@ -75,6 +75,6 @@ export const generateAccessToken = (user: User) => {
       admin: user.is_admin === "O"
     },
     process.env.JWT_TOKEN_KEY,
-    { expiresIn: "24h" }
+    { expiresIn: "30m" }
   );
 };

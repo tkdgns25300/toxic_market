@@ -1,0 +1,109 @@
+paths:
+  /raffle/unapproved:
+    get:
+      tags:
+        - Raffle
+      summary: Find all unapproved raffles
+      consumes:
+        - application/json
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          description: rows per page
+          schema:
+            type: integer
+
+        - name: pageNo
+          in: query
+          required: false
+          description: page number
+          schema:
+            type: integer
+
+
+        - name: name
+          in: query
+          required: false
+          description: 사용자 이름
+          schema:
+            type: string
+
+        - name: title
+          in: query
+          required: false
+          description: 상품명
+          schema:
+            type: string
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalCount:
+                    type: integer
+                    description: 전체 raffle의 갯수
+                    example: 10
+                  totalPage:
+                    type: integer
+                    description: 전체 페이지 갯수; limit, pageNo 를 0으로 보낼 시 null
+                    example: 1
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: Raffle 목록을 찾는데 성공했습니다.
+                  items:
+                    type: array
+                    items:
+                      properties:
+                        id:
+                          type: number
+                        price:
+                          type: number
+                        limit:
+                          type: number
+                        start_at:
+                          type: string
+                          format: date
+                        end_at:
+                          type: string
+                          format: date
+                        title:
+                          type: string
+                        description:
+                          type: string
+                        contact:
+                          type: string
+                        main_img_url:
+                          type: string
+                        sub_img_url:
+                          type: string
+                        is_approved:
+                          type: string
+                        is_succeed:
+                          type: string
+                        created_at:
+                          type: string
+                          format: date
+                        creator:
+                          type: object
+                          properties:
+                            phone:
+                              type: string
+                            name:
+                              type: string
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http

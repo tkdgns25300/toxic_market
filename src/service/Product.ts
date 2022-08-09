@@ -20,7 +20,7 @@ export class ProductService {
   ) {}
 
   async findAll(param: PageReq): Promise<PageResList<Product>> {
-    const result = await this.ProductQueryRepo.findProducts(param);
+    let result = await this.ProductQueryRepo.findProducts(param);
     return new PageResList<Product>(
       result[1],
       param.limit,
@@ -60,9 +60,12 @@ export class ProductService {
       delete paramObj?.amount
       delete paramObj?.title
     }
+    if (paramObj.amount === 0) {
+      paramObj.amount = null;
+    }
 
     await this.ProductQueryRepo.update(paramObj,"id", id);
-    return new PageResObj({}, "Product 생성에 성공했습니다.");
+    return new PageResObj({}, "Product 수정에 성공했습니다.");
   }
 
   @Transaction()

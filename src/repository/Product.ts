@@ -1,4 +1,4 @@
-import { createQueryBuilder, EntityRepository } from "typeorm";
+import { createQueryBuilder, EntityRepository, getManager } from "typeorm";
 import { Service } from "typedi";
 import { Product } from "../entity";
 import { BaseQueryRepo } from "./Base";
@@ -7,27 +7,28 @@ import { PageReq } from "../api";
 @Service()
 @EntityRepository(Product)
 export class ProductQueryRepo extends BaseQueryRepo {
-  constructor() {
-    super("product", "Product");
-  }
+	constructor() {
+		super("product", "Product");
+	}
 
-  findProducts(param: PageReq): Promise<[Array<any>, number]> {
-    const builder = createQueryBuilder("product");
+	async findProducts(param: PageReq): Promise<any> {
+		let monthBeforeDate: Date = new Date();
+		monthBeforeDate.setDate(monthBeforeDate.getDate() - 30);
+		const entityManager = getManager();
 
-    let monthBeforeDate: Date = new Date();
-    monthBeforeDate.setDate(monthBeforeDate.getDate() - 30);
-    
-    builder
-    .andWhere('is_visible = :is_visible', {
-      is_visible: 'O'
-    })
-    .andWhere(`created_at >= :from_date`, {
-      from_date: monthBeforeDate
-    })
-    .orderBy('created_at', 'DESC');
+    // Product
+		const result = await entityManager.query(
+			`(SELECT * FROM product WHERE is_visible = "O" AND (amount != 0 OR amount IS NULL) ORDER BY created_at DESC LIMIT 99999)
+      UNION ALL
+      (SELECT * FROM product WHERE is_visible = "O" AND amount = 0 ORDER BY created_at DESC LIMIT 99999)
+      LIMIT ${param.getLimit()}
+      OFFSET ${param.getOffset()};`
+		);
 
-    builder.skip(param.getOffset()).take(param.getLimit());
+    // Product 총 갯수
+		let totalCount = await entityManager.query(`SELECT COUNT(*) FROM product`);
+		totalCount = Number(totalCount[0]["COUNT(*)"]);
 
-    return builder.getManyAndCount();
-  }
+		return [result, totalCount];
+	}
 }

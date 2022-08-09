@@ -18,6 +18,7 @@ import {
   generateAccessToken,
 } from "../middlewares/Auth";
 import { User } from "../entity";
+import { UserIdPasswordDto } from "../dto/User";
 
 @Service()
 @JsonController("/auth")
@@ -52,11 +53,12 @@ export class AuthController {
   }
 
   @Post("/login")
-  public async login(
+  // @Post("/login/wallet")
+  public async walletLogin(
     @Body() data: { public_address: string; signature: string }
   ) {
     try {
-      return this.authService.login(data);
+      return this.authService.walletLogin(data);
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);
@@ -64,6 +66,18 @@ export class AuthController {
       return new PageResObj({}, err.message, true);
     }
   }
+
+  // @Post("/login/general")
+  // public async generalLogin(@Body() params: UserIdPasswordDto) {
+  //   try {
+  //     return this.authService.generalLogin(params);
+  //   } catch (err) {
+  //     if (err instanceof QueryFailedError) {
+  //       return new PageResObj({}, err.message, true);
+  //     }
+  //     return new PageResObj({}, err.message, true);
+  //   }
+  // }
 
   @Get("/signup/:address")
   public async signup(@Param("address") address: string) {

@@ -1,16 +1,16 @@
 paths:
-  /auction/update/{id}:
-    patch:
+  /raffle/finish/{id}:
+    post:
       tags:
-        - Auction
-      summary: Create a auction
+        - Raffle
+      summary: Finish a raffle
       consumes:
         - application/json
       parameters:
         - name: id
           in: path
           required: true
-          description: product id
+          description: auction id
           schema:
             type: number
 
@@ -20,31 +20,9 @@ paths:
             schema:
               type: object
               properties:
-                price:
-                  type: number
-                  required: true
-                start_at:
+                is_succeed:
                   type: string
-                  format: date
-                end_at:
-                  type: string
-                  format: date
-                title:
-                  type: string
-                  required: true
-                contact:
-                  type: string
-                  required: true
-                description:
-                  type: string
-                  required: true
-                main_img_url:
-                  type: string
-                  required: true
-                sub_img_url:
-                  type: string
-                bid:
-                  type: number
+                  enum: [O, X]
                   required: true
 
       responses:
@@ -60,7 +38,7 @@ paths:
                   msg:
                     type: string
                     description: 메시지
-                    example: 경매 수정에 성공했습니다.
+                    example: 포인트 지급에 성공했습니다.
                   error:
                     type: boolean
                     description: error 체크

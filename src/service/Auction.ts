@@ -155,11 +155,14 @@ export class AuctionService {
     if (auction.start_at > today || auction.end_at < today) {
       return new PageResObj({}, "입찰 기간이 아닙니다.", true);
     }
+    if (auction.creator_address === public_address) {
+      return new PageResObj({}, "경매를 생성하는 사람은 입찰할 수 없습니다.", true);
+    }
     if (auction.bid >= paramObj.bid_amount) {
       return new PageResObj({}, "입찰가격이 기존 가격보다 높아야 합니다.", true);
     }
-    if (auction.creator_address === public_address) {
-      return new PageResObj({}, "경매를 생성하는 사람은 입찰할 수 없습니다.", true);
+    if (paramObj.bid_amount%100 !== 0) {
+      return new PageResObj({}, "100TP단위로 입찰해주세요.", true);
     }
     let newBidder = await manager.findOne(User, {public_address: public_address})
     if(public_address === auction.bidder) {
@@ -248,11 +251,14 @@ export class AuctionService {
   async update(paramObj: AuctionDto, id: number): Promise<PageResObj<Product | {}>> {
 
     let product = await this.auctionQueryRepo.findOne("id", id);
-    if(product.creator_address.toLowerCase() !== paramObj.creator_address.toLocaleLowerCase()) {
+    if(product.creator_address.toLowerCase() !== paramObj.creator_address.toLowerCase()) {
       return new PageResObj({}, "상품을 생성한 사용자만 수정 가능합니다.", true);
     }
     let user = await this.userQueryRepo.findOne("public_address", paramObj.creator_address)
-
+    // 마감시간 이후 마감시간은 수정 불가
+    if (product.end_at <= new Date()) {
+      delete paramObj?.end_at
+    }
     if(user.seller_type === UserSellerType.INDIVIDUAL) {
       delete paramObj?.price
       delete paramObj?.start_at
@@ -261,6 +267,6 @@ export class AuctionService {
     }
 
     await this.auctionQueryRepo.update(paramObj,"id", id);
-    return new PageResObj({}, "경매 편집에 성공했습니다.");
+    return new PageResObj({}, "경매 수정에 성공했습니다.");
   }
 }

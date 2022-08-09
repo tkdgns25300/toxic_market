@@ -1,6 +1,6 @@
 tags:
   - name: User
-    description: 판매자 등록 API
+    description: 사용자 API
 
 paths:
   /user/create:

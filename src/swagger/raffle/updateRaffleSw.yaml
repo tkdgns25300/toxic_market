@@ -1,9 +1,9 @@
 paths:
-  /auction/update/{id}:
+  /raffle/update/{id}:
     patch:
       tags:
-        - Auction
-      summary: Create a auction
+        - Raffle
+      summary: Update a raffle
       consumes:
         - application/json
       parameters:
@@ -22,7 +22,6 @@ paths:
               properties:
                 price:
                   type: number
-                  required: true
                 start_at:
                   type: string
                   format: date
@@ -43,9 +42,6 @@ paths:
                   required: true
                 sub_img_url:
                   type: string
-                bid:
-                  type: number
-                  required: true
 
       responses:
         200:
@@ -60,7 +56,7 @@ paths:
                   msg:
                     type: string
                     description: 메시지
-                    example: 경매 수정에 성공했습니다.
+                    example: 추첨 수정에 성공했습니다.
                   error:
                     type: boolean
                     description: error 체크

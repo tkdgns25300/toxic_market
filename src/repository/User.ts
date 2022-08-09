@@ -11,14 +11,26 @@ export class UserQueryRepo extends BaseQueryRepo {
     super("user", "User");
   }
 
-    search(param: UserSearchReq): Promise<[Array<any>, number]> {
-      return createQueryBuilder("user")
-          .where(`name like :name`, {
-            name: `%${param.getName}%`,
-          })
-          .andWhere("public_address like :public_address", {public_address: `%${param.getAddress}%`})
-          .skip(param.getOffset())
-          .take(param.getLimit())
-          .getManyAndCount();
-    }
+  search(param: UserSearchReq): Promise<[Array<any>, number]> {
+    return createQueryBuilder("user")
+        .where(`name like :name`, {
+          name: `%${param.getName}%`,
+        })
+        .andWhere("public_address like :public_address", {public_address: `%${param.getAddress}%`})
+        .skip(param.getOffset())
+        .take(param.getLimit())
+        .getManyAndCount();
+  }
+
+  searchSeller(param: UserSearchReq): Promise<[Array<any>, number]> {
+    return createQueryBuilder("user")
+        .where(`is_seller = 'O'`)
+        .andWhere(`name like :name`, {
+          name: `%${param.getName}%`,
+        })
+        .andWhere("public_address like :public_address", {public_address: `%${param.getAddress}%`})
+        .skip(param.getOffset())
+        .take(param.getLimit())
+        .getManyAndCount();
+  }
 }

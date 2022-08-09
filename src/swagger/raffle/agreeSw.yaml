@@ -1,0 +1,44 @@
+paths:
+  /raffle/agree:
+    post:
+      tags:
+        - Raffle
+      summary: Agree raffle's service
+      consumes:
+        - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                agreeRaffleService:
+                  type: string
+                  enum: [O, X]
+                  required: true
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  item:
+                    type: object
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: 약관에 동의하였습니다.
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http
