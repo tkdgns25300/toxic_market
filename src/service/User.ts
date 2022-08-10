@@ -5,7 +5,7 @@ import { UserQueryRepo } from "../repository/User";
 import { User } from "../entity";
 import { UserDto } from "../dto";
 import { PageResList, PageResObj, UserSearchReq} from "../api";
-import { UserIdPasswordDto } from "../dto/User";
+import { UserIdPasswordDto, UserPasswordDto } from "../dto/User";
 import { hash } from "../util/hash";
 
 @Service()
@@ -81,5 +81,13 @@ export class UserService {
       return new PageResObj({}, "ID등록에 실패하였습니다.", true);
     }
     return new PageResObj({}, "ID등록에 성공하였습니다.");
+  }
+
+  async updatePassword(paramObj: UserPasswordDto, public_address: string): Promise<PageResObj<{}>> {
+    if (paramObj?.password === undefined) {
+      return new PageResObj({}, "변경할 비밀번호을 입력해주세요.", true);  
+    }
+    await this.userQueryRepo.update({ passwordHash: hash(paramObj.password) }, "public_address", public_address);
+    return new PageResObj({}, "비밀번호 변경에 성공했습니다.");
   }
 }

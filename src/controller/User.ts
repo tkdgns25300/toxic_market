@@ -4,6 +4,7 @@ import {
   Get,
   JsonController,
   Param,
+  Patch,
   Post,
   QueryParams,
   Res,
@@ -13,7 +14,7 @@ import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
 import { PageResObj, UserSearchReq} from "../api";
 import { UserDto } from "../dto";
-import { UserIdPasswordDto } from "../dto/User";
+import { UserIdPasswordDto, UserPasswordDto } from "../dto/User";
 import {checkAccessToken, checkAdminAccessToken} from "../middlewares/Auth";
 import { UserService } from "../service/User";
 
@@ -81,6 +82,20 @@ export class UserController {
     try {
       const { aud } = res.locals.jwtPayload;
       return await this.userService.register(params, aud);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
+
+  @Patch("/password")
+  @UseBefore(checkAccessToken)
+  public async updatePassword(@Body() params: UserPasswordDto, @Res() res: Response) {
+    try {
+      const { aud } = res.locals.jwtPayload;
+      return await this.userService.updatePassword(params, aud);
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);
