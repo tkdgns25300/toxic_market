@@ -3,11 +3,11 @@ tags:
     description: 로그인 API
 
 paths:
-  /auth/login:
+  /auth/login/wallet:
     post:
       tags:
         - Auth
-      summary: log in
+      summary: log in with wallet
       consumes:
         - application/json
       requestBody:

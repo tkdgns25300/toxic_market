@@ -109,6 +109,7 @@ export class User extends BaseEntity {
     length: 20,
     default: null,
     nullable: true,
+    unique: true,
     comment: "아이디"
   })
   id: string;

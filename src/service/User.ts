@@ -63,6 +63,10 @@ export class UserService {
   }
 
   async register(paramObj: UserIdPasswordDto, public_address: string): Promise<PageResObj<{}>> {
+    const isExist = await this.userQueryRepo.findOne("id", paramObj.id)
+    if (isExist) {
+      return new PageResObj({}, "존재하는 ID입니다.", true);
+    }
     const user = await this.userQueryRepo.findOne("public_address", public_address)
     // 이미 ID를 등록했었던 경우
     if (user.id !== null) {
