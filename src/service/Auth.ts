@@ -80,6 +80,21 @@ export class AuthService {
     return new PageResObj({ token }, "로그인 성공하였습니다.", false);
   }
 
+  async adminLogin(paramObj: UserIdPasswordDto): Promise<PageResObj<User | {}>> {
+    const user = await this.userQueryRepo.findOne("id", paramObj.id);
+    if (!user) {
+      return new PageResObj({}, "존재하지 않는 사용자입니다.", true);
+    }
+    if (user.passwordHash !== hash(paramObj.password)) {
+      return new PageResObj({}, "비밀번호가 일치하지 않습니다.", true);
+    }
+    if (user.is_admin !== 'O') {
+      return new PageResObj({}, "관리자가 아닙니다.", true);
+    }
+    const token = generateAccessToken(user)
+    return new PageResObj({ token }, "로그인 성공하였습니다.", false);
+  }
+
   async signup(public_address: string): Promise<PageResObj<User | {}>> {
     let isHolder = await this.isHolder(public_address);
     if (!isHolder) {

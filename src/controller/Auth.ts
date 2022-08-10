@@ -78,6 +78,18 @@ export class AuthController {
     }
   }
 
+  @Post("/login/admin")
+  public async adminLogin(@Body() params: UserIdPasswordDto) {
+    try {
+      return this.authService.adminLogin(params);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
+
   @Get("/signup/:address")
   public async signup(@Param("address") address: string) {
     try {
