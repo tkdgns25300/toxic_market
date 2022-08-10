@@ -121,7 +121,7 @@ export class User extends BaseEntity {
     nullable: true,
     comment: "비밀번호(해시 암호화)"
   })
-  passwordHash: string;
+  password_hash: string;
 
   @Column({
     type: "char",
@@ -130,4 +130,30 @@ export class User extends BaseEntity {
     comment: "응모 시스템 이용약관 동의 여부"
   })
   agreeRaffleService: string;
+
+  @Column({
+    type: "varchar",
+    length: 200,
+    default: null,
+    nullable: true,
+    comment: "프로필 이미지"
+  })
+  profile_img: string;
+
+  @Column({
+    type: "varchar",
+    length: 12,
+    default: null,
+    nullable: true,
+    comment: "닉네임"
+  })
+  nickname: string;
+
+  @Column({
+    type: "text",
+    default: null,
+    nullable: true,
+    comment: "소개글"
+  })
+  introduction: string;
 }

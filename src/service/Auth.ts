@@ -24,7 +24,7 @@ export class AuthService {
       "public_address",
       public_address
     );
-
+    delete result.password_hash;
     return new PageResObj(result, "사용자를 찾는데 성공했습니다.");
   }
   /**
@@ -73,7 +73,7 @@ export class AuthService {
     if (!user) {
       return new PageResObj({}, "존재하지 않는 사용자입니다.", true);
     }
-    if (user.passwordHash !== hash(paramObj.password)) {
+    if (user.password_hash !== hash(paramObj.password)) {
       return new PageResObj({}, "비밀번호가 일치하지 않습니다.", true);
     }
     const token = generateAccessToken(user)
@@ -85,7 +85,7 @@ export class AuthService {
     if (!user) {
       return new PageResObj({}, "존재하지 않는 사용자입니다.", true);
     }
-    if (user.passwordHash !== hash(paramObj.password)) {
+    if (user.password_hash !== hash(paramObj.password)) {
       return new PageResObj({}, "비밀번호가 일치하지 않습니다.", true);
     }
     if (user.is_admin !== 'O') {

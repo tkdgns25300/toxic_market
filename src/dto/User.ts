@@ -71,12 +71,26 @@ export class UserDto {
   @IsString({ message: "문자열이 아닙니다." })
   @MaxLength(100, { message: "최대 100자까지 입력됩니다." })
   @IsOptional()
-  passwordHash: string
+  password_hash: string
 
   @IsString({ message: "문자열이 아닙니다." })
   @MaxLength(1, { message: "최대 1자까지 입력됩니다." })
   @IsOptional()
   agreeRaffleService: string;
+
+  @IsString({ message: "문자열이 아닙니다." })
+  @MaxLength(200, { message: "최대 100자까지 입력됩니다." })
+  @IsOptional()
+  profile_img: string
+
+  @IsString({ message: "문자열이 아닙니다." })
+  @MaxLength(12, { message: "최대 100자까지 입력됩니다." })
+  @IsOptional()
+  nickname: string
+
+  @IsString({ message: "문자열이 아닙니다." })
+  @IsOptional()
+  introduction: string
 }
 
 export class UserIdPasswordDto {
@@ -93,4 +107,20 @@ export class UserPasswordDto {
   @IsString({ message: "문자열이 아닙니다." })
   @MaxLength(100, { message: "최대 100자까지 입력됩니다." })
   password: string
+}
+
+export class UserProfileDto {
+  @IsString({ message: "문자열이 아닙니다." })
+  @MaxLength(200, { message: "최대 100자까지 입력됩니다." })
+  @IsOptional()
+  profile_img: string
+
+  @IsString({ message: "문자열이 아닙니다." })
+  @MaxLength(12, { message: "최대 100자까지 입력됩니다." })
+  @IsOptional()
+  nickname: string
+
+  @IsString({ message: "문자열이 아닙니다." })
+  @IsOptional()
+  introduction: string
 }
