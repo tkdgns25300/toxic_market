@@ -21,6 +21,12 @@ export class ProductService {
 
   async findAll(param: PageReq): Promise<PageResList<Product>> {
     let result = await this.ProductQueryRepo.findProducts(param);
+    // nickname추가 하여 리턴 : 좋지 않은 방식 => 원래는 product와 user에 manyToOne관계를 맺어서 처리해야함. but 프로젝트 크기가 크지 않아 속도 저하의 우려가 없어 이렇게 작성.
+    for (const el of result[0]) {
+      const creator = await this.userQueryRepo.findOne("public_address", el.user_address);
+      const nickname = creator.nickname;
+      el.nickname = nickname
+    }
     return new PageResList<Product>(
       result[1],
       param.limit,
@@ -33,6 +39,10 @@ export class ProductService {
 
   async findOne(id: number): Promise<PageResObj<Product | {}>> {
     const result = await this.ProductQueryRepo.findOne("id", id);
+    // nickname추가 하여 리턴 : 좋지 않은 방식 => 원래는 product와 user에 manyToOne관계를 맺어서 처리해야함. but 프로젝트 크기가 크지 않아 속도 저하의 우려가 없어 이렇게 작성.
+    const creator = await this.userQueryRepo.findOne("public_address", result.user_address);
+    const nickname = creator.nickname;
+    result.nickname = nickname
     return new PageResObj(result, "Product 조회에 성공했습니다.");
   }
 

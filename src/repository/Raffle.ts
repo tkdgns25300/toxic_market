@@ -137,8 +137,6 @@ export class RaffleQueryRepo extends BaseQueryRepo {
     let raffleArr = ongoingRaffle[0].concat(finishedRaffle[0]);
     raffleArr = raffleArr.slice(param.getOffset(), param.getOffset() + param.getLimit());
     const totalCount = ongoingRaffle[1] + finishedRaffle[1];
-    console.log(raffleArr)
-    console.log(totalCount)
     return [raffleArr, totalCount]
   }
 
