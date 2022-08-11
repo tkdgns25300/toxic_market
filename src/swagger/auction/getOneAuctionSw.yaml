@@ -91,6 +91,8 @@ paths:
                               format: date
                             auction_id:
                               type: number
+                            nickname:
+                               type: string
                       created_at:
                         type: string
                         format: date
