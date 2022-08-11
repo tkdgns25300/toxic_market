@@ -175,6 +175,7 @@ export class RaffleQueryRepo extends BaseQueryRepo {
       "user.public_address",
       "raffle_log"
     ])
+    .orderBy("raffle_log.created_at", "DESC")
 
     // seller 필터링
     if (param.seller !== undefined) {
