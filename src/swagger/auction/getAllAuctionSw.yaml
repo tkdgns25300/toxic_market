@@ -78,6 +78,8 @@ paths:
                         created_at:
                           type: string
                           format: date
+                        nickname:
+                          type: string
                   error:
                     type: boolean
                     description: error 체크

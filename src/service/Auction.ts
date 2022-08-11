@@ -118,6 +118,12 @@ export class AuctionService {
 
   async findAllApproved(param: PageReq): Promise<PageResList<Auction>> {
     const result = await this.auctionQueryRepo.findAllApproved(param);
+    // nickname추가 하여 리턴 : 좋지 않은 방식 => 프로젝트 크기가 크지 않아 속도 저하의 우려가 없어 이렇게 작성.
+    for (const el of result[0]) {
+      const creator = await this.userQueryRepo.findOne("public_address", el.creator_address);
+      const nickname = creator.nickname;
+      el.nickname = nickname
+    }
     return new PageResList<Auction>(
         result[1],
         param.limit,
