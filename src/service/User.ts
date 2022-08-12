@@ -100,6 +100,7 @@ export class UserService {
       return new PageResObj({}, "프로필 수정에 실패했습니다.", true);
     }
     const result = await this.userQueryRepo.findOne("public_address", public_address);
+    delete result.nonce;
     delete result.password_hash;
     return new PageResObj(result, "프로필 수정에 성공했습니다.");
   }
