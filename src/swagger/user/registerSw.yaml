@@ -1,0 +1,46 @@
+paths:
+  /user/register:
+    post:
+      tags:
+        - User
+      summary: Register user's id, password
+      consumes:
+        - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                password:
+                  type: string
+
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: ID등록에 성공하였습니다.
+                  item:
+                    type: object
+
+                  
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http
