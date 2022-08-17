@@ -30,6 +30,7 @@ export class AuctionService {
 
 
   async findAllApprovedAndFinished(param: AuctionSearchReq): Promise<PageResList<Auction>> {
+    // Promise<PageResList<Auction>> => 옥션이 PageResList의 타입으로 들어가고 이게 프로미스로 리턴된다
     const result = await this.auctionQueryRepo.getAllApprovedAndFinished(param);
     return new PageResList<Auction>(
         result[1],
