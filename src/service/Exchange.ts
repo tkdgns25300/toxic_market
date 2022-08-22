@@ -29,11 +29,18 @@ export class ExchangeService {
   ) {
     // @ts-ignore
     const contractInstance = caver.contract.create(ABI, TOX_CONTRACT_ADDRESS);
+    //caver.contract 객체는 Klaytn 블록체인과 스마트 컨트랙트 간의 상호작용을 쉽게 만들어 줍니다. 
+    //새 컨트랙트 객체를 생성할 때 해당 스마트 컨트랙트를 위해 JSON 인터페이스를 제공해야 하는데, 
+    //이때 caver-js가 자바스크립트로 작성된 컨트랙트 객체와의 모든 호출을 RPC를 통해 하위 수준의 ABI 호출로 자동 변환시켜줍니다.
+
     const user: User = await this.userQueryRepo.findOne(
       "public_address", public_address);
 
     user.CF_balance = user.CF_balance + amount * 10 * 0.95; // 1 TOX = 10 POINT - 5% commission
 
+    // 톡시 요청으로 수수료 5%에서 0% 변경 건
+    // user.CF_balance = user.CF_balance + amount * 10
+    // commissionFee는 send하지 않음
 
     const amountOfCoins = BigInt(amount * 0.95 * Math.pow(10, 18)); // 95% of coin COMMISSION 5%
     const commissionFee = BigInt(amount * 0.05 * Math.pow(10, 18)); // 5% of coin
