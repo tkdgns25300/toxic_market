@@ -1,25 +1,15 @@
+tags:
+  - name: Product
+    description: 상품 API
+
 paths:
-  /auction/approved:
+  /product/user:
     get:
       tags:
-        - Auction
-      summary: 승인된 경매 목록
+        - Product
+      summary: Get all my product
       consumes:
         - application/json
-      parameters:
-        - name: limit
-          in: query
-          required: false
-          description: rows per page
-          schema:
-            type: integer
-
-        - name: pageNo
-          in: query
-          required: false
-          description: page number
-          schema:
-            type: integer
 
       responses:
         200:
@@ -31,7 +21,7 @@ paths:
                 properties:
                   totalCount:
                     type: integer
-                    description: 전체 auction의 갯수
+                    description: 전체 product의 갯수
                     example: 10
                   totalPage:
                     type: integer
@@ -40,44 +30,34 @@ paths:
                   msg:
                     type: string
                     description: 메시지
-                    example: Auction 목록을 찾는데 성공했습니다.
+                    example: Product 목록을 찾는데 성공했습니다.
                   items:
                     type: array
                     items:
                       properties:
                         id:
                           type: number
-                        price:
-                          type: number
-                        start_at:
-                          type: string
-                          format: date
-                        end_at:
-                          type: string
-                          format: date
-                        title:
-                          type: string
-                        contact:
-                          type: string
-                        description:
-                          type: string
                         main_img_url:
                           type: string
                         sub_img_url:
                           type: string
-                        bidder:
-                          type: string
-                        bid:
+                        price:
                           type: number
-                        is_approved:
+                        amount:
+                          type: number
+                        title:
                           type: string
-                        is_succeed:
+                        description:
                           type: string
-                        creator:
-                          type: string
+                        contact:
+                          type: string  
                         created_at:
                           type: string
                           format: date
+                        user_address:
+                          type: string
+                        is_visible:
+                          type: string
                         nickname:
                           type: string
                   error:

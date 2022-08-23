@@ -105,6 +105,13 @@ export class RaffleService {
 
   async findAllApproved(paramObj: PageReq): Promise<PageResList<Raffle>> {
     const result = await this.raffleQueryRepo.findAllApproved(paramObj);
+    // nickname추가 하여 리턴 : 좋지 않은 방식 => but 프로젝트 크기가 크지 않아 속도 저하의 우려가 없어 이렇게 작성.
+    for (const el of result[0]) {
+      const creator = await this.userQueryRepo.findOne("public_address", el.creator.public_address);
+      const nickname = creator.nickname;
+      el.nickname = nickname
+      delete el.creator
+    }
     return new PageResList<Raffle> (
         result[1],
         paramObj.limit,

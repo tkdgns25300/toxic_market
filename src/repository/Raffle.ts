@@ -104,9 +104,11 @@ export class RaffleQueryRepo extends BaseQueryRepo {
     // 진행중인 응모 (start_at 정렬)
     const ongoingRaffle = await createQueryBuilder("raffle")
     .leftJoinAndSelect("Raffle.raffle_logs", "raffle_log")
+    .leftJoinAndSelect("Raffle.creator", "user")
     .select([
       "Raffle",
-      "raffle_log"
+      "raffle_log",
+      "user.public_address"
     ])
     .where('is_approved = :is_approved', {
       is_approved: "O"
@@ -120,9 +122,11 @@ export class RaffleQueryRepo extends BaseQueryRepo {
     // 마감된 응모 (end_at 정렬)
     const finishedRaffle = await createQueryBuilder("raffle")
     .leftJoinAndSelect("Raffle.raffle_logs", "raffle_log")
+    .leftJoinAndSelect("Raffle.creator", "user")
     .select([
       "Raffle",
-      "raffle_log"
+      "raffle_log",
+      "user.public_address"
     ])
     .where('is_approved = :is_approved', {
       is_approved: "O"
@@ -137,8 +141,6 @@ export class RaffleQueryRepo extends BaseQueryRepo {
     let raffleArr = ongoingRaffle[0].concat(finishedRaffle[0]);
     raffleArr = raffleArr.slice(param.getOffset(), param.getOffset() + param.getLimit());
     const totalCount = ongoingRaffle[1] + finishedRaffle[1];
-    console.log(raffleArr)
-    console.log(totalCount)
     return [raffleArr, totalCount]
   }
 
@@ -173,6 +175,7 @@ export class RaffleQueryRepo extends BaseQueryRepo {
       "user.public_address",
       "raffle_log"
     ])
+    .orderBy("raffle_log.created_at", "DESC")
 
     // seller 필터링
     if (param.seller !== undefined) {

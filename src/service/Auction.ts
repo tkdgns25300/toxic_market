@@ -20,10 +20,18 @@ export class AuctionService {
   async getNewest(): Promise<PageResObj<Auction | {}>> {
 
     const result = await this.auctionQueryRepo.getNewest( );
-      result?.bid_logs?.map(a => {
-        a.bidder = `${a.bidder.slice(0,3)}******${a.bidder.slice(-3)}`
-      })
-      result?.bid_logs?.reverse();
+    // result.bid_logs에 닉네임 추가하여 리턴 : 좋지 않은 방식 => but 프로젝트 크기가 크지 않아 속도 저하의 우려가 없어 이렇게 작성.
+    const newBidLog = []
+    for (const el of result.bid_logs) {
+      const bidder = await this.userQueryRepo.findOne("public_address", el.bidder);
+      el.nickname = bidder.nickname
+      newBidLog.push(el)
+    }
+    result.bid_logs = newBidLog;
+    result?.bid_logs?.map(a => {
+      a.bidder = `${a.bidder.slice(0,3)}******${a.bidder.slice(-3)}`
+    })
+    result?.bid_logs?.reverse();
 
     return new PageResObj(result, "Auction 조회에 성공했습니다.");
   }
@@ -96,6 +104,14 @@ export class AuctionService {
       joinTable.push({property: "Auction.creator", alias: "user"})
     }
     const result = await this.auctionQueryRepo.findOne("id", id, joinTable);
+    // result.bid_logs에 닉네임 추가하여 리턴 : 좋지 않은 방식 => but 프로젝트 크기가 크지 않아 속도 저하의 우려가 없어 이렇게 작성.
+    const newBidLog = []
+    for (const el of result.bid_logs) {
+      const bidder = await this.userQueryRepo.findOne("public_address", el.bidder);
+      el.nickname = bidder.nickname
+      newBidLog.push(el)
+    }
+    result.bid_logs = newBidLog;
     if(!withUser) {
       result.bid_logs.map(a => {
         a.bidder = `${a.bidder.slice(0,3)}******${a.bidder.slice(-3)}`
@@ -119,6 +135,12 @@ export class AuctionService {
 
   async findAllApproved(param: PageReq): Promise<PageResList<Auction>> {
     const result = await this.auctionQueryRepo.findAllApproved(param);
+    // nickname추가 하여 리턴 : 좋지 않은 방식 => 프로젝트 크기가 크지 않아 속도 저하의 우려가 없어 이렇게 작성.
+    for (const el of result[0]) {
+      const creator = await this.userQueryRepo.findOne("public_address", el.creator_address);
+      const nickname = creator.nickname;
+      el.nickname = nickname
+    }
     return new PageResList<Auction>(
         result[1],
         param.limit,

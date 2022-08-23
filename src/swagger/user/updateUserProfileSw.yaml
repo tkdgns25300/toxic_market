@@ -1,0 +1,88 @@
+paths:
+  /user/profile:
+    patch:
+      tags:
+        - User
+      summary: Update user's profile
+      consumes:
+        - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                profile_img:
+                  type: string
+                nickname:
+                  type: string
+                introduction:
+                  type: string
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: 프로필 수정에 성공했습니다.
+                  item:
+                    type: object
+                    properties:
+                      public_address:
+                        type: string
+                        required: true
+                      CF_balance:
+                        type: number
+                        required: true
+                      is_seller:
+                        type: string
+                        enum: [ O,X ]
+                      is_admin:
+                        type: string
+                        enum: [ O,X ]
+                      email:
+                        type: string
+                      store_name:
+                        type: string
+                      phone:
+                        type: sring
+                      name:
+                        type: string
+                        required: true
+                      verify_file_url:
+                        type: string
+                        description: 법인 등기부등본, 본인 신분증 사본
+                      address:
+                        type: string
+                        description: 사업자 주소지
+                      seller_type:
+                        type: string
+                        enum: [ 개인사업자,법인,개인 ]
+                        description: 판매자 종류
+                      id:
+                        type: string
+                      agreeRaffleService:
+                        type: string
+                      profile_img:
+                        type: string
+                      nickname:
+                        type: string
+                      introduction:
+                        type: string
+                  
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http

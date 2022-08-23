@@ -52,8 +52,7 @@ export class AuthController {
     }
   }
 
-  @Post("/login")
-  // @Post("/login/wallet")
+  @Post("/login/wallet")
   public async walletLogin(
     @Body() data: { public_address: string; signature: string }
   ) {
@@ -67,17 +66,29 @@ export class AuthController {
     }
   }
 
-  // @Post("/login/general")
-  // public async generalLogin(@Body() params: UserIdPasswordDto) {
-  //   try {
-  //     return this.authService.generalLogin(params);
-  //   } catch (err) {
-  //     if (err instanceof QueryFailedError) {
-  //       return new PageResObj({}, err.message, true);
-  //     }
-  //     return new PageResObj({}, err.message, true);
-  //   }
-  // }
+  @Post("/login/general")
+  public async generalLogin(@Body() params: UserIdPasswordDto) {
+    try {
+      return this.authService.generalLogin(params);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
+
+  @Post("/login/admin")
+  public async adminLogin(@Body() params: UserIdPasswordDto) {
+    try {
+      return this.authService.adminLogin(params);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
 
   @Get("/signup/:address")
   public async signup(@Param("address") address: string) {

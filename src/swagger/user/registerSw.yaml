@@ -1,13 +1,9 @@
-tags:
-  - name: Auth
-    description: 로그인 API
-
 paths:
-  /auth/login:
+  /user/register:
     post:
       tags:
-        - Auth
-      summary: log in
+        - User
+      summary: Register user's id, password
       consumes:
         - application/json
       requestBody:
@@ -16,12 +12,11 @@ paths:
             schema:
               type: object
               properties:
-                admin_id:
+                id:
                   type: string
                 password:
                   type: string
-                remember:
-                  type: boolean
+
 
       responses:
         200:
@@ -38,13 +33,11 @@ paths:
                   msg:
                     type: string
                     description: 메시지
-                    example: 로그인에 성공했습니다.
+                    example: ID등록에 성공하였습니다.
                   item:
                     type: object
-                    properties:
-                      token:
-                        type: string
 
+                  
         500:
           description: "Server Error"
 

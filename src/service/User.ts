@@ -5,7 +5,7 @@ import { UserQueryRepo } from "../repository/User";
 import { User } from "../entity";
 import { UserDto } from "../dto";
 import { PageResList, PageResObj, UserSearchReq} from "../api";
-import { UserIdPasswordDto } from "../dto/User";
+import { UserIdPasswordDto, UserPasswordDto, UserProfileDto } from "../dto/User";
 import { hash } from "../util/hash";
 
 @Service()
@@ -21,6 +21,7 @@ export class UserService {
       result[1],
       param.limit,
       result[0].map((el: User) => {
+        delete el.password_hash;
         return el;
       }),
       "User 목록을 찾는데 성공했습니다."
@@ -33,6 +34,7 @@ export class UserService {
       result[1],
       param.limit,
       result[0].map((el: User) => {
+        delete el.password_hash;
         return el;
       }),
       "User 목록을 찾는데 성공했습니다."
@@ -41,6 +43,7 @@ export class UserService {
 
   async findOne(public_address: string): Promise<PageResObj<User | {}>> {
     const result = await this.userQueryRepo.findOne("public_address", public_address);
+    delete result.password_hash;
     return new PageResObj(result, "User 조회에 성공했습니다.");
   }
 
@@ -63,6 +66,10 @@ export class UserService {
   }
 
   async register(paramObj: UserIdPasswordDto, public_address: string): Promise<PageResObj<{}>> {
+    const isExist = await this.userQueryRepo.findOne("id", paramObj.id)
+    if (isExist) {
+      return new PageResObj({}, "존재하는 ID입니다.", true);
+    }
     const user = await this.userQueryRepo.findOne("public_address", public_address)
     // 이미 ID를 등록했었던 경우
     if (user.id !== null) {
@@ -71,12 +78,31 @@ export class UserService {
     // ID 등록
     const updatedUser = await this.userQueryRepo.update({
       id: paramObj.id,
-      passwordHash: hash(paramObj.password)      
+      password_hash: hash(paramObj.password)      
     }, "public_address", public_address)
     if (updatedUser.affected !== 1) {
       return new PageResObj({}, "ID등록에 실패하였습니다.", true);
     }
     return new PageResObj({}, "ID등록에 성공하였습니다.");
+  }
+
+  async updatePassword(paramObj: UserPasswordDto, public_address: string): Promise<PageResObj<{}>> {
+    if (paramObj?.password === undefined) {
+      return new PageResObj({}, "변경할 비밀번호을 입력해주세요.", true);  
+    }
+    await this.userQueryRepo.update({ password_hash: hash(paramObj.password) }, "public_address", public_address);
+    return new PageResObj({}, "비밀번호 변경에 성공했습니다.");
+  }
+
+  async updateProfile(paramObj: UserProfileDto, public_address: string): Promise<PageResObj<User | {}>> {
+    const update = await this.userQueryRepo.update(paramObj, "public_address", public_address);
+    if (update.affected === 0) {
+      return new PageResObj({}, "프로필 수정에 실패했습니다.", true);
+    }
+    const result = await this.userQueryRepo.findOne("public_address", public_address);
+    delete result.nonce;
+    delete result.password_hash;
+    return new PageResObj(result, "프로필 수정에 성공했습니다.");
   }
 
   async delete(public_address: string): Promise<PageResObj<{}>> {

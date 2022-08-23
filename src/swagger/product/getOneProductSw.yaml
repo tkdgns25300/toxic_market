@@ -48,6 +48,8 @@ paths:
                           type: string
                         is_visible:
                           type: string
+                        nickname:
+                          type: string
                   msg:
                     type: string
                     description: 메시지
