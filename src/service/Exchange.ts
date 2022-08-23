@@ -48,12 +48,15 @@ export class ExchangeService {
     // commissionFee는 send하지 않음
 
     const amountOfCoins = BigInt(amount * Math.pow(10, 18)); // 95% of coin COMMISSION 5%
+    // Amount (amount): 토큰을 발행할 수량입니다. 16진수로 표현되며 토큰 소수점(decimals)을 포함한 값을 사용합니다. 
+    
     //const commissionFee = BigInt(amount * 0.05 * Math.pow(10, 18)); // 5% of coin
 
     //sending coin from user to Save Account
     await contractInstance.send(
       { from: keyring.address, gas: "0x4bfd200" },
-      "transferFrom",
+      // gas : The maximum gas provided for this transaction (gas limit).
+      "transferFrom", // 함수명 작성
       public_address,
       keyring.address,
         `${amountOfCoins}`

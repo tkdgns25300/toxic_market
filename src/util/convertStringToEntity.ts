@@ -5,7 +5,8 @@ import {
   Auction,
   BidLog,
   Raffle,
-  RaffleLog
+  RaffleLog,
+  Banner
 } from "../entity";
 
 export const convertStringToEntity = (entityName: string) => {
@@ -16,7 +17,8 @@ export const convertStringToEntity = (entityName: string) => {
     ["Auction"]: Auction,
     ["BidLog"]: BidLog,
     ["Raffle"]: Raffle,
-    ["RaffleLog"]: RaffleLog
+    ["RaffleLog"]: RaffleLog,
+    ["Banner"]: Banner,
   };
   return convertList[entityName];
 };
