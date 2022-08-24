@@ -13,11 +13,6 @@ const caver = new Caver("https://public-node-api.klaytnapi.com/v1/cypress");
 const keyring = caver.wallet.keyring.createFromPrivateKey(
   process.env.WALLET_PRIVATE_KEY
 );
-
-//Note that caver.contract sends transactions for deployment and execution. 
-//트랜잭션 서명에는 caver.wallet에 있는 Keyring을 사용합니다. 
-//사용할 Keyring은 caver.wallet에 먼저 추가해야 합니다.
-
 caver.wallet.add(keyring);
 
 @Service()
@@ -34,46 +29,41 @@ export class ExchangeService {
   ) {
     // @ts-ignore
     const contractInstance = caver.contract.create(ABI, TOX_CONTRACT_ADDRESS);
-    //caver.contract 객체는 Klaytn 블록체인과 스마트 컨트랙트 간의 상호작용을 쉽게 만들어 줍니다. 
-    //새 컨트랙트 객체를 생성할 때 해당 스마트 컨트랙트를 위해 JSON 인터페이스를 제공해야 하는데, 
-    //이때 caver-js가 자바스크립트로 작성된 컨트랙트 객체와의 모든 호출을 RPC를 통해 하위 수준의 ABI 호출로 자동 변환시켜줍니다.
-
     const user: User = await this.userQueryRepo.findOne(
       "public_address", public_address);
 
-    //user.CF_balance = user.CF_balance + amount * 10 * 0.95; // 1 TOX = 10 POINT - 5% commission
+    // user.CF_balance = user.CF_balance + amount * 10 * 0.95; // 1 TOX = 10 POINT - 5% commission
+    user.CF_balance = user.CF_balance + amount * 10 * 1; // NO COMMISSION
 
-    // 톡시 요청으로 수수료 5%에서 0% 변경 건
-     user.CF_balance = user.CF_balance + amount * 10
-    // commissionFee는 send하지 않음
 
-    const amountOfCoins = BigInt(amount * Math.pow(10, 18)); // 95% of coin COMMISSION 5%
-    // Amount (amount): 토큰을 발행할 수량입니다. 16진수로 표현되며 토큰 소수점(decimals)을 포함한 값을 사용합니다. 
-    
-    //const commissionFee = BigInt(amount * 0.05 * Math.pow(10, 18)); // 5% of coin
+    // const amountOfCoins = BigInt(amount * 0.95 * Math.pow(10, 18)); // 95% of coin COMMISSION 5%
+    // const commissionFee = BigInt(amount * 0.05 * Math.pow(10, 18)); // 5% of coin
+    const amountOfCoins = BigInt(amount * 1 * Math.pow(10, 18)); // NO COMMISSION
 
     //sending coin from user to Save Account
     await contractInstance.send(
       { from: keyring.address, gas: "0x4bfd200" },
-      // gas : The maximum gas provided for this transaction (gas limit).
-      "transferFrom", // 함수명 작성
+      "transferFrom",
       public_address,
       keyring.address,
         `${amountOfCoins}`
     );
     //update user CF_balance right after coin was transferred
     await this.userQueryRepo.update(user, "public_address", public_address);
-    //sending 5% coin from SavingAccount to Commission Wallet => 불 필요
-    //await contractInstance.send(
-    //    {
-    //      from: keyring.address,
-    //      gas: "0x4bfd200",
-    //    },
-    //    "transferFrom",
-    //    public_address,
-    //    process.env.COMMISSION_WALLET,
-    //    `${commissionFee}`
-    //);
+    /**
+     * NO COMMISSION
+    //sending 5% coin from SavingAccount to Commission Wallet
+    await contractInstance.send(
+        {
+          from: keyring.address,
+          gas: "0x4bfd200",
+        },
+        "transferFrom",
+        public_address,
+        process.env.COMMISSION_WALLET,
+        `${commissionFee}`
+    );
+    */
 
     return new PageResObj(user, "TOX 코인을 포인트로 교환하는데 성공했습니다.");
   }

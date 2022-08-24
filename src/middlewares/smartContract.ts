@@ -1,17 +1,5 @@
 const TOX_CONTRACT_ADDRESS = process.env.TOX_CONTRACT;
 
-//The caver.contract package makes it easy to interact with smart contracts on Klaytn. 
-//저수준 ABI(Application Binary Interface)가 주어지면 스마트 컨트랙트의 모든 메소드를 자동으로 자바스크립트 호출로 변환합니다. 
-//이를 통해 스마트 컨트랙트가 마치 자바스크립트 객체인 것처럼 스마트 컨트랙트와 상호작용할 수 있습니다.
-
-//스마트 컨트랙트를 컴파일하여 얻은 결과를 사용해 컨트랙트 인스턴스를 만들 수 있습니다.
-
-//스마트 컨트랙트 메서드들이 ABI를 통해 컨트랙트 인스턴스 내부에서 관리됨
-
-//스마트 컨트랙트가 이미 배포되었고 배포된 컨트랙트의 주소를 알고 있다면, 아래와 같이 컨트랙트 주소를 2번째 파라미터로 
-
-
-
 const ABI = [ 
   {
     constant: true,
