@@ -11,7 +11,7 @@ import {convertStringToEntity} from "../util/convertStringToEntity";
 export class AuctionQueryRepo extends BaseQueryRepo {
   constructor() {
     super("auction", "Auction");
-  }
+  } 
 
   async getNewest() {
         let result =await createQueryBuilder("auction")

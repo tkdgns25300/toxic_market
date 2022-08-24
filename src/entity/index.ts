@@ -5,5 +5,6 @@ import { Auction } from "./Auction";
 import { BidLog } from "./BidLog";
 import { Raffle } from "./Raffle";
 import { RaffleLog } from "./RaffleLog";
+import { Banner } from "./Banner";
 
-export { User, Product, Log, Auction, BidLog, Raffle, RaffleLog };
+export { User, Product, Log, Auction, BidLog, Raffle, RaffleLog, Banner };

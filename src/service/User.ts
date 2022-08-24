@@ -104,4 +104,12 @@ export class UserService {
     delete result.password_hash;
     return new PageResObj(result, "프로필 수정에 성공했습니다.");
   }
+
+  async delete(public_address: string): Promise<PageResObj<{}>> {
+    const result = await this.userQueryRepo.delete("public_address", public_address);
+    if(result.affected !== 1) {
+      return new PageResObj({}, "회원탈퇴에 실패하였습니다.", true);
+    }
+    return new PageResObj({}, "회원탈퇴에 성공하였습니다.");
+  }
 }

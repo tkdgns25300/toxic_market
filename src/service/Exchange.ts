@@ -32,11 +32,13 @@ export class ExchangeService {
     const user: User = await this.userQueryRepo.findOne(
       "public_address", public_address);
 
-    user.CF_balance = user.CF_balance + amount * 10 * 0.95; // 1 TOX = 10 POINT - 5% commission
+    // user.CF_balance = user.CF_balance + amount * 10 * 0.95; // 1 TOX = 10 POINT - 5% commission
+    user.CF_balance = user.CF_balance + amount * 10 * 1; // NO COMMISSION
 
 
-    const amountOfCoins = BigInt(amount * 0.95 * Math.pow(10, 18)); // 95% of coin COMMISSION 5%
-    const commissionFee = BigInt(amount * 0.05 * Math.pow(10, 18)); // 5% of coin
+    // const amountOfCoins = BigInt(amount * 0.95 * Math.pow(10, 18)); // 95% of coin COMMISSION 5%
+    // const commissionFee = BigInt(amount * 0.05 * Math.pow(10, 18)); // 5% of coin
+    const amountOfCoins = BigInt(amount * 1 * Math.pow(10, 18)); // NO COMMISSION
 
     //sending coin from user to Save Account
     await contractInstance.send(
@@ -48,6 +50,8 @@ export class ExchangeService {
     );
     //update user CF_balance right after coin was transferred
     await this.userQueryRepo.update(user, "public_address", public_address);
+    /**
+     * NO COMMISSION
     //sending 5% coin from SavingAccount to Commission Wallet
     await contractInstance.send(
         {
@@ -59,6 +63,7 @@ export class ExchangeService {
         process.env.COMMISSION_WALLET,
         `${commissionFee}`
     );
+    */
 
     return new PageResObj(user, "TOX 코인을 포인트로 교환하는데 성공했습니다.");
   }

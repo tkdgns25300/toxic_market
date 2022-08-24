@@ -1,6 +1,6 @@
 const TOX_CONTRACT_ADDRESS = process.env.TOX_CONTRACT;
 
-const ABI = [
+const ABI = [ 
   {
     constant: true,
     inputs: [
