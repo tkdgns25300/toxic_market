@@ -1,6 +1,6 @@
 import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
-import { PageResList, PageResObj } from "../api";
+import { PageResList, PageResObj, List } from "../api";
 import { BannerDto } from "../dto/Banner";
 import { Banner } from "../entity";
 import { BannerQueryRepo } from "../repository/Banner";
@@ -28,11 +28,9 @@ export class BannerService {
     return new PageResObj(result, "Product 생성에 성공했습니다.");
   }
 
-  async findAll(): Promise<PageResList<Banner>> {
-    const result = await this.bannerQueryRepo.findAll()
-    return new PageResList<Banner>(
-      result[1],
-      result[1], // return 타입 맞추기 위해서 totalPage를 넣어줬는데 이렇게 진행해도 되는 지 의문입니다.
+  async findAll(): Promise<List<Banner>> {
+    const result = await this.bannerQueryRepo.findAll();
+    return new List<Banner>(
       result[0].map((el: Banner) => {
         return el;
       }),

@@ -15,14 +15,6 @@ paths:
               schema:
                 type: object
                 properties:
-                  totalCount:
-                    type: integer
-                    description: 전체 banner의 갯수
-                    example: 2
-                  totalPage:
-                    type: integer
-                    description: 전체 페이지 갯수
-                    example: 1
                   msg:
                     type: string
                     description: 메시지
