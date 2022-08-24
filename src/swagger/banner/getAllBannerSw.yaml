@@ -1,0 +1,52 @@
+paths:
+  /banner/find:
+    get:
+      tags:
+        - Banner
+      summary: Get all banners
+      consumes:
+        - application/json
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalCount:
+                    type: integer
+                    description: 전체 banner의 갯수
+                    example: 2
+                  totalPage:
+                    type: integer
+                    description: 전체 페이지 갯수
+                    example: 1
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: Banner 목록을 찾는데 성공했습니다.
+                  items:
+                    type: array
+                    items:
+                      properties:
+                        id:
+                          type: number
+                        img_url:
+                          type: string
+                        link:
+                          type: string
+                        is_vertical:
+                          type: string
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+                  
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http

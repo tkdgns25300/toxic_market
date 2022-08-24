@@ -32,7 +32,7 @@ export class BannerService {
     const result = await this.bannerQueryRepo.findAll()
     return new PageResList<Banner>(
       result[1],
-      1, // return 타입 맞추기 위해서 totalPage를 넣어줬는데 이렇게 진행해도 되는 지 의문입니다.
+      result[1], // return 타입 맞추기 위해서 totalPage를 넣어줬는데 이렇게 진행해도 되는 지 의문입니다.
       result[0].map((el: Banner) => {
         return el;
       }),
