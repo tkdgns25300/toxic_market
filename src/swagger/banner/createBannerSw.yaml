@@ -1,0 +1,58 @@
+paths:
+  /banner/create:
+    post:
+      tags:
+        - Banner
+      summary: Create a banner
+      consumes:
+        - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                img_url:
+                  type: string
+                  required: true
+                link:
+                  type: string
+                  required: true
+                is_vertical:
+                  type: string
+                  required: true
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  item:
+                    type: object
+                    properties:
+                        id:
+                          type: number
+                        img_url:
+                          type: string
+                        link:
+                          type: string
+                        is_vertical:
+                          type: string
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: Banner 생성에 성공했습니다.
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+                  
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http
