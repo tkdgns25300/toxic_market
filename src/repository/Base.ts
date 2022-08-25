@@ -53,6 +53,9 @@ export class BaseQueryRepo {
   }
 
   create(paramObj: object) {
+    console.log('this.schemaClassName :', this.schemaClassName)
+    console.log('paramObj :', paramObj)
+
     return createQueryBuilder()
       .insert()
       .into(convertStringToEntity(this.schemaClassName))
