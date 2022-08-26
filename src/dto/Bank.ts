@@ -1,14 +1,12 @@
 import { Type } from "class-transformer";
-import { IsDate, IsInt } from "class-validator";
+import { IsDate, IsInt, IsString } from "class-validator";
 
 export class BankDto {
-  @IsDate()
-  @Type(() => Date)
-  start_at: Date;
+  @IsString({ message: "문자열이 아닙니다." })
+  start_at: string;
 
-  @IsDate()
-  @Type(() => Date)
-  end_at: Date;
+  @IsString({ message: "문자열이 아닙니다." })
+  end_at: string;
 
   @IsInt()
   daily_Interest: number;
@@ -18,4 +16,7 @@ export class BankDto {
 
   @IsInt()
   deposit_Total: number;
+
+  @IsInt()
+  remaing_Day: number;
 }

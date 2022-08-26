@@ -1,5 +1,4 @@
-import { Type } from "class-transformer";
-import { IsDate, IsInt, IsString, MaxLength } from "class-validator";
+import { IsInt, IsString, MaxLength } from "class-validator";
 
 export class BankLogDto {
   @IsString({ message: "문자열이 아닙니다." })
@@ -7,12 +6,13 @@ export class BankLogDto {
   depositor: string;
 
   @IsInt()
-  bank_id: Date;
+  bank_id: number;
 
   @IsInt()
   deposite_Amount: number;
+}
 
-  @IsDate()
-  @Type(() => Date)
-  entry_at: Date;
+export class BankLogWithdrawDto {
+  @IsInt()
+  bank_id: number;
 }

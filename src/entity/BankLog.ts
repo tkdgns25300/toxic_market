@@ -1,5 +1,5 @@
 import {
-  Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn
+  Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn
 } from "typeorm";
 import { Bank } from "./Bank";
 import { BaseEntity } from "./Base";
@@ -33,10 +33,11 @@ export class BankLog extends BaseEntity {
   @Column({
     type: "int",
     comment: "누적 보상액",
+    default: 0
   })
   accumulate_Interest: number;
 
-  @Column({
+  @CreateDateColumn({
     type: "datetime",
     comment: "예치날",
   })
@@ -44,13 +45,13 @@ export class BankLog extends BaseEntity {
 
   @Column({
     type: "int",
-    comment: "예상 수익률",
+    comment: "예치 당시의 예상 수익률((bank.remaing_Day * expected_Daily_Interest) / deposite_Amount)",
   })
   expected_InterestRate: number;
 
   @Column({
     type: "int",
-    comment: "금일 예상 보상",
+    comment: "일일 예상 보상(daily_Interest * (deposite_Amount / bank.deposit_Total))",
   })
   expected_Daily_Interest: number;
 }
