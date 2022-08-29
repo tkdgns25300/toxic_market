@@ -152,7 +152,7 @@ export class RaffleController {
 
   @Get("/user")
   @UseBefore(checkAccessToken)
-  public async getUserAuctions(@QueryParams() param: PageReq, @Res() res: Response) {
+  public async getUserRaffles(@QueryParams() param: PageReq, @Res() res: Response) {
     try {
       const { aud } = res.locals.jwtPayload;
       return await this.raffleService.findUserRaffles(param, aud);
