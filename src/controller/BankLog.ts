@@ -23,11 +23,15 @@ export class BankLogController {
   @Inject()
   bankLogService: BankLogService;
 
-  @Post("/create")
-  @UseBefore(checkAccessToken)
-  public async create(@Body() params: BankLogDto, @Res() res: Response) {
+  @Post("/save") // 예치 생성 및 업데이트
+  // @UseBefore(checkAccessToken)
+  public async save(@Body() params: BankLogDto, @Res() res: Response) {
     try {
-      return await this.bankLogService.create(params);
+      // const { aud } = res.locals.jwtPayload;
+
+      return await this.bankLogService.save(params, '0x0034daa364f2cd970f74cb7d413b9db4a93a5e46');
+      // return await this.bankLogService.save(params, '0x0034daa364f2cd970f74cb7d413b9db4a93ashit');
+
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);
@@ -36,11 +40,13 @@ export class BankLogController {
     }
   }
 
-  @Post('/withdraw/:id')
-  @UseBefore(checkAccessToken)
+  @Post('/withdraw/:id') // 누적 보상 수령
+  // @UseBefore(checkAccessToken)
   public async withdraw(@Param("id") id: number, @Res() res: Response) {
     try {
-      const { aud } = res.locals.jwtPayload;
+      // const { aud } = res.locals.jwtPayload;
+
+      const aud = '0x0034daa364f2cd970f74cb7d413b9db4a93a5e46';
 
       return await this.bankLogService.withdraw(id, aud, null);
     } catch (err) {

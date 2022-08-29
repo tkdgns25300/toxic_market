@@ -27,6 +27,7 @@ export class BankQueryRepo extends BaseQueryRepo {
       .where('bank_logs.depositor = :depositor', {
         depositor: depositor
       })
+      .andWhere('Bank.is_over = X')
       .getManyAndCount();
   }
 
@@ -35,6 +36,13 @@ export class BankQueryRepo extends BaseQueryRepo {
       .where('Bank.id Not IN (:...ids)', {
         ids: ids
       })
+      .andWhere('Bank.is_over = X')
+      .getManyAndCount();
+  }
+
+  findOverBank(): Promise<[Array<any>, number]> {
+    return createQueryBuilder("bank")
+      .andWhere('Bank.is_over = O')
       .getManyAndCount();
   }
 }

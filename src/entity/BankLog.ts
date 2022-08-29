@@ -29,7 +29,7 @@ export class BankLog extends BaseEntity {
     type: "int",
     comment: "예치액",
   })
-  deposite_Amount: number;
+  deposit_Amount: number;
 
   @Column({
     type: "int",
@@ -48,7 +48,7 @@ export class BankLog extends BaseEntity {
     type: "int",
     comment: "예치 당시의 예상 수익률((bank.remaing_Day * expected_Daily_Interest) / deposite_Amount)",
   })
-  expected_InterestRate: number;
+  expected_EaringRate: number;
 
   @Column({
     type: "int",

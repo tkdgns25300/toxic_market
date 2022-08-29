@@ -23,7 +23,7 @@ export class BankController {
   @Inject()
   bankService: BankService;
 
-  @Get("/find")
+  @Get("/find") // 관리자 페이지에서 사용되는 뱅크 조회
   public async getAllBank(@QueryParams() param: PageReq, @Res() res: Response) {
     try {
       return await this.bankService.findAll(param);
@@ -35,8 +35,8 @@ export class BankController {
     }
   }
 
-  @Post("/create")
-  @UseBefore(checkAdminAccessToken)
+  @Post("/create") // 뱅크 생성
+  // @UseBefore(checkAdminAccessToken)
   public async create(@Body() params: BankDto, @Res() res: Response) {
     try {
       return await this.bankService.create(params);
@@ -48,12 +48,14 @@ export class BankController {
     }
   }
 
-  @Get("/user")
-  @UseBefore(checkAccessToken)
+  @Get("/user") // 서비스 페이지에서 사용되는 뱅크 조회(해당 사용자의 뱅크 예치 내역이 담김)
+  // @UseBefore(checkAccessToken)
   public async getAllBankWithUser(@QueryParams() param: PageReq, @Res() res: Response) {
     try {
-      const { aud } = res.locals.jwtPayload;
+      // const { aud } = res.locals.jwtPayload;
 
+      const aud = '0x0034daa364f2cd970f74cb7d413b9db4a93a5e46';
+      
       return await this.bankService.findBankWithUser(param, aud);
     } catch (err) {
       if (err instanceof QueryFailedError) {
@@ -63,15 +65,7 @@ export class BankController {
     }
   }
 
-  // 람다에서 사용할 컨트롤러
-  // 1. 00시에 bank의 remaing_day = remaing_day - 1
-  //    bankLog에서 accumulate_interest = accumulate_interest + expected_Daily_interest
-
-  // 대상 bank들은 remaining_day가 1 이상인 bank
-
-  // 2. 1에서 remaining_day가 1 => 0 bank는 원급을 지급한다
-  // 트랜잭션으로 진행함
-
+  // 람다에서 사용할 컨트롤러 => 예치 중인 사용자에게 일일 보상 지급 및 만기 뱅크 예치금 지급
   @Post('/interest')
   public async payInterestAndDeposit(@Res() res: Response) {
     try {

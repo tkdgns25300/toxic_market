@@ -66,6 +66,14 @@ export class Bank extends BaseEntity {
   })
   created_at: Date;
 
+  @Column({
+    type: "char",
+    length: 1,
+    default: "X",
+    comment: "뱅크의 종료 여부",
+  })
+  is_over: string;
+
   @OneToMany(() => BankLog, (log) => log.bank_id, {
     cascade: true
   })

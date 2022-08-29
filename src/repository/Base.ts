@@ -35,9 +35,6 @@ export class BaseQueryRepo {
     whereValue: string | number,
     joinOpt: Array<joinArrItem> = []
   ) {
-    console.log('this.schemaName :', this.schemaName)
-    console.log('this.schemaClassName :', this.schemaClassName)
-
     const query = createQueryBuilder(this.schemaName);
 
     if (joinOpt.length > 0) {
@@ -52,7 +49,6 @@ export class BaseQueryRepo {
       })
       .getOne();
     const entity_ = convertStringToEntity(this.schemaClassName);
-    console.log('여기는 들어와?5')
     return new entity_().getEntity(this.schemaClassName, result);
   }
 
