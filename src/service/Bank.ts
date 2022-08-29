@@ -77,9 +77,9 @@ export class BankService {
   private async payDeposit(id: number, manager: EntityManager) {
     const bankLog = await manager.findOne(BankLog, id);
     const targetUser = await manager.findOne(User, bankLog.depositor);
-
+ 
     targetUser.CF_balance = targetUser.CF_balance + bankLog.deposite_Amount;
-    await manager.update(User, {public_address: bankLog.depositor}, targetUser);
+    return targetUser;
   }
 
   @Transaction()
@@ -94,24 +94,21 @@ export class BankService {
       relations: ['bank_logs']
     });
 
-
-
-    console.log('targetBank :', targetBank)
-
-    targetBank[0].forEach( async (bank) => {
+    const result = targetBank[0].map( async (bank) => {
       this.minusRemaingDay(bank);
       this.accumulate(bank.bank_logs)
+
       if(bank.remaing_Day === 0) {
-        await Promise.all(bank.bank_logs.map((el) => this.payDeposit(el.id, manager)));
+        await Promise.all(bank.bank_logs.map(async (el) => {
+          const user  = await this.payDeposit(el.id, manager)
+          return await manager.save(User, user);
+        })
+        )
       }
+      return await manager.save(Bank, bank)
     });
-    // 먼저 bank에서 remaing_day가 1 이상인 애들을 찾는다 (bankLog랑 조인)
 
-    // bank의 remaing_day = remaing_day - 1
-    // bankLog의 accumulate_interest = accumulate_interest + expected_Daily_interest
-
-    // 이 과정에서 remaing_day = 0이 되는 친구가 있다면
-    // 해당 bankLog의 deposite_amount를 cf에 넣어준다
+    await Promise.all(result)
 
     return new PageResObj({}, "보상TP 및 예치금 지급에 성공했습니다.");
   }
