@@ -8,5 +8,6 @@ import { BidDto } from "./Bid";
 import { RaffleDto } from "./Raffle";
 import { RaffleLogDto } from "./RaffleLog";
 import { BannerDto } from "./Banner";
+import { StakingDto } from "./Staking";
 
-export { ExchangeDto, UserDto, ProductDto, LogDto, ImageUploadDto, AuctionDto, BidDto, RaffleDto, RaffleLogDto, BannerDto };
+export { ExchangeDto, UserDto, ProductDto, LogDto, ImageUploadDto, AuctionDto, BidDto, RaffleDto, RaffleLogDto, BannerDto, StakingDto };
