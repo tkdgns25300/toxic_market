@@ -42,6 +42,9 @@ export class StakingService {
     if (param.contract_address) {
       userToxicNFT = userToxicNFT.filter(NFT => NFT.contractAddress === param.contract_address)
     }
+
+    // Pagination
+    userToxicNFT = userToxicNFT.slice(param.getOffset(), param.getOffset() + param.getLimit())
     
     return userToxicNFT
   }
