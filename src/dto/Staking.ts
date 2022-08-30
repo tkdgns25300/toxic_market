@@ -28,3 +28,11 @@ export class StakingDto {
   @IsOptional()
   user_address: string;
 }
+
+export class StakingContractTokenDto {
+  @IsString({ message: "문자열이 아닙니다." })
+  contract_address: string;
+
+  @IsString({ message: "문자열이 아닙니다." })
+  token_id: string;
+}

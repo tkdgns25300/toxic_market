@@ -16,12 +16,10 @@ paths:
             schema:
               type: object
               properties:
-                admin_id:
+                public_address:
                   type: string
-                password:
+                signature:
                   type: string
-                remember:
-                  type: boolean
 
       responses:
         200:
