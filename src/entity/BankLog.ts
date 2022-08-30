@@ -46,14 +46,20 @@ export class BankLog extends BaseEntity {
 
   @Column({
     type: "int",
-    comment: "예치 당시의 예상 수익률((bank.remaing_Day * expected_Daily_Interest) / deposite_Amount)",
+    comment: "예치 당시의 예상 수익률",
   })
   expected_EaringRate: number;
 
   @Column({
     type: "int",
-    comment: "일일 예상 보상(daily_Interest * (deposite_Amount / bank.deposit_Total))",
+    comment: "일일 예상 보상",
   })
   expected_Daily_Interest: number;
+
+  @Column({
+    type: "int",
+    comment: "예치 당시의 만기까지 남은 날",
+  })
+  remaing_Day: number;
 }
     

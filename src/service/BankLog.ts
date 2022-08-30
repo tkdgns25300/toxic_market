@@ -17,62 +17,62 @@ export class BankLogService {
     readonly userQueryRepo: UserQueryRepo,
   ) {}
 
-  async save(paramObj: BankLogDto, depositor: string): Promise<PageResObj<BankLog | {}>> {
+  @Transaction()
+  async save(paramObj: BankLogDto, depositor: string, @TransactionManager() manager: EntityManager
+  ): Promise<PageResObj<BankLog | {}>> {
     // 예치 대상 뱅크 찾기
-    const findBank = await this.bankQueryRepo.findOne('id', paramObj.bank_id);
+    const findBank = await manager.findOne(Bank, paramObj.bank_id, { relations: ['bank_logs']});
     // 기존에 예치한 내역이 있는 지 여부 확인
-    const findBankLog = await this.bankLogQueryRepo.findOneWithTwoCondition(['depositor', 'bank_id'], [depositor, paramObj.bank_id]);
+    const findBankLog = await manager.findOne(BankLog, { where : {
+      depositor: depositor,
+      bank_id: paramObj.bank_id
+    }});
 
-    // // 기존에 예치한 내역이 있으면 update
-    // if(findBankLog) {
-    //   // 기존 예치 금액과 현재 예치 요청 금액의 합이 뱅크의 예치 가능 금액보다 클 경우 에러 발생
-    //   if(findBank.deposit_Total < findBank.deposit_Balance + paramObj.deposit_Amount) throw new Error("BankLog 생성에 실패했습니다.");
-      
-    //   // 기존의 예치 내역 업데이트
-    //   findBankLog.deposit_Amount += paramObj.deposit_Amount;
-    //   const currentRate: number = (paramObj.deposit_Amount / findBank.deposit_Total);
-    //   const currentDailyInterest = findBank.daily_Interest * currentRate;
-    //   findBankLog.expected_Daily_Interest += currentDailyInterest;
-    //   findBankLog.expected_EaringRate = ((((findBankLog.deposit_Amount - paramObj.deposit_Amount) * (findBankLog.expected_EaringRate / 100)) + currentDailyInterest * findBank.remaing_Day) / (findBankLog.deposit_Amount)) * 100
+    let shareholding;
 
-    //   // 뱅크 예치 잔액 변경
-    //   findBank.deposit_Balance = findBank.deposit_Balance + paramObj.deposit_Amount;
+    if(!findBankLog) { // 내가 예치한 내역이 없다면
+      shareholding = findBank.deposit_Balance === 0 ? 100 : (paramObj.deposit_Amount / (paramObj.deposit_Amount + findBank.deposit_Balance)) * 100 // 지분율
+      const bankLog = new BankLog();
+      bankLog.bank_id = paramObj.bank_id;
+      bankLog.deposit_Amount = paramObj.deposit_Amount;
+      bankLog.expected_Daily_Interest = findBank.daily_Interest * shareholding / 100;
+      bankLog.expected_EaringRate = ((bankLog.expected_Daily_Interest * findBank.remaing_Day) / paramObj.deposit_Amount) * 100;
+      bankLog.depositor = depositor;
+      bankLog.remaing_Day = findBank.remaing_Day;
 
-    //   // 뱅크, 뱅크로그 업데이트
-    //   await this.bankQueryRepo.update(findBank, 'id', findBank.id);
-    //   await this.bankLogQueryRepo.update(findBankLog, 'id', findBankLog.id);
+      findBank.bank_logs.push(bankLog);
 
-    //   const result = await this.bankLogQueryRepo.findOne("id", findBankLog.id);
-    //   return new PageResObj(result, "BankLog 생성에 성공했습니다.");
-    // };
-
-    // 기존에 예치 내역이 없다면 새롭게 생성
-    // 뱅치 예금 가능 금액보다 현재 예치 요청 금액이 클 경우 에러 발생
-    // if(findBank.deposit_Total < paramObj.deposit_Amount) throw new Error("BankLog 생성에 실패했습니다.");
-
-    // 일일 이자액 및 총 수익률 계산 후 뱅크 로그 생성
-    // paramObj['expected_Daily_Interest'] = findBank.daily_Interest * (paramObj.deposit_Amount / findBank.deposit_Total);
-    // paramObj['expected_EaringRate'] = (findBank.remaing_Day * paramObj['expected_Daily_Interest'] / paramObj.deposit_Amount) * 100;
+      findBank.deposit_User = findBank.deposit_User + 1;
+      findBank.deposit_Balance = findBank.deposit_Balance + paramObj.deposit_Amount;
+    } else {
+      // 내가 예치한 내역이 있다면
+      findBankLog.deposit_Amount += paramObj.deposit_Amount; // 예치 잔액 변경
+      shareholding = ((findBankLog.deposit_Amount) / (paramObj.deposit_Amount + findBank.deposit_Balance)) * 100; // 지분율
+      findBankLog.expected_EaringRate = (((findBankLog.expected_Daily_Interest * (findBankLog.remaing_Day - findBank.remaing_Day)) + (findBank.daily_Interest * shareholding / 100 * findBank.remaing_Day)) / findBankLog.deposit_Amount * 100); // 예상 수익률 수정
+      findBankLog.expected_Daily_Interest = findBank.daily_Interest * shareholding / 100; // 예상 일일 이자 수정
+      findBankLog.remaing_Day = findBank.remaing_Day;
+      findBank.deposit_Balance = findBank.deposit_Balance + paramObj.deposit_Amount;
+    };
     
-    const sharehloding = findBank.deposit_Balance === 0 ? 1 : (paramObj.deposit_Amount / (paramObj.deposit_Amount + findBank.deposit_Balance)) * 100 // 지분율
-
-    console.log('findBank.deposit_Balance :', findBank.deposit_Balance)
-    console.log('sharehloding :', sharehloding)
-    paramObj['expected_Daily_Interest'] = findBank.daily_Interest * sharehloding / 100;
-    console.log('paramObj :', paramObj)
-    paramObj['expected_EaringRate'] = ((paramObj['expected_Daily_Interest'] * findBank.remaing_Day) / paramObj.deposit_Amount) * 100; 
-    console.log('paramObj :', paramObj)
-
-    paramObj['depositor'] = depositor;
-    const bankLog = await this.bankLogQueryRepo.create(paramObj);
-
     // 뱅크 예치 잔액 및 참여자 수 변경
-    findBank.deposit_User = findBank.deposit_User + 1;
-    findBank.deposit_Balance = findBank.deposit_Balance + paramObj.deposit_Amount;
+    if(shareholding !== 100) {
+      findBank.bank_logs.map((el) => {
+        if(el.depositor !== depositor) {
+          const userShareholding = (el.deposit_Amount / findBank.deposit_Balance) * 100;
+          el.expected_EaringRate = (((el.expected_Daily_Interest * (el.remaing_Day - findBank.remaing_Day)) + (findBank.daily_Interest * userShareholding / 100 * findBank.remaing_Day)) / el.deposit_Amount * 100); // 예상 수익률 수정
+          el.expected_Daily_Interest = findBank.daily_Interest * userShareholding / 100;
+        };
+      });
+    };
 
-    // 뱅크 업데이트
-    await this.bankQueryRepo.update(findBank, 'id', paramObj.bank_id);
-    const result = await this.bankLogQueryRepo.findOne("id", bankLog.identifiers[0].id);
+    await manager.save(Bank, findBank);
+    if(findBankLog) {
+      await manager.save(BankLog, findBankLog);
+    };
+
+    const result = await manager.findOne(BankLog, { where : {
+      depositor: depositor
+    }});
     return new PageResObj(result, "BankLog 생성에 성공했습니다.");
   }
 
