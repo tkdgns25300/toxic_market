@@ -58,7 +58,7 @@ export class StakingService {
   async stakingNFT(param: StakingContractTokenDto, public_address: string) {
     // Todo : 삭제, 톡시측 지갑 추가
     const myKeyring = caver.wallet.keyring.createFromPrivateKey(
-      '0x6041b4636061525df35172d2f0c2fbd5554a6d4bd2e57f482f5f617c9318541b'
+      ''
     )
     caver.wallet.add(myKeyring);
 
@@ -76,6 +76,7 @@ export class StakingService {
         from: '0xf9496b7E5989647AD47bcDbe3bd79E98FB836514'
       })
     }
+
 
     return await kip17.isApprovedForAll('0x216D59b59729d902E066efe266FC2dB212FF5d2E', '0xf9496b7E5989647AD47bcDbe3bd79E98FB836514')
 
