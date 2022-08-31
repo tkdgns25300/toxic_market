@@ -1,5 +1,4 @@
-import { Type } from "class-transformer";
-import { IsDate, IsInt, IsString } from "class-validator";
+import { IsInt, IsString } from "class-validator";
 
 export class BankDto {
   @IsString({ message: "문자열이 아닙니다." })
