@@ -1,0 +1,67 @@
+paths:
+  /bank/deposit:
+    post:
+      tags:
+        - Bank
+      summary: Deposit a bank
+      consumes:
+        - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bank_id:
+                  type: number
+                  required: true
+                deposit_Amount:
+                  type: number
+                  required: true
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  item:
+                    type: object
+                    properties:
+                        id:
+                          type: number
+                        depositor:
+                          type: string
+                        bank_id:
+                          type: number
+                        deposit_Amount:
+                          type: number
+                        accumulate_Interest:
+                          type: number
+                        entry_at:
+                          type: string
+                          format: date
+                        expected_EaringRate:
+                          type: number
+                        expected_Daily_Interest:
+                          type: number
+                        remaing_Day:
+                          type: number
+
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: BankLog 생성에 성공했습니다.
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+                  
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http

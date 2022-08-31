@@ -1,0 +1,74 @@
+paths:
+  /bank/withdraw/{id}:
+    post:
+      tags:
+        - Bank
+      summary: Withdraw bank interest
+      consumes:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: bankLog id
+          schema:
+            type: number
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  item:
+                    type: object
+                    properties:
+                      public_address:
+                        type: string
+                        required: true
+                      CF_balance:
+                        type: number
+                        required: true
+                      is_seller:
+                        type: string
+                        enum: [ O,X ]
+                      is_admin:
+                        type: string
+                        enum: [ O,X ]
+                      email:
+                        type: string
+                      store_name:
+                        type: string
+                      phone:
+                        type: sring
+                      name:
+                        type: string
+                        required: true
+                      verify_file_url:
+                        type: string
+                        description: 법인 등기부등본, 본인 신분증 사본
+                      address:
+                        type: string
+                        description: 사업자 주소지
+                      seller_type:
+                        type: string
+                        enum: [ 개인사업자,법인,개인 ]
+                        description: 판매자 종류
+
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: 보상 수령에 성공했습니다.
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+                  
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http

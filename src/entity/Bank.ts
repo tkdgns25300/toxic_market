@@ -21,7 +21,7 @@ export class Bank extends BaseEntity {
     type: "varchar",
     comment: "예치 종료일(예시 2023-10-01)",
   })
-  end_at: Date;
+  end_at: string;
 
   @Column({
     type: "int",

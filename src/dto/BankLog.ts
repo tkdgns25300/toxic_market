@@ -7,8 +7,3 @@ export class BankLogDto {
   @IsInt()
   deposit_Amount: number;
 }
-
-export class BankLogWithdrawDto {
-  @IsInt()
-  bank_id: number;
-}

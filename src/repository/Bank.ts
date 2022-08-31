@@ -1,5 +1,5 @@
 import { Service } from "typedi";
-import { Brackets, createQueryBuilder, EntityRepository, getManager } from "typeorm";
+import { createQueryBuilder, EntityRepository } from "typeorm";
 import { PageReq } from "../api";
 import { Bank } from "../entity";
 import { BaseQueryRepo } from "./Base";
@@ -21,28 +21,19 @@ export class BankQueryRepo extends BaseQueryRepo {
       .getManyAndCount();
   }
 
-  findBankWithUser(depositor: string): Promise<[Array<any>, number]> {
+  findBankWithUser(): Promise<[Array<any>, number]> {
     return createQueryBuilder("bank")
       .leftJoinAndSelect("Bank.bank_logs", "bank_logs")
-      .where('bank_logs.depositor = :depositor', {
-        depositor: depositor
-      })
-      .andWhere('Bank.is_over = X')
+      .where(`is_over = 'X'`)
+      .orderBy('created_at', "DESC")
       .getManyAndCount();
   }
 
-  findBankWithoutUser(ids: Array<number>): Promise<[Array<any>, number]> {
+  findOverBankWithUser(): Promise<[Array<any>, number]> {
     return createQueryBuilder("bank")
-      .where('Bank.id Not IN (:...ids)', {
-        ids: ids
-      })
-      .andWhere('Bank.is_over = X')
-      .getManyAndCount();
-  }
-
-  findOverBank(): Promise<[Array<any>, number]> {
-    return createQueryBuilder("bank")
-      .andWhere('Bank.is_over = O')
+      .leftJoinAndSelect("Bank.bank_logs", "bank_logs")
+      .andWhere(`is_over = 'O'`)
+      .orderBy('created_at', "DESC")
       .getManyAndCount();
   }
 }
