@@ -1,4 +1,4 @@
-import { IsBoolean, IsString, MaxLength } from "class-validator";
+import { IsString, MaxLength } from "class-validator";
 
 export class BannerDto {
   @IsString({ message: "문자열이 아닙니다." })

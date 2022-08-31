@@ -13,7 +13,7 @@ export class BannerService {
     readonly bannerQueryRepo: BannerQueryRepo,
   ) {}
 
-  async create(paramObj: BannerDto) {
+  async create(paramObj: BannerDto): Promise<PageResObj<Banner | {}>> {
     const exist = await this.bannerQueryRepo.findOne("is_vertical", paramObj.is_vertical); // 요청이 들어온 세로/가로와 동일한 위치에 배너가 있는 지 여부 확인
     if(exist) {
       await this.bannerQueryRepo.delete("id", exist.id);
@@ -25,7 +25,7 @@ export class BannerService {
     const banner = await this.bannerQueryRepo.create(paramObj); // 기존에 있는 배너를 삭제하고 새로운 배너를 만든다
     const result = await this.bannerQueryRepo.findOne("id", banner.identifiers[0].id); // 만든 걸 리턴함
     
-    return new PageResObj(result, "Product 생성에 성공했습니다.");
+    return new PageResObj(result, "Banner 생성에 성공했습니다.");
   }
 
   async findAll(): Promise<List<Banner>> {

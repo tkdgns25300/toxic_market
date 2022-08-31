@@ -1,0 +1,82 @@
+paths:
+  /bank/create:
+    post:
+      tags:
+        - Bank
+      summary: Create a bank
+      consumes:
+        - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                start_at:
+                  type: string
+                  required: true
+                end_at:
+                  type: string
+                  required: true
+                daily_Interest:
+                  type: number
+                  required: true
+                total_Interest:
+                  type: number
+                  required: true
+                deposit_Total:
+                  type: number
+                  required: true 
+                remaing_Day:
+                  type: number
+                  required: true 
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  item:
+                    type: object
+                    properties:
+                        id:
+                          type: number
+                        start_at:
+                          type: string
+                        end_at:
+                          type: string
+                        daily_Interest:
+                          type: number
+                        total_Interest:
+                          type: number
+                        deposit_Total:
+                          type: number
+                        deposit_Balance:
+                          type: number
+                        deposit_User:
+                          type: number
+                        remaing_Day:
+                          type: number
+                        created_at:
+                          type: string
+                          format: date
+                        is_over:
+                          type: number
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: Bank 생성에 성공했습니다.
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+                  
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http

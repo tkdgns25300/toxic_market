@@ -1,0 +1,59 @@
+paths:
+  /bank/find:
+    get:
+      tags:
+        - Bank
+      summary: Get all banks in manager page
+      consumes:
+        - application/json
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: Bank 목록을 찾는데 성공했습니다.
+                  items:
+                    type: array
+                    items:
+                      properties:
+                        id:
+                          type: number
+                        start_at:
+                          type: string
+                        end_at:
+                          type: string
+                        daily_Interest:
+                          type: number
+                        total_Interest:
+                          type: number
+                        deposit_Total:
+                          type: number
+                        deposit_Balance:
+                          type: number
+                        deposit_User:
+                          type: number
+                        remaing_Day:
+                          type: number
+                        created_at:
+                          type: string
+                          format: date
+                        is_over:
+                          type: string
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+                  
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http
