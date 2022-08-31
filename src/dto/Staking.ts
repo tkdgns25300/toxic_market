@@ -34,5 +34,5 @@ export class StakingContractTokenDto {
   contract_address: string;
 
   @IsString({ message: "문자열이 아닙니다." })
-  token_id: string;
+  token_id: string[];
 }
