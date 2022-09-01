@@ -7,6 +7,8 @@ import { StakingQueryRepo } from "../repository/Staking";
 import { StakingContractTokenDto } from "../dto/Staking";
 import { ABI, TOX_CONTRACT_ADDRESS } from "../middlewares/smartContract";
 import { PageResObj } from "../api";
+import { EntityManager, Transaction, TransactionManager } from "typeorm";
+import { Staking, StakingLog, User } from "../entity";
 
 const toxicNFTContractAddress = [process.env.TOXIC_APE, process.env.FOOLKATS, process.env.SUCCUBUS, process.env.TOXIC_APE_SPECIAL]
 const caver = new Caver("https://public-node-api.klaytnapi.com/v1/cypress");
@@ -866,5 +868,34 @@ export class StakingService {
     await this.stakingQueryRepo.update(staking, "user_address", public_address);    
 
     return new PageResObj({}, 'Unstaking에 성공하였습니다.')
+  }
+
+  @Transaction()
+  async payPoint(key: string, @TransactionManager() manager: EntityManager): Promise<PageResObj<{}>> {
+    if (key !== process.env.AWS_LAMBDA_AUTH_KEY) {
+      return new PageResObj({}, '잘못된 접근입니다.', true)
+    }
+
+    const allStaking = await manager.query('select * from staking')
+    for (const staking of allStaking) {
+      // 유저에게 TP지급
+      const amount = staking.toxic_ape_amount * 20 + staking.foolkat_amount * 4 + staking.succubus_amount * 10 + staking.toxic_ape_special_amount * 30;
+      const user = await manager.findOne(User, staking.user_address);
+      user.CF_balance += amount;
+      await manager.update(User, {public_address: staking.user_address}, user);
+
+      // Staking 업데이트
+      staking.total_payments += amount;
+      await manager.update(Staking, {id: staking.id}, staking);
+
+      // 로그 생성
+      const log = {
+        payment_amount: amount,
+        staking_id: staking.id
+      }
+      const stakingLog = manager.create(StakingLog, log)
+      await manager.save(StakingLog, stakingLog)
+    }
+    return new PageResObj({}, 'TP 지급에 성공하였습니다.')
   }
 }

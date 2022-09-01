@@ -1,16 +1,5 @@
-// /**
-//  * To transfer your NFT to another wallet, follow these simple steps:
-//  * 
-//  * 1. Open your wallet to view your NFTs.
-//  * 2. Choose the NFT you want to send.
-//  * 3. Enter the recipient’s public wallet address (or ENS).
-//  * 4. Approve the transaction.
-//  * 5. Verify your transfer using Etherscan.
-//  * 
-//  */
-
 import { Response } from "express";
-import { Body, Get, JsonController, Post, QueryParams, Res, UseBefore } from "routing-controllers";
+import { Body, Get, JsonController, Param, Post, QueryParams, Res, UseBefore } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
 import { PageResObj } from "../api";
@@ -18,17 +7,6 @@ import { StakingSearchReq } from "../api/request/StakingSearchReq";
 import { StakingContractTokenDto } from "../dto/Staking";
 import { checkAccessToken } from "../middlewares/Auth";
 import { StakingService } from "../service/Staking";
-
-// /**
-//  * Transferring Your NFTs Safely
-//  * 
-//  * 1. Never give out your wallet’s secret phrase
-//  * 2. Verify the recipients’ wallet address
-//  * 3. Always choose the “Fast” transaction speed
-//  * 4. Don’t send someone an NFT if you are awaiting payment
-//  * 5. Be aware of common NFT scams
-//  * 
-//  */
 
 // 전체 로직
 // 1. 해당 유저의 보유 NFT 확인 API(Pagenation + sort 필요)
@@ -97,6 +75,18 @@ export class StakingController {
     try {
       const { aud } = res.locals.jwtPayload;
       return await this.stakingSerivce.unstakingNFT(params, aud);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
+
+  @Post("/payment/:key")
+  public async payPoint(@Param("key") key: string ) {
+    try {
+      return await this.stakingSerivce.payPoint(key, null)
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);
