@@ -101,3 +101,75 @@ export class BankController {
     };
   };
 }
+
+
+// 람다에서 사용할 코드
+// const https = require('https');
+
+// function postRequest(body) {
+//   const options = {
+//     hostname: 'localhost',
+//     path: '/bank/interest',
+//     method: 'POST',
+//     port: 4000, // 👈️ replace with 80 for HTTP requests
+//     // headers: {
+//     //   'Content-Type': 'application/json',
+//     // },
+//     // body: body
+//   };
+
+//   return new Promise((resolve, reject) => {
+//     console.log('options :', options)
+//     const req = https.request(options, res => {
+//       let rawData = '';
+
+//       res.on('data', chunk => {
+//         rawData += chunk;
+//       });
+
+//       res.on('end', () => {
+//         try {
+//           console.log('정상적으로 된 것인가', rawData)
+//           resolve(rawData)
+//         } catch (err) {
+//           console.log('err :', err)
+//           reject(new Error(err));
+//         }
+//       });
+//     });
+    
+//     console.log('req :', req)
+
+//     req.on('error', err => {
+//       reject(new Error(err));
+//     });
+
+//     // 👇️ write the body to the Request object
+//     req.write(JSON.stringify(body));
+//     req.end();
+//   });
+// }
+
+// exports.handler = async event => {
+//   try {
+//     const result = await postRequest({
+//         userInfo: {
+//             userId: "guest", password: "1234"
+//         }
+//     });
+//     console.log('result is: 👉️', result);
+
+//     // 👇️️ response structure assume you use proxy integration with API gateway
+//     return {
+//       statusCode: 200,
+//       headers: {'Content-Type': 'application/json'},
+//       body: result,
+//     };
+//   } catch (error) {
+//     console.log('Error is: 👉️', error);
+//     return {
+//       statusCode: 400,
+//       body: error.message,
+//     };
+//   }
+// };

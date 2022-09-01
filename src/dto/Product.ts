@@ -5,6 +5,7 @@ export class ProductDto {
 
   @IsString({ message: "문자열이 아닙니다." })
   @MaxLength(200, { message: "최대 200자까지 입력됩니다." })
+  @IsOptional()
   main_img_url: string;
 
   @IsString({ message: "문자열이 아닙니다." })
@@ -12,21 +13,24 @@ export class ProductDto {
   sub_img_url: string;
 
   @IsInt()
+  @IsOptional()
   price: number;
 
-  @IsInt()
   @IsOptional()
-  amount: number;
+  amount: number | string;
 
   @IsString({ message: "문자열이 아닙니다." })
   @MaxLength(50, { message: "최대 50자까지 입력됩니다." })
+  @IsOptional()
   title: string;
 
   @IsString({ message: "문자열이 아닙니다." })
+  @IsOptional()
   description: string;
 
   @IsString({ message: "문자열이 아닙니다." })
   @MaxLength(200, { message: "최대 200자까지 입력됩니다." })
+  @IsOptional()
   contact: string;
 
   @IsString({ message: "문자열이 아닙니다." })

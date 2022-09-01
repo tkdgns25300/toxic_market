@@ -58,24 +58,34 @@ export class ProductService {
   }
 
   async update(paramObj: ProductDto, id: number): Promise<PageResObj<Product | {}>> {
-
     let product = await this.ProductQueryRepo.findOne("id", id);
-    if(product.user_address !== paramObj.user_address) {
-      return new PageResObj({}, "상품을 생성한 사용자만 수정 가능합니다.", true);
+    let user = await this.userQueryRepo.findOne("public_address", paramObj.user_address)
+
+    if(product.user_address !== paramObj.user_address && user.is_admin === 'X') { // 수정 가능한 조건 : 1. 본인이 만든 마켓, 2. 관리자
+      return new PageResObj({}, "상품을 생성한 사용자와 관리자만 수정 가능합니다.", true);
     }
 
-    let user = await this.userQueryRepo.findOne("public_address", paramObj.user_address)
     if(user.seller_type === UserSellerType.INDIVIDUAL) {
       delete paramObj?.price
       delete paramObj?.amount
       delete paramObj?.title
     }
-    if (paramObj.amount === 0) {
+    if (paramObj.amount === 0 ) { // 무제한
       paramObj.amount = null;
-    }
+    } else if (paramObj.amount === 'sold out') { // 상품 재고 0
+      paramObj.amount = 0;
+    } 
 
     await this.ProductQueryRepo.update(paramObj,"id", id);
     return new PageResObj({}, "Product 수정에 성공했습니다.");
+  }
+
+  async delete(id: number): Promise<PageResObj<Product | {}>> {
+    const result = await this.ProductQueryRepo.delete('id', id);
+    if(result.affected !== 1) {
+      return new PageResObj({}, "Product 삭제에 실패하였습니다.", true);
+    }
+    return new PageResObj({}, "Product 삭제에 성공하였습니다.");
   }
 
   @Transaction()
