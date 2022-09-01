@@ -1,6 +1,7 @@
 import { Response } from "express";
 import {
   Body,
+  Delete,
   Get,
   JsonController,
   Param, Patch,
@@ -13,7 +14,7 @@ import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
 import { PageReq, PageResObj } from "../api";
 import { ProductDto } from "../dto";
-import { checkAccessToken } from "../middlewares/Auth";
+import { checkAccessToken, checkAdminAccessToken } from "../middlewares/Auth";
 import { ProductService } from "../service/Product";
 
 @Service()
@@ -89,6 +90,19 @@ export class ProductController {
     try {
       const { aud } = res.locals.jwtPayload;
       return await this.productService.buy(id, obj.amount, aud, null);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
+
+  @Delete('/delete/:id')
+  @UseBefore(checkAdminAccessToken)
+  public async delete(@Param("id") id: number, @Res() res: Response) {
+    try {
+      return await this.productService.delete(id);
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);

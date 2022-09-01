@@ -19,7 +19,6 @@ export class BankLog extends BaseEntity {
   depositor: string;
 
   @ManyToOne(() => Bank, (bank) => bank.bank_logs, {
-    onDelete: 'CASCADE',
     onUpdate: 'CASCADE'
   })
   @JoinColumn({ name: "bank_id"})

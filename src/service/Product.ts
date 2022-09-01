@@ -80,6 +80,14 @@ export class ProductService {
     return new PageResObj({}, "Product 수정에 성공했습니다.");
   }
 
+  async delete(id: number): Promise<PageResObj<Product | {}>> {
+    const result = await this.ProductQueryRepo.delete('id', id);
+    if(result.affected !== 1) {
+      return new PageResObj({}, "Product 삭제에 실패하였습니다.", true);
+    }
+    return new PageResObj({}, "Product 삭제에 성공하였습니다.");
+  }
+
   @Transaction()
   async buy(
     id: number,
