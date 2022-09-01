@@ -34,6 +34,8 @@ paths:
                   type: string
                 contact:
                   type: string
+                is_visible:
+                  type: string
 
       responses:
         200:

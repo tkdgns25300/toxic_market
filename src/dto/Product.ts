@@ -14,9 +14,8 @@ export class ProductDto {
   @IsInt()
   price: number;
 
-  @IsInt()
   @IsOptional()
-  amount: number;
+  amount: number | string;
 
   @IsString({ message: "문자열이 아닙니다." })
   @MaxLength(50, { message: "최대 50자까지 입력됩니다." })
