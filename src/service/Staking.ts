@@ -16,6 +16,12 @@ const keyring = caver.wallet.keyring.createFromPrivateKey(
 );
 caver.wallet.add(keyring);
 
+// Todo : 삭제, 톡시측 지갑 추가
+const myKeyring = caver.wallet.keyring.createFromPrivateKey(
+  ''
+)
+caver.wallet.add(myKeyring);
+
 @Service()
 export class StakingService {
   constructor(
@@ -23,7 +29,7 @@ export class StakingService {
     readonly stakingQueryRepo: StakingQueryRepo
   ) {}
 
-  async findUserNFT(param: StakingSearchReq, public_address: string) {
+  async findUserNFT(param: StakingSearchReq, public_address: string): Promise<any[]> {
     // 유저의 모든 NFT
     const userAllNFT = await axios({
       method: "get",
@@ -37,11 +43,11 @@ export class StakingService {
     });
 
     // 유저의 NFT중 톡시에이프 NFT만 필터링(Toxic-Ape, Foolkat, Succubus, Toxic-Ape-Special)
-    // const toxicNFTContractAddress = [process.env.TOXIC_APE, process.env.FOOLKATS, process.env.SUCCUBUS, process.env.TOXIC_APE_SPECIAL]
+    const toxicNFTContractAddress = [process.env.TOXIC_APE, process.env.FOOLKATS, process.env.SUCCUBUS, process.env.TOXIC_APE_SPECIAL]
     /**
      * Todo : Remove this to deploy
      */
-    const toxicNFTContractAddress = [process.env.TOXIC_APE, process.env.FOOLKATS, process.env.SUCCUBUS, process.env.TOXIC_APE_SPECIAL, '0x9faccd9f9661dddec3971c1ee146516127c34fc1']
+    // const toxicNFTContractAddress = [process.env.TOXIC_APE, process.env.FOOLKATS, process.env.SUCCUBUS, process.env.TOXIC_APE_SPECIAL, '0x9faccd9f9661dddec3971c1ee146516127c34fc1']
     let userToxicNFT = userAllNFT.data.items.filter(NFT => toxicNFTContractAddress.includes(NFT.contractAddress))
 
     // contract_address 필터링
@@ -55,30 +61,58 @@ export class StakingService {
     return userToxicNFT;
   }
 
-  async stakingNFT(param: StakingContractTokenDto, public_address: string) {
-    // Todo : 삭제, 톡시측 지갑 추가
-    const myKeyring = caver.wallet.keyring.createFromPrivateKey(
-      ''
-    )
-    caver.wallet.add(myKeyring);
-
+  async stakingNFT(param: StakingContractTokenDto, public_address: string): Promise<PageResObj<{}>> {
+    const toxicNFTContractAddress = [process.env.TOXIC_APE, process.env.FOOLKATS, process.env.SUCCUBUS, process.env.TOXIC_APE_SPECIAL]
     const kip17 = new caver.kct.kip17(param.contract_address)
     // NFT전송권한 부여받았는지 확인
     const isApproved = await kip17.isApprovedForAll(public_address, '0xf9496b7E5989647AD47bcDbe3bd79E98FB836514')
+    // const isApproved = await kip17.isApprovedForAll(public_address, '톡시 지갑')
     if (!isApproved) {
       return new PageResObj({}, "transfer 권한이 없습니다.", true);
     }
 
-    // 1. NFT transfer
-    // 2. create Staking
+    // 1. create staking data
+    let kindOfNFT: string;
+    switch(param.contract_address) {
+      case toxicNFTContractAddress[0]:
+        kindOfNFT = 'toxic_ape'
+        break;
+      case toxicNFTContractAddress[1]:
+        kindOfNFT = 'foolkat'
+        break;
+      case toxicNFTContractAddress[2]:
+        kindOfNFT = 'succubus'
+        break;
+      case toxicNFTContractAddress[3]:
+        kindOfNFT = 'toxic_ape_special'
+        break;
+    }
+    
+    const staking = await this.stakingQueryRepo.findOne('user_address', public_address)
+    // 이전에 스테이킹 했던 사용자
+    if (staking) {
+      if (staking[kindOfNFT] === null || staking[kindOfNFT] === '') staking[kindOfNFT] = param.token_id.join('&')
+      else staking[kindOfNFT] += '&' + param.token_id.join('&')
+      await this.stakingQueryRepo.update(staking, 'user_address', public_address)
+    }
+    // 처음 스테이킹 하는 사용자
+    else {
+      const newStaking = {
+        [kindOfNFT]: param.token_id.join('&'),
+        total_points: 0,
+        user_address: public_address
+      }
+      await this.stakingQueryRepo.create(newStaking)
+    }
+
     for (const tokenId of param.token_id) {
-      await kip17.transferFrom(public_address, '0xf9496b7E5989647AD47bcDbe3bd79E98FB836514', tokenId, {
+      // 2. NFT transfer
+      await kip17.safeTransferFrom(public_address, '0xf9496b7E5989647AD47bcDbe3bd79E98FB836514', tokenId, {
         from: '0xf9496b7E5989647AD47bcDbe3bd79E98FB836514'
       })
     }
-
-
-    return await kip17.isApprovedForAll('0x216D59b59729d902E066efe266FC2dB212FF5d2E', '0xf9496b7E5989647AD47bcDbe3bd79E98FB836514')
+    
+    return new PageResObj({}, "Staking에 성공하였습니다.");
 
     /**
      * 프론트에 전달할 NFT전송 권한 코드
