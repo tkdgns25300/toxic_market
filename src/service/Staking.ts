@@ -8,6 +8,7 @@ import { StakingContractTokenDto } from "../dto/Staking";
 import { ABI, TOX_CONTRACT_ADDRESS } from "../middlewares/smartContract";
 import { PageResObj } from "../api";
 
+const toxicNFTContractAddress = [process.env.TOXIC_APE, process.env.FOOLKATS, process.env.SUCCUBUS, process.env.TOXIC_APE_SPECIAL]
 const caver = new Caver("https://public-node-api.klaytnapi.com/v1/cypress");
 // const caver = new Caver('https://api.baobab.klaytn.net:8651/')
 
@@ -15,10 +16,9 @@ const keyring = caver.wallet.keyring.createFromPrivateKey(
   process.env.WALLET_PRIVATE_KEY
 );
 caver.wallet.add(keyring);
-
 // Todo : 삭제, 톡시측 지갑 추가
 const myKeyring = caver.wallet.keyring.createFromPrivateKey(
-  ''
+  '0x6041b4636061525df35172d2f0c2fbd5554a6d4bd2e57f482f5f617c9318541b'
 )
 caver.wallet.add(myKeyring);
 
@@ -29,11 +29,11 @@ export class StakingService {
     readonly stakingQueryRepo: StakingQueryRepo
   ) {}
 
-  async findUserNFT(param: StakingSearchReq, public_address: string): Promise<any[]> {
+  async findUserNFT(param: StakingSearchReq, public_address: string): Promise<PageResObj<any[]>> {
     // 유저의 모든 NFT
-    const userAllNFT = await axios({
+    let userAllNFT = await axios({
       method: "get",
-      url: `https://th-api.klaytnapi.com/v2/account/${[public_address]}/token?kind=nft`,
+      url: `https://th-api.klaytnapi.com/v2/account/${[public_address]}/token?kind=nft&size=1000&ca-filters=${param.contract_address}`,
       headers: {
         "x-chain-id": process.env.KLAYTN_API_X_CHAIN_ID
           ? process.env.KLAYTN_API_X_CHAIN_ID
@@ -42,27 +42,13 @@ export class StakingService {
       },
     });
 
-    // 유저의 NFT중 톡시에이프 NFT만 필터링(Toxic-Ape, Foolkat, Succubus, Toxic-Ape-Special)
-    const toxicNFTContractAddress = [process.env.TOXIC_APE, process.env.FOOLKATS, process.env.SUCCUBUS, process.env.TOXIC_APE_SPECIAL]
-    /**
-     * Todo : Remove this to deploy
-     */
-    // const toxicNFTContractAddress = [process.env.TOXIC_APE, process.env.FOOLKATS, process.env.SUCCUBUS, process.env.TOXIC_APE_SPECIAL, '0x9faccd9f9661dddec3971c1ee146516127c34fc1']
-    let userToxicNFT = userAllNFT.data.items.filter(NFT => toxicNFTContractAddress.includes(NFT.contractAddress))
-
-    // contract_address 필터링
-    if (param.contract_address) {
-      userToxicNFT = userToxicNFT.filter(NFT => NFT.contractAddress === param.contract_address)
-    }
-
     // Pagination
-    userToxicNFT = userToxicNFT.slice(param.getOffset(), param.getOffset() + param.getLimit())
+    const result = userAllNFT.data.items.slice(param.getOffset(), param.getOffset() + param.getLimit())
     
-    return userToxicNFT;
+    return new PageResObj(result, "유저 NFT 조회에 성공하였습니다.");
   }
 
   async stakingNFT(param: StakingContractTokenDto, public_address: string): Promise<PageResObj<{}>> {
-    const toxicNFTContractAddress = [process.env.TOXIC_APE, process.env.FOOLKATS, process.env.SUCCUBUS, process.env.TOXIC_APE_SPECIAL]
     const kip17 = new caver.kct.kip17(param.contract_address)
     // NFT전송권한 부여받았는지 확인
     const isApproved = await kip17.isApprovedForAll(public_address, '0xf9496b7E5989647AD47bcDbe3bd79E98FB836514')
@@ -110,6 +96,9 @@ export class StakingService {
       await kip17.safeTransferFrom(public_address, '0xf9496b7E5989647AD47bcDbe3bd79E98FB836514', tokenId, {
         from: '0xf9496b7E5989647AD47bcDbe3bd79E98FB836514'
       })
+      // await kip17.safeTransferFrom(public_address, '톡시지갑', tokenId, {
+      //   from: '톡시지갑'
+      // })
     }
     
     return new PageResObj({}, "Staking에 성공하였습니다.");
@@ -808,5 +797,28 @@ export class StakingService {
       }
     ]
     
+  }
+
+  async findUserStakingNFT(param: StakingSearchReq, public_address: string): Promise<PageResObj<any[]>> {
+    // 모든 NFT 조회
+    const allNFT = await axios({
+      method: "get",
+      url: `https://th-api.klaytnapi.com/v2/account/0xf9496b7E5989647AD47bcDbe3bd79E98FB836514/token?kind=nft&size=1000&ca-filters=${param.contract_address}`,
+      // url: `https://th-api.klaytnapi.com/v2/account/${[톡시지갑]}/token?kind=nft&size=1000&ca-filters=${param.contract_address}`,
+      headers: {
+        "x-chain-id": process.env.KLAYTN_API_X_CHAIN_ID
+          ? process.env.KLAYTN_API_X_CHAIN_ID
+          : "8217",
+        Authorization: `Basic ${process.env.KLAYTN_API_KEY}`,
+      },
+    });
+
+    // 유저의 NFT만 필터링
+    let result = allNFT.data.items.filter(nft => nft.lastTransfer.transferFrom.toLowerCase() === public_address.toLowerCase())
+
+    // Pagination
+    result = result.slice(param.getOffset(), param.getOffset() + param.getLimit())
+
+    return new PageResObj(result, "유저의 스테이킹된 NFT 조회에 성공하였습니다.");
   }
 }

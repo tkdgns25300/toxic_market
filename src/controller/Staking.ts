@@ -76,4 +76,18 @@ export class StakingController {
       return new PageResObj({}, err.message, true);
     }
   }
+
+  @Get("/staking")
+  @UseBefore(checkAccessToken)
+  public async findUserStakingNFT(@QueryParams() params: StakingSearchReq, @Res() res: Response) {
+    try {
+      const { aud } = res.locals.jwtPayload;
+      return await this.stakingSerivce.findUserStakingNFT(params, aud)
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
 }
