@@ -89,6 +89,8 @@ export class StakingService {
     if (staking) {
       if (staking[kindOfNFT] === null || staking[kindOfNFT] === '') staking[kindOfNFT] = param.token_id.join('&')
       else staking[kindOfNFT] += '&' + param.token_id.join('&')
+      const NFTAmount = kindOfNFT + '_amount'
+      staking[NFTAmount] = staking[kindOfNFT].split('&').length;
       await this.stakingQueryRepo.update(staking, 'user_address', public_address)
     }
     // 처음 스테이킹 하는 사용자
@@ -858,6 +860,9 @@ export class StakingService {
     }
     const newTokenIdArr = staking[kindOfNFT].split('&').filter(tokenId => !param.token_id.includes(tokenId)).join('&');
     staking[kindOfNFT] = newTokenIdArr;
+    const NFTAmount = kindOfNFT + '_amount'
+    if (newTokenIdArr === '') staking[NFTAmount] = 0
+    else staking[NFTAmount] = newTokenIdArr.split('&').length;
     await this.stakingQueryRepo.update(staking, "user_address", public_address);    
 
     return new PageResObj({}, 'Unstaking에 성공하였습니다.')

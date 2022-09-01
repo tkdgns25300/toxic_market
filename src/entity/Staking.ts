@@ -18,12 +18,26 @@ export class Staking extends BaseEntity {
   toxic_ape: string;
 
   @Column({
+    type: "int",
+    default: 0,
+    comment: "총 스테이킹 수량"
+  })
+  toxic_ape_amount: number;
+
+  @Column({
     type: "text",
     default: null,
     nullable: true,
     comment: "토큰 ID 및 스테이킹 시간 모음(JSON형식으로 저장)"
   })
   foolkat: string;
+
+  @Column({
+    type: "int",
+    default: 0,
+    comment: "총 스테이킹 수량"
+  })
+  foolkat_amount: number;
 
   @Column({
     type: "text",
@@ -34,12 +48,26 @@ export class Staking extends BaseEntity {
   succubus: string;
 
   @Column({
+    type: "int",
+    default: 0,
+    comment: "총 스테이킹 수량"
+  })
+  succubus_amount: number;
+
+  @Column({
     type: "text",
     default: null,
     nullable: true,
     comment: "토큰 ID 및 스테이킹 시간 모음(JSON형식으로 저장)"
   })
   toxic_ape_special: string;
+
+  @Column({
+    type: "int",
+    default: 0,
+    comment: "총 스테이킹 수량"
+  })
+  toxic_ape_special_amount: number;
 
   @Column({
     type: "int",
