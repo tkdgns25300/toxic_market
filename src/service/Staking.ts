@@ -18,7 +18,7 @@ const keyring = caver.wallet.keyring.createFromPrivateKey(
 caver.wallet.add(keyring);
 // Todo : 삭제, 톡시측 지갑 추가
 const myKeyring = caver.wallet.keyring.createFromPrivateKey(
-  '0x6041b4636061525df35172d2f0c2fbd5554a6d4bd2e57f482f5f617c9318541b'
+  process.env.TEST_WALLET_PRIVATE_KEY
 )
 caver.wallet.add(myKeyring);
 
@@ -56,8 +56,18 @@ export class StakingService {
     if (!isApproved) {
       return new PageResObj({}, "transfer 권한이 없습니다.", true);
     }
+    
+    // 1. transfer NFT
+    for (const tokenId of param.token_id) {
+      await kip17.safeTransferFrom(public_address, '0xf9496b7E5989647AD47bcDbe3bd79E98FB836514', tokenId, {
+        from: '0xf9496b7E5989647AD47bcDbe3bd79E98FB836514'
+      })
+      // await kip17.safeTransferFrom(public_address, '톡시지갑', tokenId, {
+      //   from: '톡시지갑'
+      // })
+    }
 
-    // 1. create staking data
+    // 2. Create Staking Data
     let kindOfNFT: string;
     switch(param.contract_address) {
       case toxicNFTContractAddress[0]:
@@ -91,15 +101,6 @@ export class StakingService {
       await this.stakingQueryRepo.create(newStaking)
     }
 
-    for (const tokenId of param.token_id) {
-      // 2. NFT transfer
-      await kip17.safeTransferFrom(public_address, '0xf9496b7E5989647AD47bcDbe3bd79E98FB836514', tokenId, {
-        from: '0xf9496b7E5989647AD47bcDbe3bd79E98FB836514'
-      })
-      // await kip17.safeTransferFrom(public_address, '톡시지갑', tokenId, {
-      //   from: '톡시지갑'
-      // })
-    }
     
     return new PageResObj({}, "Staking에 성공하였습니다.");
 
@@ -823,6 +824,42 @@ export class StakingService {
   }
 
   async unstakingNFT(param: StakingContractTokenDto, public_address: string): Promise<PageResObj<{}>> {
-    return new PageResObj({}, 'working')
+    const staking = await this.stakingQueryRepo.findOne("user_address", public_address);
+    if (!staking) {
+      return new PageResObj({}, "이전에 스테이킹한 기록이 없습니다.", true)
+    }
+
+    // 1. transfer NFT
+    const kip17 = new caver.kct.kip17(param.contract_address)
+    for (const tokenId of param.token_id) {
+      await kip17.safeTransferFrom('0xf9496b7E5989647AD47bcDbe3bd79E98FB836514', public_address, tokenId, {
+        from: '0xf9496b7E5989647AD47bcDbe3bd79E98FB836514'
+      })
+      // await kip17.safeTransferFrom(public_address, '톡시지갑', tokenId, {
+      //   from: '톡시지갑'
+      // })
+    }
+
+    // 2. Update Staking Data
+    let kindOfNFT: string;
+    switch(param.contract_address) {
+      case toxicNFTContractAddress[0]:
+        kindOfNFT = 'toxic_ape'
+        break;
+      case toxicNFTContractAddress[1]:
+        kindOfNFT = 'foolkat'
+        break;
+      case toxicNFTContractAddress[2]:
+        kindOfNFT = 'succubus'
+        break;
+      case toxicNFTContractAddress[3]:
+        kindOfNFT = 'toxic_ape_special'
+        break;
+    }
+    const newTokenIdArr = staking[kindOfNFT].split('&').filter(tokenId => !param.token_id.includes(tokenId)).join('&');
+    staking[kindOfNFT] = newTokenIdArr;
+    await this.stakingQueryRepo.update(staking, "user_address", public_address);    
+
+    return new PageResObj({}, 'Unstaking에 성공하였습니다.')
   }
 }
