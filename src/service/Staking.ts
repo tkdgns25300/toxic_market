@@ -821,4 +821,8 @@ export class StakingService {
 
     return new PageResObj(result, "유저의 스테이킹된 NFT 조회에 성공하였습니다.");
   }
+
+  async unstakingNFT(param: StakingContractTokenDto, public_address: string): Promise<PageResObj<{}>> {
+    return new PageResObj({}, 'working')
+  }
 }

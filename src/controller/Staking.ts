@@ -90,4 +90,18 @@ export class StakingController {
       return new PageResObj({}, err.message, true);
     }
   }
+
+  @Post("/unstak")
+  @UseBefore(checkAccessToken)
+  public async unstakingNFT(@Body() params: StakingContractTokenDto, @Res() res: Response) {
+    try {
+      const { aud } = res.locals.jwtPayload;
+      return await this.stakingSerivce.unstakingNFT(params, aud);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
 }
