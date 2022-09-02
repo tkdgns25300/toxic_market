@@ -2,13 +2,14 @@ import Caver, { KIP17 } from "caver-js";
 import axios from "axios";
 import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
-import { StakingSearchReq } from "../api/request/StakingSearchReq";
+import { NftSearchReq } from "../api/request/NftSearchReq";
 import { StakingQueryRepo } from "../repository/Staking";
 import { StakingContractTokenDto } from "../dto/Staking";
 import { ABI, TOX_CONTRACT_ADDRESS } from "../middlewares/smartContract";
-import { PageResObj } from "../api";
+import { PageReq, PageResList, PageResObj } from "../api";
 import { EntityManager, Transaction, TransactionManager } from "typeorm";
 import { Staking, StakingLog, User } from "../entity";
+import { StakingSearchReq } from "../api/request/StakingSearchReq";
 
 const toxicNFTContractAddress = [process.env.TOXIC_APE, process.env.FOOLKATS, process.env.SUCCUBUS, process.env.TOXIC_APE_SPECIAL]
 const caver = new Caver("https://public-node-api.klaytnapi.com/v1/cypress");
@@ -31,7 +32,7 @@ export class StakingService {
     readonly stakingQueryRepo: StakingQueryRepo
   ) {}
 
-  async findUserNFT(param: StakingSearchReq, public_address: string): Promise<PageResObj<any[]>> {
+  async findUserNFT(param: NftSearchReq, public_address: string): Promise<PageResObj<any[]>> {
     // 유저의 모든 NFT
     let userAllNFT = await axios({
       method: "get",
@@ -97,8 +98,10 @@ export class StakingService {
     }
     // 처음 스테이킹 하는 사용자
     else {
+      const NFTAmount = kindOfNFT + '_amount'
       const newStaking = {
         [kindOfNFT]: param.token_id.join('&'),
+        [NFTAmount]: param.token_id.length,
         total_points: 0,
         user_address: public_address
       }
@@ -804,7 +807,7 @@ export class StakingService {
     
   }
 
-  async findUserStakingNFT(param: StakingSearchReq, public_address: string): Promise<PageResObj<any[]>> {
+  async findUserStakingNFT(param: NftSearchReq, public_address: string): Promise<PageResObj<any[]>> {
     // 모든 NFT 조회
     const allNFT = await axios({
       method: "get",
@@ -897,5 +900,17 @@ export class StakingService {
       await manager.save(StakingLog, stakingLog)
     }
     return new PageResObj({}, 'TP 지급에 성공하였습니다.')
+  }
+
+  async findStaking(param: StakingSearchReq): Promise<PageResList<Staking>> {
+    const result = await this.stakingQueryRepo.findStaking(param);
+    return new PageResList<Staking>(
+        result[1],
+        param.limit,
+        result[0].map((el: Staking) => {
+          return el;
+        }),
+        "Staking 목록을 찾는데 성공했습니다."
+    );
   }
 }

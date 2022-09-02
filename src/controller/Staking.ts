@@ -2,10 +2,11 @@ import { Response } from "express";
 import { Body, Get, JsonController, Param, Post, QueryParams, Res, UseBefore } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
-import { PageResObj } from "../api";
+import { PageReq, PageResObj } from "../api";
+import { NftSearchReq } from "../api/request/NftSearchReq";
 import { StakingSearchReq } from "../api/request/StakingSearchReq";
 import { StakingContractTokenDto } from "../dto/Staking";
-import { checkAccessToken } from "../middlewares/Auth";
+import { checkAccessToken, checkAdminAccessToken } from "../middlewares/Auth";
 import { StakingService } from "../service/Staking";
 
 // 전체 로직
@@ -27,9 +28,9 @@ export class StakingController {
   @Inject()
   stakingSerivce: StakingService;
 
-  @Get("/user")
+  @Get("/nft/mine")
   @UseBefore(checkAccessToken)
-  public async findUserNFT(@QueryParams() params: StakingSearchReq, @Res() res: Response) {
+  public async findUserNFT(@QueryParams() params: NftSearchReq, @Res() res: Response) {
     try {
       const { aud } = res.locals.jwtPayload;
       return await this.stakingSerivce.findUserNFT(params, aud)
@@ -55,9 +56,9 @@ export class StakingController {
     }
   }
 
-  @Get("/staking")
+  @Get("/nft/staking")
   @UseBefore(checkAccessToken)
-  public async findUserStakingNFT(@QueryParams() params: StakingSearchReq, @Res() res: Response) {
+  public async findUserStakingNFT(@QueryParams() params: NftSearchReq, @Res() res: Response) {
     try {
       const { aud } = res.locals.jwtPayload;
       return await this.stakingSerivce.findUserStakingNFT(params, aud)
@@ -87,6 +88,19 @@ export class StakingController {
   public async payPoint(@Param("key") key: string ) {
     try {
       return await this.stakingSerivce.payPoint(key, null)
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
+
+  @Get("/staking")
+  @UseBefore(checkAdminAccessToken)
+  public async findStaking(@QueryParams() params: StakingSearchReq) {
+    try {
+      return await this.stakingSerivce.findStaking(params)
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);
