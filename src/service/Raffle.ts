@@ -105,11 +105,11 @@ export class RaffleService {
 
   async findAllApproved(paramObj: PageReq): Promise<PageResList<Raffle>> {
     const result = await this.raffleQueryRepo.findAllApproved(paramObj);
-    // nickname추가 하여 리턴 : 좋지 않은 방식 => but 프로젝트 크기가 크지 않아 속도 저하의 우려가 없어 이렇게 작성.
+    // nickname, profile_img추가 하여 리턴 : 좋지 않은 방식 => but 프로젝트 크기가 크지 않아 속도 저하의 우려가 없어 이렇게 작성.
     for (const el of result[0]) {
       const creator = await this.userQueryRepo.findOne("public_address", el.creator.public_address);
-      const nickname = creator.nickname;
-      el.nickname = nickname
+      el.nickname = creator.nickname;
+      el.profile_img = creator.profile_img;
       delete el.creator
     }
     return new PageResList<Raffle> (
@@ -232,6 +232,13 @@ export class RaffleService {
 
   async findUserRaffles(param: PageReq, creator_address: string): Promise<PageResList<Raffle>> {
     const result = await this.raffleQueryRepo.findUserRaffles(param, creator_address);
+    // nickname, profile_img추가 하여 리턴 : 좋지 않은 방식 => but 프로젝트 크기가 크지 않아 속도 저하의 우려가 없어 이렇게 작성.
+    for (const el of result[0]) {
+      const creator = await this.userQueryRepo.findOne("public_address", creator_address);
+      el.nickname = creator.nickname;
+      el.profile_img = creator.profile_img;
+      delete el.creator
+    }
     return new PageResList<Raffle>(
       result[1],
       param.limit,

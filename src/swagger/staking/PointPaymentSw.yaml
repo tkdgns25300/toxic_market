@@ -1,0 +1,46 @@
+tags:
+  - name: Staking
+    description: Staking API
+
+
+paths:
+  /staking/payment/{key}:
+    post:
+      tags:
+        - Staking
+      summary: TP Payment
+      consumes:
+        - application/json
+      parameters:
+        - name: key
+          in: path
+          required: true
+          description: api access key
+          schema:
+            type: string
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  item:
+                    type: object
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: TP 지급에 성공하였습니다..
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http

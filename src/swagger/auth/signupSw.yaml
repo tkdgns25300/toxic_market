@@ -1,0 +1,55 @@
+paths:
+  /auth/signup/{address}:
+    get:
+      tags:
+        - Auth
+      summary: signup
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: 회원가입에 성공했습니다.
+                  item:
+                    type: object
+                    properties:
+                      public_address:
+                        type: string
+                      nonce:
+                        type: string
+                      CF_balance:
+                        type: number
+                      is_seller:
+                        type: string
+                      email:
+                        type: null
+                      store_name:
+                        type: null
+                      phone:
+                        type: null
+                      name:
+                        type: null
+                      verify_file_url:
+                        type: null
+                      address:
+                        type: null
+                      seller_type:
+                        type: null
+
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http

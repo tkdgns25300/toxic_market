@@ -20,11 +20,12 @@ export class AuctionService {
   async getNewest(): Promise<PageResObj<Auction | {}>> {
 
     const result = await this.auctionQueryRepo.getNewest( );
-    // result.bid_logs에 닉네임 추가하여 리턴 : 좋지 않은 방식 => but 프로젝트 크기가 크지 않아 속도 저하의 우려가 없어 이렇게 작성.
+    // result.bid_logs에 닉네임, 프로필 이미지 추가하여 리턴 : 좋지 않은 방식 => but 프로젝트 크기가 크지 않아 속도 저하의 우려가 없어 이렇게 작성.
     const newBidLog = []
     for (const el of result.bid_logs) {
       const bidder = await this.userQueryRepo.findOne("public_address", el.bidder);
-      el.nickname = bidder.nickname
+      el.nickname = bidder.nickname;
+      el.profile_img = bidder.profile_img;
       newBidLog.push(el)
     }
     result.bid_logs = newBidLog;
@@ -63,6 +64,13 @@ export class AuctionService {
 
   async findUserAuctions(param: PageReq, creator_address: string): Promise<PageResList<Auction>> {
     const result = await this.auctionQueryRepo.findUserAuctions(param, creator_address);
+    // nickname, profile_img추가 하여 리턴 : 좋지 않은 방식 => but 프로젝트 크기가 크지 않아 속도 저하의 우려가 없어 이렇게 작성.
+    for (const el of result[0]) {
+      const creator = await this.userQueryRepo.findOne("public_address", creator_address);
+      el.nickname = creator.nickname;
+      el.profile_img = creator.profile_img;
+      delete el.creator
+    }
     return new PageResList<Auction>(
         result[1],
         param.limit,
@@ -103,11 +111,12 @@ export class AuctionService {
       joinTable.push({property: "Auction.creator", alias: "user"})
     }
     const result = await this.auctionQueryRepo.findOne("id", id, joinTable);
-    // result.bid_logs에 닉네임 추가하여 리턴 : 좋지 않은 방식 => but 프로젝트 크기가 크지 않아 속도 저하의 우려가 없어 이렇게 작성.
+    // result.bid_logs에 닉네임, 프로필 이미지 추가하여 리턴 : 좋지 않은 방식 => but 프로젝트 크기가 크지 않아 속도 저하의 우려가 없어 이렇게 작성.
     const newBidLog = []
     for (const el of result.bid_logs) {
       const bidder = await this.userQueryRepo.findOne("public_address", el.bidder);
-      el.nickname = bidder.nickname
+      el.nickname = bidder.nickname;
+      el.profile_img = bidder.profile_img;
       newBidLog.push(el)
     }
     result.bid_logs = newBidLog;
@@ -134,11 +143,11 @@ export class AuctionService {
 
   async findAllApproved(param: PageReq): Promise<PageResList<Auction>> {
     const result = await this.auctionQueryRepo.findAllApproved(param);
-    // nickname추가 하여 리턴 : 좋지 않은 방식 => 프로젝트 크기가 크지 않아 속도 저하의 우려가 없어 이렇게 작성.
+    // nickname, profile_img추가 하여 리턴 : 좋지 않은 방식 => 프로젝트 크기가 크지 않아 속도 저하의 우려가 없어 이렇게 작성.
     for (const el of result[0]) {
       const creator = await this.userQueryRepo.findOne("public_address", el.creator_address);
-      const nickname = creator.nickname;
-      el.nickname = nickname
+      el.nickname = creator.nickname;
+      el.profile_img = creator.profile_img;
     }
     return new PageResList<Auction>(
         result[1],
