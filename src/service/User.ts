@@ -112,4 +112,17 @@ export class UserService {
     }
     return new PageResObj({}, "회원탈퇴에 성공하였습니다.");
   }
+
+  async updateSeller(public_address: string, paramObj: UserDto): Promise<PageResObj<User | {}>> {
+    const update = await this.userQueryRepo.update(paramObj, 'public_address', public_address);
+    if (update.affected === 0) {
+      return new PageResObj({}, "판매자 수정에 실패했습니다.", true);
+    };
+
+    const result: User = await this.userQueryRepo.findOne(
+      "public_address",
+      paramObj.public_address
+    );
+    return new PageResObj(result, "판매자 수정에 성공했습니다.");
+  }
 }

@@ -77,6 +77,19 @@ export class UserController {
     }
   }
 
+  @Patch("/seller/:public_address")
+  @UseBefore(checkAdminAccessToken)
+  public async updateSeller(@Param("public_address") public_address: string, @Body() params: UserDto, @Res() res: Response) {
+    try {
+      return await this.userService.updateSeller(public_address, params);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
+
   @Post("/register")
   @UseBefore(checkAccessToken)
   public async register(@Body() params: UserIdPasswordDto, @Res() res: Response) {
