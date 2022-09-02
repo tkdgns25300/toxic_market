@@ -124,6 +124,7 @@ export class RaffleService {
 
   @Transaction()
   async apply(paramObj: ApplyDto, public_address: string, @TransactionManager() manager: EntityManager): Promise<PageResObj<Raffle | {}>> {
+    if(paramObj.apply_amount < 1) return new PageResObj({}, "응모 갯수는 0개 이상이여야 합니다.", true); 
     let raffle = await manager.query('select * from raffle where id = ?', [paramObj.raffle_id])
     raffle = raffle[0]
     // 추첨 기간에만 응모가능
