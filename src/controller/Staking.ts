@@ -10,19 +10,6 @@ import { StakingContractTokenDto } from "../dto/Staking";
 import { checkAccessToken, checkAdminAccessToken } from "../middlewares/Auth";
 import { StakingService } from "../service/Staking";
 
-// 전체 로직
-// 1. 해당 유저의 보유 NFT 확인 API(Pagenation + sort 필요)
-// : Token History API('https://refs.klaytnapi.com/ko/tokenhistory/latest#operation/getNftsByOwnerAddress');
-// 2. 톡시 지갑에 스테이킹 되어있는 해당 유저의 보유 NFT 확인 API(Pagenation + sort 필요)
-// : 
-// 3. 스테이킹 API
-// : 가스비 확인
-// 4. 언스테이킹 API
-// : 가스비 확인
-// 5. 정오(12:00 PM) 예약 API(람다)
-// 6. 스테이킹 목록 조회 API
-// 7. 스테이킹 이용 유저의 포인트 지급내역 조회 API
-
 @Service()
 @JsonController("/staking")
 export class StakingController {
