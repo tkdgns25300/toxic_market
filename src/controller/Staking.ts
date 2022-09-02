@@ -4,6 +4,7 @@ import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
 import { PageReq, PageResObj } from "../api";
 import { NftSearchReq } from "../api/request/NftSearchReq";
+import { StakingLogSearchReq } from "../api/request/StakingLogSearchReq";
 import { StakingSearchReq } from "../api/request/StakingSearchReq";
 import { StakingContractTokenDto } from "../dto/Staking";
 import { checkAccessToken, checkAdminAccessToken } from "../middlewares/Auth";
@@ -85,7 +86,7 @@ export class StakingController {
   }
 
   @Post("/payment/:key")
-  public async payPoint(@Param("key") key: string ) {
+  public async payPoint(@Param("key") key: string) {
     try {
       return await this.stakingSerivce.payPoint(key, null)
     } catch (err) {
@@ -101,6 +102,19 @@ export class StakingController {
   public async findStaking(@QueryParams() params: StakingSearchReq) {
     try {
       return await this.stakingSerivce.findStaking(params)
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
+
+  @Get("/staking_log")
+  @UseBefore(checkAccessToken)
+  public async findStakingLog(@QueryParams() params: StakingLogSearchReq) {
+    try {
+      return await this.stakingSerivce.findStakingLog(params)
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);

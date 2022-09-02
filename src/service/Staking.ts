@@ -10,6 +10,7 @@ import { PageReq, PageResList, PageResObj } from "../api";
 import { EntityManager, Transaction, TransactionManager } from "typeorm";
 import { Staking, StakingLog, User } from "../entity";
 import { StakingSearchReq } from "../api/request/StakingSearchReq";
+import { StakingLogSearchReq } from "../api/request/StakingLogSearchReq";
 
 const toxicNFTContractAddress = [process.env.TOXIC_APE, process.env.FOOLKATS, process.env.SUCCUBUS, process.env.TOXIC_APE_SPECIAL]
 const caver = new Caver("https://public-node-api.klaytnapi.com/v1/cypress");
@@ -911,6 +912,18 @@ export class StakingService {
           return el;
         }),
         "Staking 목록을 찾는데 성공했습니다."
+    );
+  }
+
+  async findStakingLog(param: StakingLogSearchReq): Promise<PageResList<Staking>> {
+    const result = await this.stakingQueryRepo.findStakingLog(param);
+    return new PageResList<Staking>(
+        result[1],
+        param.limit,
+        result[0].map((el: Staking) => {
+          return el;
+        }),
+        "StakingLog 목록을 찾는데 성공했습니다."
     );
   }
 }
