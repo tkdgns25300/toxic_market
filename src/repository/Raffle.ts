@@ -152,7 +152,7 @@ export class RaffleQueryRepo extends BaseQueryRepo {
     .leftJoinAndSelect("Raffle.creator", "user")
     .select([
       "Raffle",
-      "user.name",
+      "user.nickname",
       "user.public_address",
       "user.phone",
       "user.profile_img",
