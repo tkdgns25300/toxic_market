@@ -1,0 +1,86 @@
+tags:
+  - name: Staking
+    description: Staking API
+
+
+paths:
+  /staking/nft/staking:
+    get:
+      tags:
+        - Staking
+      summary: Get User's All Staked NFT List
+      consumes:
+        - application/json
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          description: rows per page
+          schema:
+            type: integer
+
+        - name: pageNo
+          in: query
+          required: false
+          description: page number
+          schema:
+            type: integer
+
+        - name: contract_address
+          in: query
+          required: true
+          description: contract address
+          schema:
+            type: string
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  item:
+                    type: object
+                    properties:
+                      kind:
+                        type: string
+                      contractAddress:
+                        type: string
+                      updatedAt:
+                        type: number
+                      balance:
+                        type: string
+                      lastTransfer:
+                        type: object
+                        properties:
+                          transactionHash:
+                            type: string
+                          transferFrom:
+                            type: string
+                          transferTo:
+                            type: string
+                      extras:
+                        type: object
+                        properties:
+                          tokenId:
+                            type: string
+                          tokenUri:
+                            type: string
+                        
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: 유저의 스테이킹된 NFT 조회에 성공하였습니다.
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http
