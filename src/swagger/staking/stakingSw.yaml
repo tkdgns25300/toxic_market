@@ -5,7 +5,7 @@ tags:
 
 paths:
   /staking/stak:
-    Post:
+    post:
       tags:
         - Staking
       summary: Staking User's NFT
