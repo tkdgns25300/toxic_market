@@ -92,6 +92,10 @@ paths:
                                 format: date
                         nickname:
                           type: string
+                        profile_img:
+                          type: string
+                        creator_address:
+                          type: string
                   error:
                     type: boolean
                     description: error 체크

@@ -110,6 +110,7 @@ export class RaffleService {
       const creator = await this.userQueryRepo.findOne("public_address", el.creator.public_address);
       el.nickname = creator.nickname;
       el.profile_img = creator.profile_img;
+      el.creator_address = creator.public_address;
       delete el.creator
     }
     return new PageResList<Raffle> (
