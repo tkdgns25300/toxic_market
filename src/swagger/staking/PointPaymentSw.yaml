@@ -32,7 +32,7 @@ paths:
                   msg:
                     type: string
                     description: 메시지
-                    example: TP 지급에 성공하였습니다..
+                    example: TP 지급에 성공하였습니다.
                   error:
                     type: boolean
                     description: error 체크
