@@ -155,6 +155,7 @@ export class RaffleQueryRepo extends BaseQueryRepo {
       "user.name",
       "user.public_address",
       "user.phone",
+      "user.profile_img",
       "raffle_log"
     ])
     .where('Raffle.id = :id', {
