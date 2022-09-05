@@ -81,6 +81,10 @@ paths:
                             created_at:
                               type: string
                               format: date
+                            nickname:
+                              type: string
+                            profile_img:
+                              type: string
                   msg:
                     type: string
                     description: 메시지
