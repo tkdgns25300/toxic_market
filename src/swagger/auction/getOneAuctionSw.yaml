@@ -92,7 +92,9 @@ paths:
                             auction_id:
                               type: number
                             nickname:
-                               type: string
+                              type: string
+                            profile_img:
+                              type: string
                       created_at:
                         type: string
                         format: date

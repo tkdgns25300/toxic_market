@@ -120,6 +120,7 @@ export class AuctionService {
       newBidLog.push(el)
     }
     result.bid_logs = newBidLog;
+    delete result.creator.password_hash;
     if(!withUser) {
       result.bid_logs.map(a => {
         a.bidder = `${a.bidder.slice(0,3)}******${a.bidder.slice(-3)}`
