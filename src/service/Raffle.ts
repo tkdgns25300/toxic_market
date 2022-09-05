@@ -186,6 +186,12 @@ export class RaffleService {
         r.applicant = `${r.applicant.slice(0,3)}******${r.applicant.slice(-3)}`
       })
     }
+    // raffle_logs에 nickname, profile_img추가 하여 리턴 : 좋지 않은 방식 => but 프로젝트 크기가 크지 않아 속도 저하의 우려가 없어 이렇게 작성.
+    for (const el of result.raffle_logs) {
+      const applicant = await this.userQueryRepo.findOne("public_address", el.applicant);
+      el.nickname = applicant.nickname;
+      el.profile_img = applicant.profile_img;
+    }
     return new PageResObj(result, "Raffle 조회에 성공했습니다.");
   }
 
