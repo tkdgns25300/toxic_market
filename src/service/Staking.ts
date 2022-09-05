@@ -923,7 +923,7 @@ export class StakingService {
         result[0].map((el: Staking) => {
           return el;
         }),
-        "StakingLog 목록을 찾는데 성공했습니다."
+        "Staking Log 목록을 찾는데 성공했습니다."
     );
   }
 }

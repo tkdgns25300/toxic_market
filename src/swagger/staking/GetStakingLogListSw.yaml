@@ -1,0 +1,77 @@
+tags:
+  - name: Staking
+    description: Staking API
+
+
+paths:
+  /staking/staking_log:
+    get:
+      tags:
+        - Staking
+      summary: Get Staking Log List
+      consumes:
+        - application/json
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          description: rows per page
+          schema:
+            type: integer
+
+        - name: pageNo
+          in: query
+          required: false
+          description: page number
+          schema:
+            type: integer
+
+        - name: staking_id
+          in: query
+          required: true
+          description: staking id
+          schema:
+            type: string
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalCount:
+                    type: integer
+                    description: 전체 Staking Log 갯수
+                    example: 10
+                  totalPage:
+                    type: integer
+                    description: 전체 페이지 갯수; limit, pageNo 를 0으로 보낼 시 null
+                    example: 1
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: Staking Log 목록을 찾는데 성공했습니다.
+                  items:
+                    type: array
+                    items:
+                      properties:
+                        id:
+                          type: number
+                        payment_amount:
+                          type: number
+                        created_at:
+                          type: string
+                          format: date
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http
