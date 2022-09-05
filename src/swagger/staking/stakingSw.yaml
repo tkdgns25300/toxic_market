@@ -1,0 +1,54 @@
+tags:
+  - name: Staking
+    description: Staking API
+
+
+paths:
+  /staking/stak:
+    Post:
+      tags:
+        - Staking
+      summary: Staking User's NFT
+      consumes:
+        - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                contract_address:
+                  type: string
+                  required: true
+                token_id:
+                  type: array
+                  items:
+                    type: string
+                  required: true
+                
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  item:
+                    type: object
+                    properties:                        
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: Staking에 성공하였습니다.
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http
