@@ -1,0 +1,102 @@
+tags:
+  - name: Staking
+    description: Staking API
+
+
+paths:
+  /staking/staking:
+    get:
+      tags:
+        - Staking
+      summary: Get Staking List
+      consumes:
+        - application/json
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          description: rows per page
+          schema:
+            type: integer
+
+        - name: pageNo
+          in: query
+          required: false
+          description: page number
+          schema:
+            type: integer
+
+        - name: id
+          in: query
+          required: false
+          description: user id
+          schema:
+            type: string
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalCount:
+                    type: integer
+                    description: 전체 Staking 갯수
+                    example: 10
+                  totalPage:
+                    type: integer
+                    description: 전체 페이지 갯수; limit, pageNo 를 0으로 보낼 시 null
+                    example: 1
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: Staking 목록을 찾는데 성공했습니다.
+                  items:
+                    type: array
+                    items:
+                      properties:
+                        id:
+                          type: number
+                        toxic_ape:
+                          type: string
+                          default: null
+                        toxic_ape_amount:
+                          type: number
+                        foolkat:
+                          type: string
+                          default: null
+                        foolkat_amount:
+                          type: number
+                        succubus:
+                          type: string
+                          default: null
+                        succubus_amount:
+                          type: number
+                        toxic_ape_special:
+                          type: string
+                          default: null
+                        toxic_ape_special_amount:
+                          type: number
+                        total_payments:
+                          type: number
+                        created_at:
+                          type: string
+                          format: date
+                        user_address:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http
