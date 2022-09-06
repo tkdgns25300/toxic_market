@@ -134,7 +134,6 @@ export class UserService {
 
   async getAllLog(paramObj: PageReq, public_address: string): Promise<PageResObj<{}>> {
     // Product Log
-    console.log(public_address)
     const productBuyLog = await this.logQueryRepo.findBuyProductLogs(paramObj, public_address)
     const productSellLog = await this.logQueryRepo.findSellProductLogs(paramObj, public_address)
 
@@ -143,8 +142,9 @@ export class UserService {
     const auctionSellLog = await this.bidLogQueryRepo.findSellBidLogs(paramObj, public_address)
 
     // Raffle Log
+    const raffleBuyLog = await this.raffleLogQueryRepo.findBuyRaffleLogs(paramObj, public_address)
+    const raffleSellLog = await this.raffleLogQueryRepo.findSellRaffleLogs(paramObj, public_address)
 
-
-    return new PageResObj({productBuyLog, productSellLog, auctionBuyLog, auctionSellLog}, "비밀번호 변경에 성공했습니다.");
+    return new PageResObj({productBuyLog, productSellLog, auctionBuyLog, auctionSellLog, raffleBuyLog, raffleSellLog}, "비밀번호 변경에 성공했습니다.");
   }
 }
