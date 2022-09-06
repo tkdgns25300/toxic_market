@@ -13,7 +13,7 @@ import {
 } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
-import { PageResObj, UserSearchReq} from "../api";
+import { PageReq, PageResObj, UserSearchReq} from "../api";
 import { UserDto } from "../dto";
 import { UserIdPasswordDto, UserPasswordDto, UserProfileDto, UserAddressDto } from "../dto/User";
 import {checkAccessToken, checkAdminAccessToken} from "../middlewares/Auth";
@@ -138,6 +138,19 @@ export class UserController {
   public async delete(@Body() params: UserAddressDto, @Res() res: Response) { // 2. 탈퇴 시키려는 사용자의 지갑주소를 바디값으로 받는다
     try {
       return await this.userService.delete(params.public_address);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
+
+  @Get("/log/:public_address")
+  @UseBefore(checkAdminAccessToken)
+  public async getAllLog( @QueryParams() params: PageReq, @Param("public_address") public_address: string) {
+    try {
+      return await this.userService.getAllLog(params, public_address);
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);

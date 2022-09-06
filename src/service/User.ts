@@ -4,15 +4,21 @@ import { InjectRepository } from "typeorm-typedi-extensions";
 import { UserQueryRepo } from "../repository/User";
 import { User } from "../entity";
 import { UserDto } from "../dto";
-import { PageResList, PageResObj, UserSearchReq} from "../api";
+import { PageReq, PageResList, PageResObj, UserSearchReq} from "../api";
 import { UserIdPasswordDto, UserPasswordDto, UserProfileDto } from "../dto/User";
 import { hash } from "../util/hash";
+import { LogQueryRepo } from "../repository/Log";
+import { RaffleLogQueryRepo } from "../repository/RaffleLog";
+import { BidLogQueryRepo } from "../repository/BIdLog";
 
 @Service()
 export class UserService {
   constructor(
     @InjectRepository()
     readonly userQueryRepo: UserQueryRepo,
+    readonly logQueryRepo: LogQueryRepo,
+    readonly raffleLogQueryRepo: RaffleLogQueryRepo,
+    readonly bidLogQueryRepo: BidLogQueryRepo
   ) {}
 
   async findAll(param: UserSearchReq): Promise<PageResList<User>> {
@@ -27,7 +33,7 @@ export class UserService {
       "User 목록을 찾는데 성공했습니다."
     );
   }
-
+  Auction
   async findAllSeller(param: UserSearchReq): Promise<PageResList<User>> {
     const result = await this.userQueryRepo.searchSeller(param);
     return new PageResList<User>(
@@ -124,5 +130,18 @@ export class UserService {
       paramObj.public_address
     );
     return new PageResObj(result, "판매자 수정에 성공했습니다.");
+  }
+
+  async getAllLog(paramObj: PageReq, public_address: string): Promise<PageResObj<{}>> {
+    // Product Log
+    const productBuyLog = await this.logQueryRepo.findBuyLogs(paramObj, public_address)
+    const productSellLog = await this.logQueryRepo.findSellLogs(paramObj, public_address)
+    // Auction Log
+
+
+    // Raffle Log
+
+
+    return new PageResObj({productBuyLog, productSellLog}, "비밀번호 변경에 성공했습니다.");
   }
 }
