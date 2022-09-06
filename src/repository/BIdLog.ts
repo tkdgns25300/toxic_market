@@ -15,11 +15,11 @@ export class BidLogQueryRepo extends BaseQueryRepo {
     const builder = createQueryBuilder("bid_log");
 
     builder
-    .where(`bidder = :public_address`, {
+    .leftJoinAndSelect("BidLog.auction_id", "auction")
+    .where(`BidLog.bidder = :public_address`, {
       public_address: public_address,
     })
-    .skip(param.getOffset())
-    .take(param.getLimit());
+    .orderBy('BidLog.created_at', 'DESC')
 
     return builder.getManyAndCount();
   }
@@ -32,8 +32,7 @@ export class BidLogQueryRepo extends BaseQueryRepo {
     .where(`auction.creator_address = :public_address`, {
       public_address: public_address,
     })
-    .skip(param.getOffset())
-    .take(param.getLimit());
+    .orderBy('BidLog.created_at', 'DESC')
 
     return builder.getManyAndCount();
   }

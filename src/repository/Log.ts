@@ -33,8 +33,7 @@ export class LogQueryRepo extends BaseQueryRepo {
     .where(`buyer = :public_address`, {
       public_address: public_address,
     })
-    .skip(param.getOffset())
-    .take(param.getLimit());
+    .orderBy('created_at', 'DESC')
     
     return builder.getManyAndCount();
   }
@@ -46,8 +45,7 @@ export class LogQueryRepo extends BaseQueryRepo {
     .where(`seller = :public_address`, {
       public_address: public_address,
     })
-    .skip(param.getOffset())
-    .take(param.getLimit());
+    .orderBy('created_at', 'DESC')
     
     return builder.getManyAndCount();
   }

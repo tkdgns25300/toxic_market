@@ -145,6 +145,49 @@ export class UserService {
     const raffleBuyLog = await this.raffleLogQueryRepo.findBuyRaffleLogs(paramObj, public_address)
     const raffleSellLog = await this.raffleLogQueryRepo.findSellRaffleLogs(paramObj, public_address)
 
-    return new PageResObj({productBuyLog, productSellLog, auctionBuyLog, auctionSellLog, raffleBuyLog, raffleSellLog}, "비밀번호 변경에 성공했습니다.");
+    // 모든 Log 정렬
+    const buyLog = [];
+    productBuyLog[0].forEach(log => buyLog.push({
+      category: '마켓',
+      title: log.title,
+      total_point: log.total_CF,
+      created_at: log.created_at
+    }))
+    auctionBuyLog[0].forEach(log => buyLog.push({
+      category: '경매',
+      title: log.auction_id.title,
+      total_point: log.bid,
+      created_at: log.created_at
+    }))
+    raffleBuyLog[0].forEach(log => buyLog.push({
+      category: '추첨',
+      title: log.raffle_id.title,
+      total_point: log.amount * log.raffle_id.price,
+      created_at: log.created_at
+    }))
+    const buy_log = buyLog.sort((a, b) => b.created_at - a.created_at)
+
+    const sellLog = [];
+    productSellLog[0].forEach(log => sellLog.push({
+      category: '마켓',
+      title: log.title,
+      total_point: log.total_CF,
+      created_at: log.created_at
+    }))
+    auctionSellLog[0].forEach(log => sellLog.push({
+      category: '경매',
+      title: log.auction_id.title,
+      total_point: log.bid,
+      created_at: log.created_at
+    }))
+    raffleSellLog[0].forEach(log => sellLog.push({
+      category: '추첨',
+      title: log.raffle_id.title,
+      total_point: log.amount * log.raffle_id.price,
+      created_at: log.created_at
+    }))
+    const sell_log = sellLog.sort((a, b) => b.created_at - a.created_at)
+
+    return new PageResObj({ buy_log, sell_log }, "유저의 구매/판매 내역 조회에 성공하였습니다.");
   }
 }

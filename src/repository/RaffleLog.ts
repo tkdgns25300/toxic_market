@@ -31,11 +31,11 @@ export class RaffleLogQueryRepo extends BaseQueryRepo {
     const builder = createQueryBuilder("raffle_log");
 
     builder
-    .where(`applicant = :public_address`, {
+    .leftJoinAndSelect("RaffleLog.raffle_id", "raffle")
+    .where(`RaffleLog.applicant = :public_address`, {
       public_address: public_address,
     })
-    .skip(param.getOffset())
-    .take(param.getLimit());
+    .orderBy('RaffleLog.created_at', 'DESC')
 
     return builder.getManyAndCount();
   }
@@ -48,8 +48,7 @@ export class RaffleLogQueryRepo extends BaseQueryRepo {
     .where(`raffle.creator_address = :public_address`, {
       public_address: public_address,
     })
-    .skip(param.getOffset())
-    .take(param.getLimit());
+    .orderBy('RaffleLog.created_at', 'DESC')
 
     return builder.getManyAndCount();
   }
