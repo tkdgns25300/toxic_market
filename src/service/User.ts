@@ -132,18 +132,18 @@ export class UserService {
     return new PageResObj(result, "판매자 수정에 성공했습니다.");
   }
 
-  async getAllLog(paramObj: PageReq, public_address: string): Promise<PageResObj<{}>> {
+  async getAllLog(public_address: string): Promise<PageResObj<{}>> {
     // Product Log
-    const productBuyLog = await this.logQueryRepo.findBuyProductLogs(paramObj, public_address)
-    const productSellLog = await this.logQueryRepo.findSellProductLogs(paramObj, public_address)
+    const productBuyLog = await this.logQueryRepo.findBuyProductLogs(public_address)
+    const productSellLog = await this.logQueryRepo.findSellProductLogs(public_address)
 
     // Auction Log
-    const auctionBuyLog = await this.bidLogQueryRepo.findBuyBidLogs(paramObj, public_address)
-    const auctionSellLog = await this.bidLogQueryRepo.findSellBidLogs(paramObj, public_address)
+    const auctionBuyLog = await this.bidLogQueryRepo.findBuyBidLogs(public_address)
+    const auctionSellLog = await this.bidLogQueryRepo.findSellBidLogs(public_address)
 
     // Raffle Log
-    const raffleBuyLog = await this.raffleLogQueryRepo.findBuyRaffleLogs(paramObj, public_address)
-    const raffleSellLog = await this.raffleLogQueryRepo.findSellRaffleLogs(paramObj, public_address)
+    const raffleBuyLog = await this.raffleLogQueryRepo.findBuyRaffleLogs(public_address)
+    const raffleSellLog = await this.raffleLogQueryRepo.findSellRaffleLogs(public_address)
 
     // 모든 Log 정렬
     const buyLog = [];

@@ -27,7 +27,7 @@ export class RaffleLogQueryRepo extends BaseQueryRepo {
     .execute()
   }
 
-  findBuyRaffleLogs(param: PageReq, public_address: string): Promise<[Array<any>, number]> {
+  findBuyRaffleLogs(public_address: string): Promise<[Array<any>, number]> {
     const builder = createQueryBuilder("raffle_log");
 
     builder
@@ -40,7 +40,7 @@ export class RaffleLogQueryRepo extends BaseQueryRepo {
     return builder.getManyAndCount();
   }
 
-  findSellRaffleLogs(param: PageReq, public_address: string): Promise<[Array<any>, number]> {
+  findSellRaffleLogs(public_address: string): Promise<[Array<any>, number]> {
     const builder = createQueryBuilder("raffle_log");
 
     builder

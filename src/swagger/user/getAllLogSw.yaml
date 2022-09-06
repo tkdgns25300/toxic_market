@@ -1,0 +1,72 @@
+paths:
+  /user/log/{public_address}:
+    get:
+      tags:
+        - User
+      summary: Get a user's all log
+      consumes:
+        - application/json
+      parameters:
+        - name: public_address
+          in: path
+          required: true
+          description: public address
+          schema:
+            type: string
+
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  item:
+                    type: array
+                    items:
+                      properties:
+                        buy_log:
+                          type: array
+                          items:
+                            properties:
+                              category:
+                                type: string
+                                enum: [ '마켓', '경매', '추첨']
+                              title:
+                                type: string
+                              total_point:
+                                type: number
+                              created_at:
+                                type: string
+                                format: date
+                        sell_log:
+                          type: array
+                          items:
+                            properties:
+                              category:
+                                type: string
+                                enum: [ '마켓', '경매', '추첨']
+                              title:
+                                type: string
+                              total_point:
+                                type: number
+                              created_at:
+                                type: string
+                                format: date
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: 유저의 구매/판매 내역 조회에 성공하였습니다.
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+                  
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http

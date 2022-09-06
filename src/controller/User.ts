@@ -148,9 +148,9 @@ export class UserController {
 
   @Get("/log/:public_address")
   @UseBefore(checkAdminAccessToken)
-  public async getAllLog( @QueryParams() params: PageReq, @Param("public_address") public_address: string) {
+  public async getAllLog(@Param("public_address") public_address: string) {
     try {
-      return await this.userService.getAllLog(params, public_address);
+      return await this.userService.getAllLog(public_address);
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);

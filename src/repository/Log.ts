@@ -26,7 +26,7 @@ export class LogQueryRepo extends BaseQueryRepo {
     return builder.getManyAndCount();
   }
 
-  findBuyProductLogs(param: PageReq, public_address: string): Promise<[Array<any>, number]> {
+  findBuyProductLogs(public_address: string): Promise<[Array<any>, number]> {
     const builder = createQueryBuilder("log");
 
     builder
@@ -38,7 +38,7 @@ export class LogQueryRepo extends BaseQueryRepo {
     return builder.getManyAndCount();
   }
 
-  findSellProductLogs(param: PageReq, public_address: string): Promise<[Array<any>, number]> {
+  findSellProductLogs(public_address: string): Promise<[Array<any>, number]> {
     const builder = createQueryBuilder("log");
 
     builder

@@ -11,7 +11,7 @@ export class BidLogQueryRepo extends BaseQueryRepo {
     super("bid_log", "BidLog");
   }
 
-  findBuyBidLogs(param: PageReq, public_address: string): Promise<[Array<any>, number]> {
+  findBuyBidLogs(public_address: string): Promise<[Array<any>, number]> {
     const builder = createQueryBuilder("bid_log");
 
     builder
@@ -24,7 +24,7 @@ export class BidLogQueryRepo extends BaseQueryRepo {
     return builder.getManyAndCount();
   }
 
-  findSellBidLogs(param: PageReq, public_address: string): Promise<[Array<any>, number]> {
+  findSellBidLogs(public_address: string): Promise<[Array<any>, number]> {
     const builder = createQueryBuilder("bid_log");
 
     builder
