@@ -134,14 +134,17 @@ export class UserService {
 
   async getAllLog(paramObj: PageReq, public_address: string): Promise<PageResObj<{}>> {
     // Product Log
-    const productBuyLog = await this.logQueryRepo.findBuyLogs(paramObj, public_address)
-    const productSellLog = await this.logQueryRepo.findSellLogs(paramObj, public_address)
-    // Auction Log
+    console.log(public_address)
+    const productBuyLog = await this.logQueryRepo.findBuyProductLogs(paramObj, public_address)
+    const productSellLog = await this.logQueryRepo.findSellProductLogs(paramObj, public_address)
 
+    // Auction Log
+    const auctionBuyLog = await this.bidLogQueryRepo.findBuyBidLogs(paramObj, public_address)
+    const auctionSellLog = await this.bidLogQueryRepo.findSellBidLogs(paramObj, public_address)
 
     // Raffle Log
 
 
-    return new PageResObj({productBuyLog, productSellLog}, "비밀번호 변경에 성공했습니다.");
+    return new PageResObj({productBuyLog, productSellLog, auctionBuyLog, auctionSellLog}, "비밀번호 변경에 성공했습니다.");
   }
 }

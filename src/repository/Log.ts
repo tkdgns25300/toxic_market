@@ -17,7 +17,7 @@ export class LogQueryRepo extends BaseQueryRepo {
 
     const filter = param.getUser;
 
-    builder.andWhere(`${filter} = :${filter}`, {
+    builder.where(`${filter} = :${filter}`, {
       [filter]: param[filter],
     });
 
@@ -26,22 +26,26 @@ export class LogQueryRepo extends BaseQueryRepo {
     return builder.getManyAndCount();
   }
 
-  findBuyLogs(param: PageReq, public_address: string): Promise<[Array<any>, number]> {
+  findBuyProductLogs(param: PageReq, public_address: string): Promise<[Array<any>, number]> {
     const builder = createQueryBuilder("log");
 
     builder
-    .andWhere(`buyer = ${public_address}`)
+    .where(`buyer = :public_address`, {
+      public_address: public_address,
+    })
     .skip(param.getOffset())
     .take(param.getLimit());
     
     return builder.getManyAndCount();
   }
 
-  findSellLogs(param: PageReq, public_address: string): Promise<[Array<any>, number]> {
+  findSellProductLogs(param: PageReq, public_address: string): Promise<[Array<any>, number]> {
     const builder = createQueryBuilder("log");
 
     builder
-    .andWhere(`seller = ${public_address}`)
+    .where(`seller = :public_address`, {
+      public_address: public_address,
+    })
     .skip(param.getOffset())
     .take(param.getLimit());
     
