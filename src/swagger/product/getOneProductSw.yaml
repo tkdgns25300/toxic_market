@@ -48,7 +48,13 @@ paths:
                           type: string
                         is_visible:
                           type: string
+                        name:
+                          type: string
+                        phone:
+                          type: string
                         nickname:
+                          type: string
+                        profile_img:
                           type: string
                   msg:
                     type: string

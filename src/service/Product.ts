@@ -24,6 +24,8 @@ export class ProductService {
     // nickname, profile_img추가하여 리턴 : 좋지 않은 방식 => 원래는 product와 user에 manyToOne관계를 맺어서 처리해야함. but 프로젝트 크기가 크지 않아 속도 저하의 우려가 없어 이렇게 작성.
     for (const el of result[0]) {
       const creator = await this.userQueryRepo.findOne("public_address", el.user_address);
+      el.name = creator.name;
+      el.phone = creator.phone;
       el.nickname = creator.nickname;
       el.profile_img = creator.profile_img;
     }
@@ -41,6 +43,8 @@ export class ProductService {
     const result = await this.ProductQueryRepo.findOne("id", id);
     // nickname, profile_img추가하여 리턴 : 좋지 않은 방식 => 원래는 product와 user에 manyToOne관계를 맺어서 처리해야함. but 프로젝트 크기가 크지 않아 속도 저하의 우려가 없어 이렇게 작성.
     const creator = await this.userQueryRepo.findOne("public_address", result.user_address);
+    result.name = creator.name;
+    result.phone = creator.phone;
     result.nickname = creator.nickname;
     result.profile_img = creator.profile_img;
     return new PageResObj(result, "Product 조회에 성공했습니다.");
@@ -69,6 +73,7 @@ export class ProductService {
       delete paramObj?.price
       delete paramObj?.amount
       delete paramObj?.title
+      delete paramObj?.is_visible
     }
     if (paramObj.amount === 0 ) { // 무제한
       paramObj.amount = null;
