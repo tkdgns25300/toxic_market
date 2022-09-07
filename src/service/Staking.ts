@@ -69,6 +69,9 @@ export class StakingService {
       case toxicNFTContractAddress[3]:
         kindOfNFT = 'toxic_ape_special'
         break;
+      default:
+        kindOfNFT = 'toxic_ape'
+        break;
     }
     
     // 1. transfer NFT + set staking time
@@ -837,6 +840,9 @@ export class StakingService {
       case toxicNFTContractAddress[3]:
         kindOfNFT = 'toxic_ape_special'
         break;
+      default:
+        kindOfNFT = 'toxic_ape'
+        break;
     }
 
     // 1. Check Staking Time
@@ -860,17 +866,20 @@ export class StakingService {
     // 2. transfer NFT
     const kip17 = new caver.kct.kip17(param.contract_address)
     for (const tokenId of param.token_id) {
-      await kip17.safeTransferFrom(public_address, process.env.STAKING_WALLET_ADDRESS, tokenId, {
+      await kip17.safeTransferFrom(process.env.STAKING_WALLET_ADDRESS, public_address, tokenId, {
         from: process.env.STAKING_WALLET_ADDRESS
       })
     }
 
     // 3. Update Staking Data
     const newStakingTimeArr = staking[stakingTimeName].split('&')
+    let index = -1;
     const newTokenIdArr = staking[kindOfNFT].split('&').filter((tokenId, idx) => {
+      index++;
       if(param.token_id.includes(tokenId)) {
         // staking time도 같이 제거
-        newStakingTimeArr.splice(idx, 1)
+        newStakingTimeArr.splice(index, 1)
+        index--;
         return false;
       }
       return true;
