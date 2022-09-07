@@ -60,18 +60,6 @@ export class StakingService {
     if (!isApproved) {
       return new PageResObj({}, "transfer 권한이 없습니다.", true);
     }
-    
-    // 1. transfer NFT
-    for (const tokenId of param.token_id) {
-      await kip17.safeTransferFrom(public_address, '0xf9496b7E5989647AD47bcDbe3bd79E98FB836514', tokenId, {
-        from: '0xf9496b7E5989647AD47bcDbe3bd79E98FB836514'
-      })
-      // await kip17.safeTransferFrom(public_address, '톡시지갑', tokenId, {
-      //   from: '톡시지갑'
-      // })
-    }
-
-    // 2. Create Staking Data
     let kindOfNFT: string;
     switch(param.contract_address) {
       case toxicNFTContractAddress[0]:
@@ -88,20 +76,40 @@ export class StakingService {
         break;
     }
     
+    // 1. transfer NFT + set staking time
+    const stakingTimeArr = []
+    for (const tokenId of param.token_id) {
+      await kip17.safeTransferFrom(public_address, '0xf9496b7E5989647AD47bcDbe3bd79E98FB836514', tokenId, {
+        from: '0xf9496b7E5989647AD47bcDbe3bd79E98FB836514'
+      })
+      // await kip17.safeTransferFrom(public_address, '톡시지갑', tokenId, {
+      //   from: '톡시지갑'
+      // })
+      stakingTimeArr.push(new Date().toISOString())
+    }
+
+    // 2. Create Staking Data  
     const staking = await this.stakingQueryRepo.findOne('user_address', public_address)
+    const NFTAmount = kindOfNFT + '_amount'
+    const stakingTimeName = kindOfNFT + '_staking_time';
     // 이전에 스테이킹 했던 사용자
     if (staking) {
-      if (staking[kindOfNFT] === null || staking[kindOfNFT] === '') staking[kindOfNFT] = param.token_id.join('&')
-      else staking[kindOfNFT] += '&' + param.token_id.join('&')
-      const NFTAmount = kindOfNFT + '_amount'
+      if (staking[kindOfNFT] === null || staking[kindOfNFT] === '') {
+        staking[kindOfNFT] = param.token_id.join('&')
+        staking[stakingTimeName] = stakingTimeArr.join('&')
+      }
+      else {
+        staking[kindOfNFT] += '&' + param.token_id.join('&')
+        staking[stakingTimeName] += '&' + stakingTimeArr.join('&')
+      }
       staking[NFTAmount] = staking[kindOfNFT].split('&').length;
       await this.stakingQueryRepo.update(staking, 'user_address', public_address)
     }
     // 처음 스테이킹 하는 사용자
     else {
-      const NFTAmount = kindOfNFT + '_amount'
       const newStaking = {
         [kindOfNFT]: param.token_id.join('&'),
+        [stakingTimeName]: stakingTimeArr.join('&'),
         [NFTAmount]: param.token_id.length,
         total_points: 0,
         user_address: public_address
@@ -836,19 +844,6 @@ export class StakingService {
     if (!staking) {
       return new PageResObj({}, "이전에 스테이킹한 기록이 없습니다.", true)
     }
-
-    // 1. transfer NFT
-    const kip17 = new caver.kct.kip17(param.contract_address)
-    for (const tokenId of param.token_id) {
-      await kip17.safeTransferFrom('0xf9496b7E5989647AD47bcDbe3bd79E98FB836514', public_address, tokenId, {
-        from: '0xf9496b7E5989647AD47bcDbe3bd79E98FB836514'
-      })
-      // await kip17.safeTransferFrom(public_address, '톡시지갑', tokenId, {
-      //   from: '톡시지갑'
-      // })
-    }
-
-    // 2. Update Staking Data
     let kindOfNFT: string;
     switch(param.contract_address) {
       case toxicNFTContractAddress[0]:
@@ -864,8 +859,44 @@ export class StakingService {
         kindOfNFT = 'toxic_ape_special'
         break;
     }
-    const newTokenIdArr = staking[kindOfNFT].split('&').filter(tokenId => !param.token_id.includes(tokenId)).join('&');
+
+    // 1. Check Staking Time
+    const stakingTimeName = kindOfNFT + '_staking_time';
+    const stakingTimeArr = staking[stakingTimeName].split('&');
+    staking[kindOfNFT].split('&').forEach((tokenId: string, idx: number) => {
+      if (param.token_id.includes(tokenId)) {
+        const stakingTime = new Date(stakingTimeArr[idx])
+        const unstakingEnableTime = new Date()
+        unstakingEnableTime.setDate(stakingTime.getDate() + 10);
+        if (stakingTime <= unstakingEnableTime) {
+          return new PageResObj({}, 'Staking 10일 이후부터 Unstaking이 가능합니다.', true)
+        }
+      }
+    })
+
+    // 2. transfer NFT
+    const kip17 = new caver.kct.kip17(param.contract_address)
+    for (const tokenId of param.token_id) {
+      await kip17.safeTransferFrom('0xf9496b7E5989647AD47bcDbe3bd79E98FB836514', public_address, tokenId, {
+        from: '0xf9496b7E5989647AD47bcDbe3bd79E98FB836514'
+      })
+      // await kip17.safeTransferFrom(public_address, '톡시지갑', tokenId, {
+      //   from: '톡시지갑'
+      // })
+    }
+
+    // 3. Update Staking Data
+    const newStakingTimeArr = staking[stakingTimeName].split('&')
+    const newTokenIdArr = staking[kindOfNFT].split('&').filter((tokenId, idx) => {
+      if(param.token_id.includes(tokenId)) {
+        // staking time도 같이 제거
+        newStakingTimeArr.splice(idx, 1)
+        return false;
+      }
+      return true;
+    }).join('&');
     staking[kindOfNFT] = newTokenIdArr;
+    staking[stakingTimeName] = newStakingTimeArr.join('&');
     const NFTAmount = kindOfNFT + '_amount'
     if (newTokenIdArr === '') staking[NFTAmount] = 0
     else staking[NFTAmount] = newTokenIdArr.split('&').length;

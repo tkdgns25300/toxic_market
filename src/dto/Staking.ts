@@ -9,7 +9,23 @@ export class StakingDto {
 
   @IsString({ message: "문자열이 아닙니다." })
   @IsOptional()
+  toxic_ape_staking_time: string;
+
+  @IsInt()
+  @IsOptional()
+  toxic_ape_amount: string;
+
+  @IsString({ message: "문자열이 아닙니다." })
+  @IsOptional()
   foolkat: string;
+
+  @IsString({ message: "문자열이 아닙니다." })
+  @IsOptional()
+  foolkat_staking_time: string;
+
+  @IsInt()
+  @IsOptional()
+  foolkat_amount: string;
 
   @IsString({ message: "문자열이 아닙니다." })
   @IsOptional()
@@ -17,7 +33,23 @@ export class StakingDto {
 
   @IsString({ message: "문자열이 아닙니다." })
   @IsOptional()
+  succubus_staking_time: string;
+
+  @IsInt()
+  @IsOptional()
+  succubus_amount: string;
+
+  @IsString({ message: "문자열이 아닙니다." })
+  @IsOptional()
   toxic_ape_special: string;
+
+  @IsString({ message: "문자열이 아닙니다." })
+  @IsOptional()
+  toxic_ape_special_staking_time: string;
+
+  @IsInt()
+  @IsOptional()
+  toxic_ape_special_amount: string;
 
   @IsInt()
   @IsOptional()

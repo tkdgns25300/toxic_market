@@ -13,9 +13,17 @@ export class Staking extends BaseEntity {
     type: "text",
     default: null,
     nullable: true,
-    comment: "토큰 ID 및 스테이킹 시간 모음(JSON형식으로 저장)"
+    comment: "토큰 ID 모음($로 구분)"
   })
   toxic_ape: string;
+
+  @Column({
+    type: "text",
+    default: null,
+    nullable: true,
+    comment: "각 토큰 ID의 스테이킹 시간 모음($로 구분)"
+  })
+  toxic_ape_staking_time: string;
 
   @Column({
     type: "int",
@@ -28,9 +36,17 @@ export class Staking extends BaseEntity {
     type: "text",
     default: null,
     nullable: true,
-    comment: "토큰 ID 및 스테이킹 시간 모음(JSON형식으로 저장)"
+    comment: "토큰 ID 모음($로 구분)"
   })
   foolkat: string;
+
+  @Column({
+    type: "text",
+    default: null,
+    nullable: true,
+    comment: "각 토큰 ID의 스테이킹 시간 모음($로 구분)"
+  })
+  foolkat_staking_time: string;
 
   @Column({
     type: "int",
@@ -43,9 +59,17 @@ export class Staking extends BaseEntity {
     type: "text",
     default: null,
     nullable: true,
-    comment: "토큰 ID 및 스테이킹 시간 모음(JSON형식으로 저장)"
+    comment: "토큰 ID 모음($로 구분)"
   })
   succubus: string;
+
+  @Column({
+    type: "text",
+    default: null,
+    nullable: true,
+    comment: "각 토큰 ID의 스테이킹 시간 모음($로 구분)"
+  })
+  succubus_staking_time: string;
 
   @Column({
     type: "int",
@@ -58,9 +82,17 @@ export class Staking extends BaseEntity {
     type: "text",
     default: null,
     nullable: true,
-    comment: "토큰 ID 및 스테이킹 시간 모음(JSON형식으로 저장)"
+    comment: "토큰 ID 모음($로 구분)"
   })
   toxic_ape_special: string;
+
+  @Column({
+    type: "text",
+    default: null,
+    nullable: true,
+    comment: "각 토큰 ID의 스테이킹 시간 모음($로 구분)"
+  })
+  toxic_ape_special_staking_time: string;
 
   @Column({
     type: "int",
