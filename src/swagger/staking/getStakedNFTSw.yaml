@@ -42,32 +42,33 @@ paths:
                 type: object
                 properties:
                   item:
-                    type: object
-                    properties:
-                      kind:
-                        type: string
-                      contractAddress:
-                        type: string
-                      updatedAt:
-                        type: number
-                      balance:
-                        type: string
-                      lastTransfer:
-                        type: object
-                        properties:
-                          transactionHash:
-                            type: string
-                          transferFrom:
-                            type: string
-                          transferTo:
-                            type: string
-                      extras:
-                        type: object
-                        properties:
-                          tokenId:
-                            type: string
-                          tokenUri:
-                            type: string
+                    type: array
+                    items:
+                      properties:
+                        kind:
+                          type: string
+                        contractAddress:
+                          type: string
+                        updatedAt:
+                          type: number
+                        balance:
+                          type: string
+                        lastTransfer:
+                          type: object
+                          properties:
+                            transactionHash:
+                              type: string
+                            transferFrom:
+                              type: string
+                            transferTo:
+                              type: string
+                        extras:
+                          type: object
+                          properties:
+                            tokenId:
+                              type: string
+                            tokenUri:
+                              type: string
                         
                   msg:
                     type: string

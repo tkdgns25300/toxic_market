@@ -42,7 +42,8 @@ paths:
                 type: object
                 properties:
                   item:
-                    type: object
+                    type: array
+                    items:
                     properties:
                       kind:
                         type: string
