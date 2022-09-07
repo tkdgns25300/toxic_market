@@ -863,16 +863,20 @@ export class StakingService {
     // 1. Check Staking Time
     const stakingTimeName = kindOfNFT + '_staking_time';
     const stakingTimeArr = staking[stakingTimeName].split('&');
+    let isPossible = true;
     staking[kindOfNFT].split('&').forEach((tokenId: string, idx: number) => {
       if (param.token_id.includes(tokenId)) {
         const stakingTime = new Date(stakingTimeArr[idx])
-        const unstakingEnableTime = new Date()
+        const unstakingEnableTime = new Date(stakingTime)
         unstakingEnableTime.setDate(stakingTime.getDate() + 10);
-        if (stakingTime <= unstakingEnableTime) {
-          return new PageResObj({}, 'Staking 10일 이후부터 Unstaking이 가능합니다.', true)
+        if (new Date() <= unstakingEnableTime) {
+          isPossible = false;
         }
       }
     })
+    if (!isPossible) {
+      return new PageResObj({}, 'Staking 10일 이후부터 Unstaking이 가능합니다.', true)
+    }
 
     // 2. transfer NFT
     const kip17 = new caver.kct.kip17(param.contract_address)
