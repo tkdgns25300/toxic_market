@@ -16,15 +16,11 @@ const toxicNFTContractAddress = [process.env.TOXIC_APE, process.env.FOOLKATS, pr
 const caver = new Caver("https://public-node-api.klaytnapi.com/v1/cypress");
 // const caver = new Caver('https://api.baobab.klaytn.net:8651/')
 
+// Staking 지갑
 const keyring = caver.wallet.keyring.createFromPrivateKey(
-  process.env.WALLET_PRIVATE_KEY
+  process.env.STAKING_WALLET_PRIVATE_KEY
 );
 caver.wallet.add(keyring);
-// Todo : 삭제, 톡시측 지갑 추가
-const myKeyring = caver.wallet.keyring.createFromPrivateKey(
-  process.env.TEST_WALLET_PRIVATE_KEY
-)
-caver.wallet.add(myKeyring);
 
 @Service()
 export class StakingService {
@@ -55,8 +51,7 @@ export class StakingService {
   async stakingNFT(param: StakingContractTokenDto, public_address: string): Promise<PageResObj<{}>> {
     const kip17 = new caver.kct.kip17(param.contract_address)
     // NFT전송권한 부여받았는지 확인
-    const isApproved = await kip17.isApprovedForAll(public_address, '0xf9496b7E5989647AD47bcDbe3bd79E98FB836514')
-    // const isApproved = await kip17.isApprovedForAll(public_address, '톡시 지갑')
+    const isApproved = await kip17.isApprovedForAll(public_address, process.env.STAKING_WALLET_ADDRESS)
     if (!isApproved) {
       return new PageResObj({}, "transfer 권한이 없습니다.", true);
     }
@@ -79,12 +74,9 @@ export class StakingService {
     // 1. transfer NFT + set staking time
     const stakingTimeArr = []
     for (const tokenId of param.token_id) {
-      await kip17.safeTransferFrom(public_address, '0xf9496b7E5989647AD47bcDbe3bd79E98FB836514', tokenId, {
-        from: '0xf9496b7E5989647AD47bcDbe3bd79E98FB836514'
+      await kip17.safeTransferFrom(public_address, process.env.STAKING_WALLET_ADDRESS, tokenId, {
+        from: process.env.STAKING_WALLET_ADDRESS
       })
-      // await kip17.safeTransferFrom(public_address, '톡시지갑', tokenId, {
-      //   from: '톡시지갑'
-      // })
       stakingTimeArr.push(new Date().toISOString())
     }
 
@@ -117,20 +109,8 @@ export class StakingService {
       await this.stakingQueryRepo.create(newStaking)
     }
 
-    
     return new PageResObj({}, "Staking에 성공하였습니다.");
 
-    /**
-     * 프론트에 전달할 NFT전송 권한 코드
-     * 
-    async function approveTransferNFT(contract_ABI: any[], contract_address: string, user_address: string) {
-      // Contract Instance 생성
-      const contract = new window.caver.klay.Contract(contract_ABI, contract_address)
-      // 톡시측 지갑주소로 NFT 전송 권한 부여
-      await contract.methods.setApprovalForAll(`${'톡시측 지갑주소'}`, true).send( {from: user_address, gas: '0x4bfd200'})
-    }
-    
-    */
     const succubusABI = [
       {
         "inputs": [
@@ -820,8 +800,7 @@ export class StakingService {
     // 모든 NFT 조회
     const allNFT = await axios({
       method: "get",
-      url: `https://th-api.klaytnapi.com/v2/account/0xf9496b7E5989647AD47bcDbe3bd79E98FB836514/token?kind=nft&size=1000&ca-filters=${param.contract_address}`,
-      // url: `https://th-api.klaytnapi.com/v2/account/${[톡시지갑]}/token?kind=nft&size=1000&ca-filters=${param.contract_address}`,
+      url: `https://th-api.klaytnapi.com/v2/account/${process.env.STAKING_WALLET_ADDRESS}/token?kind=nft&size=1000&ca-filters=${param.contract_address}`,
       headers: {
         "x-chain-id": process.env.KLAYTN_API_X_CHAIN_ID
           ? process.env.KLAYTN_API_X_CHAIN_ID
@@ -881,12 +860,9 @@ export class StakingService {
     // 2. transfer NFT
     const kip17 = new caver.kct.kip17(param.contract_address)
     for (const tokenId of param.token_id) {
-      await kip17.safeTransferFrom('0xf9496b7E5989647AD47bcDbe3bd79E98FB836514', public_address, tokenId, {
-        from: '0xf9496b7E5989647AD47bcDbe3bd79E98FB836514'
+      await kip17.safeTransferFrom(public_address, process.env.STAKING_WALLET_ADDRESS, tokenId, {
+        from: process.env.STAKING_WALLET_ADDRESS
       })
-      // await kip17.safeTransferFrom(public_address, '톡시지갑', tokenId, {
-      //   from: '톡시지갑'
-      // })
     }
 
     // 3. Update Staking Data
