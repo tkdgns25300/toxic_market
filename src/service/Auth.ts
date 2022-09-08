@@ -9,6 +9,7 @@ import { PageResObj } from "../api";
 import { generateAccessToken } from "../middlewares/Auth";
 import { UserIdPasswordDto } from "../dto/User";
 import { hash } from "../util/hash";
+import { StakingQueryRepo } from "../repository/Staking";
 
 const caver = new Caver("https://public-node-api.klaytnapi.com/v1/cypress");
 
@@ -16,7 +17,8 @@ const caver = new Caver("https://public-node-api.klaytnapi.com/v1/cypress");
 export class AuthService {
   constructor(
     @InjectRepository()
-    readonly userQueryRepo: UserQueryRepo
+    readonly userQueryRepo: UserQueryRepo,
+    readonly stakingQueryRepo: StakingQueryRepo
   ) {}
 
   async findOne(public_address: string): Promise<PageResObj<User | {}>> {
@@ -132,11 +134,10 @@ export class AuthService {
 
   async isHolder(owner: string) {
     const contracts = [
-      "0xe50c9ba45bc554d76ecc2fc102ec20eb8d738885", //TOXIC APE
-      "0x06852d51798534dabea3b93702e6e9f476dfdb65", //FOOLKATS
-      "0xf88b6de943080948331935d93abaabb71523e504", //TOXIC SPECIAL
-      "0x008673da3a22888456b0ab86d15f1d313ed805e2", //SUCCUBUS
-      "0x2CC04a78589f32FD60c384a1f574C4725e34a1FF", //marketTest //TODO: REMOVE marketTest CONTRACT ON DEPLOY, IT IS FOR TESTING PURPOSE ONLY
+      process.env.TOXIC_APE, //TOXIC APE
+      process.env.FOOLKATS, //FOOLKATS
+      process.env.SUCCUBUS, //SUCCUBUS
+      process.env.TOXIC_APE_SPECIAL, //TOXIC SPECIAL
     ];
 
     // for each contract address make query if length is greater than 0 , then it is holder
@@ -157,4 +158,12 @@ export class AuthService {
     }
     return false;
   }
+
+  async checkStakingHolder(public_address: string): Promise<PageResObj<string>> {
+    const staking = await this.stakingQueryRepo.findOne("user_address", public_address);
+    if (staking?.toxic_ape) {
+      return new PageResObj('O', "Toxic_Ape 홀더입니다.")
+    }
+    return new PageResObj('X', "Toxic_Ape 홀더가 아닙니다.")
+    }
 }

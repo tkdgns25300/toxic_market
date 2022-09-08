@@ -102,7 +102,18 @@ export class AuthController {
     }
   }
 
-  //TODO: delete this before deploying
+  @Get("/holder/:address")
+  public async checkStakingHolder(@Param("address") address: string) {
+    try {
+      return this.authService.checkStakingHolder(address);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
+
   @Get("/getjwt/:address")
   public async getjwt(@Param("address") address: string) {
     try {

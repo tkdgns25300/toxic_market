@@ -5,6 +5,15 @@ paths:
       tags:
         - Auth
       summary: find user by address
+      consumes:
+        - application/json
+      parameters:
+        - name: address
+          in: path
+          required: true
+          description: public address
+          schema:
+            type: string
 
       responses:
         200:
