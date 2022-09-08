@@ -31,19 +31,25 @@ export class StakingService {
 
   async findUserNFT(param: NftSearchReq, public_address: string): Promise<PageResObj<any[]>> {
     // 유저의 모든 NFT
-    let userAllNFT = await axios({
-      method: "get",
-      url: `https://th-api.klaytnapi.com/v2/account/${[public_address]}/token?kind=nft&size=1000&ca-filters=${param.contract_address}`,
-      headers: {
-        "x-chain-id": process.env.KLAYTN_API_X_CHAIN_ID
-          ? process.env.KLAYTN_API_X_CHAIN_ID
-          : "8217",
-        Authorization: `Basic ${process.env.KLAYTN_API_KEY}`,
-      },
-    });
+    let cursor = '';
+    let result = [];
+    do {
+      const res = await axios({
+        method: "get",
+        url: `https://th-api.klaytnapi.com/v2/account/${[public_address]}/token?kind=nft&size=1000&ca-filters=${param.contract_address}&cursor=${cursor}`,
+        headers: {
+          "x-chain-id": process.env.KLAYTN_API_X_CHAIN_ID
+            ? process.env.KLAYTN_API_X_CHAIN_ID
+            : "8217",
+          Authorization: `Basic ${process.env.KLAYTN_API_KEY}`,
+        },
+      });
+      result = result.concat(res.data.items);
+      cursor = res.data.cursor;
+    } while (cursor !== '')
 
     // Pagination
-    const result = userAllNFT.data.items.slice(param.getOffset(), param.getOffset() + param.getLimit())
+    result = result.slice(param.getOffset(), param.getOffset() + param.getLimit());
     
     return new PageResObj(result, "유저 NFT 조회에 성공하였습니다.");
   }
@@ -117,19 +123,25 @@ export class StakingService {
 
   async findUserStakingNFT(param: NftSearchReq, public_address: string): Promise<PageResObj<any[]>> {
     // 모든 NFT 조회
-    const allNFT = await axios({
-      method: "get",
-      url: `https://th-api.klaytnapi.com/v2/account/${process.env.STAKING_WALLET_ADDRESS}/token?kind=nft&size=1000&ca-filters=${param.contract_address}`,
-      headers: {
-        "x-chain-id": process.env.KLAYTN_API_X_CHAIN_ID
-          ? process.env.KLAYTN_API_X_CHAIN_ID
-          : "8217",
-        Authorization: `Basic ${process.env.KLAYTN_API_KEY}`,
-      },
-    });
+    let cursor = '';
+    let result = [];
+    do {
+      const res = await axios({
+        method: "get",
+        url: `https://th-api.klaytnapi.com/v2/account/${process.env.STAKING_WALLET_ADDRESS}/token?kind=nft&size=1000&ca-filters=${param.contract_address}&cursor=${cursor}`,
+        headers: {
+          "x-chain-id": process.env.KLAYTN_API_X_CHAIN_ID
+            ? process.env.KLAYTN_API_X_CHAIN_ID
+            : "8217",
+          Authorization: `Basic ${process.env.KLAYTN_API_KEY}`,
+        },
+      });
+      result = result.concat(res.data.items);
+      cursor = res.data.cursor;
+    } while (cursor !== '')
 
     // 유저의 NFT만 필터링
-    let result = allNFT.data.items.filter(nft => nft.lastTransfer.transferFrom.toLowerCase() === public_address.toLowerCase())
+    result = result.filter(nft => nft.lastTransfer.transferFrom.toLowerCase() === public_address.toLowerCase())
 
     // Pagination
     result = result.slice(param.getOffset(), param.getOffset() + param.getLimit())
