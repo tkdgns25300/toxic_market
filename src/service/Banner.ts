@@ -19,7 +19,7 @@ export class BannerService {
       await this.bannerQueryRepo.delete("id", exist.id);
       // 기존에 is_vertical과 동일하 배너가 있을 경우, 삭제하고 추가한다
       // s3에서도 삭제하기 위해 로직 추가
-      //await imageDelete(exist.img_url);
+      await imageDelete(exist.img_url);
     }
 
     const banner = await this.bannerQueryRepo.create(paramObj); // 기존에 있는 배너를 삭제하고 새로운 배너를 만든다
