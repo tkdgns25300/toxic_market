@@ -15,6 +15,34 @@ export class StakingLog extends BaseEntity {
   })
   payment_amount: number;
 
+  @Column({
+    type: "int",
+    default: 0,
+    comment: "총 스테이킹 수량"
+  })
+  toxic_ape_amount: number;
+
+  @Column({
+    type: "int",
+    default: 0,
+    comment: "총 스테이킹 수량"
+  })
+  foolkat_amount: number;
+
+  @Column({
+    type: "int",
+    default: 0,
+    comment: "총 스테이킹 수량"
+  })
+  succubus_amount: number;
+
+  @Column({
+    type: "int",
+    default: 0,
+    comment: "총 스테이킹 수량"
+  })
+  toxic_ape_special_amount: number;
+
   @CreateDateColumn({
     comment: "생성 시간",
   })

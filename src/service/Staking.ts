@@ -62,7 +62,7 @@ export class StakingService {
       return new PageResObj({}, "transfer 권한이 없습니다.", true);
     }
     let kindOfNFT: string;
-    switch(param.contract_address) {
+    switch(param.contract_address.toLowerCase()) {
       case toxicNFTContractAddress[0]:
         kindOfNFT = 'toxic_ape'
         break;
@@ -74,9 +74,6 @@ export class StakingService {
         break;
       case toxicNFTContractAddress[3]:
         kindOfNFT = 'toxic_ape_special'
-        break;
-      default:
-        kindOfNFT = 'toxic_ape'
         break;
     }
     
@@ -155,7 +152,7 @@ export class StakingService {
       return new PageResObj({}, "이전에 스테이킹한 기록이 없습니다.", true)
     }
     let kindOfNFT: string;
-    switch(param.contract_address) {
+    switch(param.contract_address.toLowerCase()) {
       case toxicNFTContractAddress[0]:
         kindOfNFT = 'toxic_ape'
         break;
@@ -167,9 +164,6 @@ export class StakingService {
         break;
       case toxicNFTContractAddress[3]:
         kindOfNFT = 'toxic_ape_special'
-        break;
-      default:
-        kindOfNFT = 'toxic_ape'
         break;
     }
 
@@ -242,6 +236,10 @@ export class StakingService {
 
       // 로그 생성
       const log = {
+        toxic_ape_amount: staking.toxic_ape_amount,
+        foolkat_amount: staking.foolkat_amount,
+        succubus_amount: staking.succubus_amount,
+        toxic_ape_special_amount: staking.toxic_ape_special_amount,
         payment_amount: amount,
         staking_id: staking.id
       }
