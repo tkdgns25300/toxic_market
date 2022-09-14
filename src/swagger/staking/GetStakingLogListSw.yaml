@@ -59,6 +59,14 @@ paths:
                       properties:
                         id:
                           type: number
+                        toxic_ape_amount:
+                          type: number
+                        foolkat_amount:
+                          type: number
+                        succubus_amount:
+                          type: number
+                        toxic_ape_special_amount:
+                          type: number
                         payment_amount:
                           type: number
                         created_at:
