@@ -10,6 +10,7 @@ import { PageReq, PageResObj } from "../api";
 import { BankDto, BankLogDto } from "../dto";
 import { checkAccessToken, checkAdminAccessToken } from "../middlewares/Auth";
 import { BankService } from "../service/Bank";
+import { validate, validateOrReject, ValidationError } from "class-validator";
 
 @Service()
 @JsonController("/bank")
@@ -34,11 +35,22 @@ export class BankController {
   @UseBefore(checkAdminAccessToken)
   public async createBank(@Body() params: BankDto, @Res() res: Response) {
     try {
+      //const test: BankDto = new BankDto();
+      //test.daily_Interest = params.daily_Interest
+      //test.deposit_Total = params.deposit_Total
+      //test.start_at = params.start_at
+      //test.end_at = params.end_at
+      //test.total_Interest = params.total_Interest
+      //test.remaing_Day = params.remaing_Day
+      //const result = await validateOrReject(params);
+      
+      //console.log(result)
       return await this.bankService.create(params);
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);
       };
+      //console.log('err :', err)
       return new PageResObj({}, err.message, true);
     };
   };
