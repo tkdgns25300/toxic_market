@@ -85,7 +85,7 @@ export class StakingController {
   }
 
   @Get("/staking")
-  @UseBefore(checkAdminAccessToken)
+  @UseBefore(checkAccessToken)
   public async findStaking(@QueryParams() params: StakingSearchReq) {
     try {
       return await this.stakingSerivce.findStaking(params)

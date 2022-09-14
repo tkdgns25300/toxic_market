@@ -89,6 +89,8 @@ paths:
                           properties:
                             name:
                               type: string
+                            public_address:
+                              type: string
                   error:
                     type: boolean
                     description: error 체크

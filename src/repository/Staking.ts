@@ -20,7 +20,8 @@ export class StakingQueryRepo extends BaseQueryRepo {
     .leftJoinAndSelect("Staking.user_address", "user")
     .select([
       "Staking",
-      "user.name"
+      "user.name",
+      "user.public_address"
     ])
 
     if (param.id) {
