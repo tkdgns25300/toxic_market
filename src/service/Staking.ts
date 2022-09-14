@@ -175,7 +175,8 @@ export class StakingService {
       if (param.token_id.includes(tokenId)) {
         const stakingTime = new Date(stakingTimeArr[idx])
         const unstakingEnableTime = new Date(stakingTime)
-        unstakingEnableTime.setDate(stakingTime.getDate() + 10);
+        // unstakingEnableTime.setDate(stakingTime.getDate() + 10);
+        unstakingEnableTime.setMinutes(stakingTime.getMinutes() + 3);
         if (new Date() <= unstakingEnableTime) {
           isPossible = false;
         }
