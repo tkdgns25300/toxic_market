@@ -42,33 +42,38 @@ paths:
                 type: object
                 properties:
                   item:
-                    type: array
-                    items:
-                      properties:
-                        kind:
-                          type: string
-                        contractAddress:
-                          type: string
-                        updatedAt:
-                          type: number
-                        balance:
-                          type: string
-                        lastTransfer:
-                          type: object
+                    type: object
+                    properties:
+                      result:
+                        type: array
+                        items:
                           properties:
-                            transactionHash:
+                            kind:
                               type: string
-                            transferFrom:
+                            contractAddress:
                               type: string
-                            transferTo:
+                            updatedAt:
+                              type: number
+                            balance:
                               type: string
-                        extras:
-                          type: object
-                          properties:
-                            tokenId:
-                              type: string
-                            tokenUri:
-                              type: string
+                            lastTransfer:
+                              type: object
+                              properties:
+                                transactionHash:
+                                  type: string
+                                transferFrom:
+                                  type: string
+                                transferTo:
+                                  type: string
+                            extras:
+                              type: object
+                              properties:
+                                tokenId:
+                                  type: string
+                                tokenUri:
+                                  type: string
+                      totalAmounts:
+                        type: number
                         
                   msg:
                     type: string
