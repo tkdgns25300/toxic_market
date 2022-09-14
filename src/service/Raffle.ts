@@ -295,15 +295,14 @@ export class RaffleService {
     }
   }
 
-  async update(paramObj: RaffleDto, id: number): Promise<PageResObj<Raffle | {}>> {
+  async update(paramObj: RaffleDto, id: number, public_address: string): Promise<PageResObj<Raffle | {}>> {
     const raffle: any = await this.raffleQueryRepo.getOne(id);
-    const user = await this.userQueryRepo.findOne("public_address", paramObj.creator)
-    console.log(user)
-    if (user.is_admin !== 'O') {
-      if (raffle.creator.public_address.toLowerCase() !== paramObj.creator.toLowerCase()) {
-        return new PageResObj({}, "추첨을 생성한 사용자나 관리자만 수정 가능합니다.", true);
-      }
+    const user = await this.userQueryRepo.findOne("public_address", public_address)
+
+    if (raffle.creator.public_address.toLowerCase() !== public_address.toLowerCase() && user.is_admin === 'X') {
+      return new PageResObj({}, "추첨을 생성한 사용자나 관리자만 수정 가능합니다.", true);
     }
+
     // 마감시간 이후 마감시간은 수정 불가
     if (raffle.end_at <= new Date()) {
       delete paramObj?.end_at

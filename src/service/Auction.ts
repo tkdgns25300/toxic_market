@@ -277,16 +277,16 @@ export class AuctionService {
       await manager.update(Auction, id, auction);
       return new PageResObj(paramObj, "포인트 반송하는데 성공했습니다.");
     }
-
   }
 
-  async update(paramObj: AuctionDto, id: number): Promise<PageResObj<Product | {}>> {
-
+  async update(paramObj: AuctionDto, id: number, public_address: string): Promise<PageResObj<Product | {}>> {
     let product = await this.auctionQueryRepo.findOne("id", id);
-    if(product.creator_address.toLowerCase() !== paramObj.creator_address.toLowerCase()) {
-      return new PageResObj({}, "상품을 생성한 사용자만 수정 가능합니다.", true);
+    let user = await this.userQueryRepo.findOne("public_address", public_address)
+
+    if(product.creator_address.toLowerCase() !== public_address.toLowerCase() && user.is_admin === 'X') {
+      return new PageResObj({}, "경매를 생성한 사용자와 관리자만 수정 가능합니다.", true);
     }
-    let user = await this.userQueryRepo.findOne("public_address", paramObj.creator_address)
+  
     // 마감시간 이후 마감시간은 수정 불가
     if (product.end_at <= new Date()) {
       delete paramObj?.end_at

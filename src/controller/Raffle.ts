@@ -182,8 +182,7 @@ export class RaffleController {
   public async update(@Param("id") id: number, @Body() param: RaffleDto, @Res() res: Response) {
     try {
       const { aud } = res.locals.jwtPayload;
-      param.creator = aud;
-      return await this.raffleService.update(param, id);
+      return await this.raffleService.update(param, id, aud);
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);

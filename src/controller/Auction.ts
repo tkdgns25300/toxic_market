@@ -60,8 +60,7 @@ export class AuctionController {
   public async update(@Param("id") id: number,@Body() params: AuctionDto, @Res() res: Response) {
     try {
       const { aud } = res.locals.jwtPayload;
-      params.creator_address = aud;
-      return await this.auctionService.update(params, id);
+      return await this.auctionService.update(params, id, aud);
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);

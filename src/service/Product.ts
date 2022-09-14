@@ -61,11 +61,11 @@ export class ProductService {
     return new PageResObj(result, "Product 생성에 성공했습니다.");
   }
 
-  async update(paramObj: ProductDto, id: number): Promise<PageResObj<Product | {}>> {
+  async update(paramObj: ProductDto, id: number, public_address: string): Promise<PageResObj<Product | {}>> {
     let product = await this.ProductQueryRepo.findOne("id", id);
-    let user = await this.userQueryRepo.findOne("public_address", paramObj.user_address)
+    let user = await this.userQueryRepo.findOne("public_address", public_address)
 
-    if(product.user_address !== paramObj.user_address && user.is_admin === 'X') { // 수정 가능한 조건 : 1. 본인이 만든 마켓, 2. 관리자
+    if(product.user_address !== public_address && user.is_admin === 'X') { // 수정 가능한 조건 : 1. 본인이 만든 마켓, 2. 관리자
       return new PageResObj({}, "상품을 생성한 사용자와 관리자만 수정 가능합니다.", true);
     }
 

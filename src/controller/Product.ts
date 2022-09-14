@@ -70,8 +70,7 @@ export class ProductController {
   public async update(@Param("id") id: number,@Body() params: ProductDto, @Res() res: Response) {
     try {
       const { aud } = res.locals.jwtPayload;
-      params.user_address = aud;
-      return await this.productService.update(params, id);
+      return await this.productService.update(params, id, aud);
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);
