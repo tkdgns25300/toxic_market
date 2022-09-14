@@ -77,7 +77,7 @@ export class ExchangeService {
     const user: User = await manager.findOne(User, {
       public_address: public_address,
     });
-    if (point_amount < 1000) return new PageResObj({}, "1000TP 이상부터 TOX 코인으로 교환 가능합니다.");
+    if (point_amount < 1000) return new PageResObj({}, "1000TP 이상부터 TOX 코인으로 교환 가능합니다.", true);
     if (user.CF_balance < point_amount) {
       return new PageResObj({}, "포인트가 부족합니다.");
     }
