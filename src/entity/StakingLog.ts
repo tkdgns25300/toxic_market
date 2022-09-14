@@ -11,12 +11,6 @@ export class StakingLog extends BaseEntity {
 
   @Column({
     type: "int",
-    comment: "지급 금액"
-  })
-  payment_amount: number;
-
-  @Column({
-    type: "int",
     default: 0,
     comment: "총 스테이킹 수량"
   })
@@ -42,6 +36,12 @@ export class StakingLog extends BaseEntity {
     comment: "총 스테이킹 수량"
   })
   toxic_ape_special_amount: number;
+
+  @Column({
+    type: "int",
+    comment: "지급 금액"
+  })
+  payment_amount: number;
 
   @CreateDateColumn({
     comment: "생성 시간",
