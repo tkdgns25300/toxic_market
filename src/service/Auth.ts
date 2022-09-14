@@ -26,6 +26,9 @@ export class AuthService {
       "public_address",
       public_address
     );
+    if (!result) {
+      return new PageResObj({}, "사용자를 찾는데 실패했습니다.", true);  
+    }
     delete result.password_hash;
     return new PageResObj(result, "사용자를 찾는데 성공했습니다.");
   }
