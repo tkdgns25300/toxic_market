@@ -26,6 +26,9 @@ export class AuthService {
       "public_address",
       public_address
     );
+    if (!result) {
+      return new PageResObj({}, "사용자를 찾는데 실패했습니다.", true);  
+    }
     delete result.password_hash;
     return new PageResObj(result, "사용자를 찾는데 성공했습니다.");
   }
@@ -134,10 +137,10 @@ export class AuthService {
 
   async isHolder(owner: string) {
     const contracts = [
-      process.env.TOXIC_APE, //TOXIC APE
-      process.env.FOOLKATS, //FOOLKATS
-      process.env.SUCCUBUS, //SUCCUBUS
-      process.env.TOXIC_APE_SPECIAL, //TOXIC SPECIAL
+      process.env.TOXIC_APE,
+      // process.env.FOOLKATS,
+      // process.env.SUCCUBUS,
+      // process.env.TOXIC_APE_SPECIAL,
     ];
 
     // for each contract address make query if length is greater than 0 , then it is holder

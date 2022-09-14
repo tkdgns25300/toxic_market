@@ -29,7 +29,7 @@ export class StakingService {
     readonly stakingQueryRepo: StakingQueryRepo
   ) {}
 
-  async findUserNFT(param: NftSearchReq, public_address: string): Promise<PageResObj<any[]>> {
+  async findUserNFT(param: NftSearchReq, public_address: string): Promise<PageResObj<any>> {
     // 유저의 모든 NFT
     let cursor = '';
     let result = [];
@@ -49,9 +49,10 @@ export class StakingService {
     } while (cursor !== '')
 
     // Pagination
+    const totalAmounts = result.length;
     result = result.slice(param.getOffset(), param.getOffset() + param.getLimit());
     
-    return new PageResObj(result, "유저 NFT 조회에 성공하였습니다.");
+    return new PageResObj({result, totalAmounts}, "유저 NFT 조회에 성공하였습니다.");
   }
 
   async stakingNFT(param: StakingContractTokenDto, public_address: string): Promise<PageResObj<{}>> {
@@ -118,7 +119,7 @@ export class StakingService {
     return new PageResObj({}, "Staking에 성공하였습니다.");    
   }
 
-  async findUserStakingNFT(param: NftSearchReq, public_address: string): Promise<PageResObj<any[]>> {
+  async findUserStakingNFT(param: NftSearchReq, public_address: string): Promise<PageResObj<any>> {
     // 모든 NFT 조회
     let cursor = '';
     let result = [];
@@ -141,9 +142,10 @@ export class StakingService {
     result = result.filter(nft => nft.lastTransfer.transferFrom.toLowerCase() === public_address.toLowerCase())
 
     // Pagination
-    result = result.slice(param.getOffset(), param.getOffset() + param.getLimit())
+    const totalAmounts = result.length;
+    result = result.slice(param.getOffset(), param.getOffset() + param.getLimit());
 
-    return new PageResObj(result, "유저의 스테이킹된 NFT 조회에 성공하였습니다.");
+    return new PageResObj({ result, totalAmounts }, "유저의 스테이킹된 NFT 조회에 성공하였습니다.");
   }
 
   async unstakingNFT(param: StakingContractTokenDto, public_address: string): Promise<PageResObj<{}>> {
@@ -244,8 +246,10 @@ export class StakingService {
         payment_amount: amount,
         staking_id: staking.id
       }
-      const stakingLog = manager.create(StakingLog, log)
-      await manager.save(StakingLog, stakingLog)
+      if(staking.toxic_ape_amount + staking.foolkat_amount + staking.succubus_amount + staking.toxic_ape_special_amount !== 0) {
+        const stakingLog = manager.create(StakingLog, log)
+        await manager.save(StakingLog, stakingLog)
+      }
     }
     return new PageResObj({}, 'TP 지급에 성공하였습니다.')
   }
