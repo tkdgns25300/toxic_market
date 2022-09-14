@@ -21,7 +21,8 @@ export class StakingQueryRepo extends BaseQueryRepo {
     .select([
       "Staking",
       "user.name",
-      "user.public_address"
+      "user.public_address",
+      "user.id"
     ])
 
     if (param.id) {

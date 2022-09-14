@@ -87,9 +87,11 @@ paths:
                         user_address:
                           type: object
                           properties:
+                            public_address:
+                              type: string
                             name:
                               type: string
-                            public_address:
+                            id:
                               type: string
                   error:
                     type: boolean
