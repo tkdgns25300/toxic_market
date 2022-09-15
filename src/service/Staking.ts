@@ -76,6 +76,10 @@ export class StakingService {
       case toxicNFTContractAddress[3]:
         kindOfNFT = 'toxic_ape_special'
         break;
+      // Testing Contract_address
+      case '0x9faccd9f9661dddec3971c1ee146516127c34fc1':
+        kindOfNFT = 'toxic_ape'
+        break;
     }
     
     // 1. transfer NFT + set staking time
@@ -166,6 +170,10 @@ export class StakingService {
         break;
       case toxicNFTContractAddress[3]:
         kindOfNFT = 'toxic_ape_special'
+        break;
+      // Testing Contract_address
+      case '0x9faccd9f9661dddec3971c1ee146516127c34fc1':
+        kindOfNFT = 'toxic_ape'
         break;
     }
 
