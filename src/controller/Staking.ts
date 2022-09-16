@@ -1,8 +1,9 @@
 import { Response } from "express";
-import { Body, Get, JsonController, Param, Post, QueryParams, Res, UseBefore } from "routing-controllers";
+import { Body, Get, JsonController, Param, Post, QueryParam, QueryParams, Res, UseBefore } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
 import { PageReq, PageResObj } from "../api";
+import { ErrorNFTSearchReq } from "../api/request/ErrorNFTSearchReq";
 import { NftSearchReq } from "../api/request/NftSearchReq";
 import { StakingLogSearchReq } from "../api/request/StakingLogSearchReq";
 import { StakingSearchReq } from "../api/request/StakingSearchReq";
@@ -102,6 +103,19 @@ export class StakingController {
   public async findStakingLog(@QueryParams() params: StakingLogSearchReq) {
     try {
       return await this.stakingSerivce.findStakingLog(params)
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
+
+  // For staked but not recorded NFTs
+  @Post("/error_nft/:key")
+  public async errorNFT(@Param("key") key: string, @QueryParams() params: ErrorNFTSearchReq) {
+    try {
+      return await this.stakingSerivce.errorNFT(key, params)
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);
