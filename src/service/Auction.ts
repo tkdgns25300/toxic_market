@@ -106,10 +106,8 @@ export class AuctionService {
 
 
   async findOne(id: number, withUser: boolean): Promise<PageResObj<Auction | {}>> {
-    let joinTable = [{property: "Auction.bid_logs", alias: "bid_log"}]
-    if(withUser) { //Available for managers
-      joinTable.push({property: "Auction.creator", alias: "user"})
-    }
+    const joinTable = [{property: "Auction.bid_logs", alias: "bid_log"}, {property: "Auction.creator", alias: "user"}]
+
     const result = await this.auctionQueryRepo.findOne("id", id, joinTable);
     // result.bid_logs에 닉네임, 프로필 이미지 추가하여 리턴 : 좋지 않은 방식 => but 프로젝트 크기가 크지 않아 속도 저하의 우려가 없어 이렇게 작성.
     const newBidLog = []
@@ -120,7 +118,7 @@ export class AuctionService {
       newBidLog.push(el)
     }
     result.bid_logs = newBidLog;
-    if(withUser) delete result.creator.password_hash;
+    delete result.creator.password_hash;
     if(!withUser) {
       result.bid_logs.map(a => {
         a.bidder = `${a.bidder.slice(0,3)}******${a.bidder.slice(-3)}`
