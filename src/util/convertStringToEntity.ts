@@ -9,7 +9,8 @@ import {
   Banner,
   Bank,
   BankLog,
-  Staking
+  Staking,
+  StakingLog
 } from "../entity";
 
 export const convertStringToEntity = (entityName: string) => {
@@ -24,7 +25,8 @@ export const convertStringToEntity = (entityName: string) => {
     ["Banner"]: Banner,
     ["Bank"]: Bank,
     ["BankLog"]: BankLog,
-    ["Staking"]: Staking
+    ["Staking"]: Staking,
+    ["StakingLog"]: StakingLog
   };
   return convertList[entityName];
 };
