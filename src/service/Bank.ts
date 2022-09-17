@@ -5,6 +5,7 @@ import { PageReq, PageResList, PageResObj } from "../api";
 import { BankDto, BankLogDto } from "../dto";
 import { Bank, BankLog, User } from "../entity";
 import { BankQueryRepo } from "../repository/Bank";
+import { DepositControl } from "./Bank.ctrl";
 
 @Service()
 export class BankService {
@@ -145,42 +146,23 @@ export class BankService {
       depositor: depositor,
       bank_id: paramObj.bank_id
     }});
-
-    let shareholding;
-
     if(findBank.deposit_Total < findBank.deposit_Balance + paramObj.deposit_Amount) return new PageResObj({}, "해당 뱅크의 예치 한도를 초과하는 예치금입니다.", true);
-
-    if(!findBankLog) { // 내가 예치한 내역이 없다면 뱅크 로그 객체를 만들어서 findBank에 push 후 save
-      shareholding = findBank.deposit_Balance === 0 ? 100 : (paramObj.deposit_Amount / (paramObj.deposit_Amount + findBank.deposit_Balance)) * 100; // 지분율
-      const bankLog = new BankLog();
-      bankLog.bank_id = paramObj.bank_id;
-      bankLog.deposit_Amount = paramObj.deposit_Amount; // 예치 잔액
-      bankLog.expected_Daily_Interest = findBank.daily_Interest * shareholding / 100; // 예상 일일 보상
-      bankLog.expected_EaringRate = ((bankLog.expected_Daily_Interest * findBank.remaing_Day) / paramObj.deposit_Amount) * 100; // 수익률 계산
-      bankLog.depositor = depositor;
-      bankLog.remaing_Day = findBank.remaing_Day;
-
-      findBank.bank_logs.push(bankLog);
-
-      findBank.deposit_User = findBank.deposit_User + 1; // 뱅크 예치자 추가
-      findBank.deposit_Balance = findBank.deposit_Balance + paramObj.deposit_Amount; // 뱅크 예치 잔액 추가
-    } else {
-      // 내가 예치한 내역이 있다면 findBankLog 수정 후 save
-      findBankLog.deposit_Amount += paramObj.deposit_Amount; // 예치 잔액 변경
-      shareholding = ((findBankLog.deposit_Amount) / (paramObj.deposit_Amount + findBank.deposit_Balance)) * 100;
-      findBankLog.expected_EaringRate = (((findBankLog.expected_Daily_Interest * (findBankLog.remaing_Day - findBank.remaing_Day)) + (findBank.daily_Interest * shareholding / 100 * findBank.remaing_Day)) / findBankLog.deposit_Amount * 100); // 수익률 계산
-      findBankLog.expected_Daily_Interest = findBank.daily_Interest * shareholding / 100; // 예상 일일 보상
-      findBankLog.remaing_Day = findBank.remaing_Day;
-      findBank.deposit_Balance = findBank.deposit_Balance + paramObj.deposit_Amount; // 뱅크 예치 잔액 추가
-    };
     
-    // 뱅크의 다른 사용자 뱅크 로그 수익률 및 예상 일일 보상 변경
+    let shareholding;
+    const depositCtrl = new DepositControl();
+    if(!findBankLog) {
+      shareholding = findBank.deposit_Balance === 0 ? 100 : depositCtrl.getShareholing(paramObj.deposit_Amount, findBank.deposit_Balance, paramObj.deposit_Amount);
+      depositCtrl.firstDeposit(findBank, paramObj, shareholding, depositor);
+    } else {
+      findBankLog.deposit_Amount += paramObj.deposit_Amount; // 예치 잔액 변경
+      shareholding = depositCtrl.getShareholing(findBankLog.deposit_Amount, findBank.deposit_Balance, paramObj.deposit_Amount);
+      depositCtrl.retryDeposit(findBankLog, findBank, paramObj, shareholding);
+    };
+
     if(shareholding !== 100) {
       findBank.bank_logs.map((el) => {
         if(el.depositor !== depositor) {
-          const userShareholding = (el.deposit_Amount / findBank.deposit_Balance) * 100;
-          el.expected_EaringRate = (((el.expected_Daily_Interest * (el.remaing_Day - findBank.remaing_Day)) + (findBank.daily_Interest * userShareholding / 100 * findBank.remaing_Day)) / el.deposit_Amount * 100);
-          el.expected_Daily_Interest = findBank.daily_Interest * userShareholding / 100;
+          depositCtrl.manageOtherDeposit(el, findBank);
         };
       });
     };
