@@ -354,8 +354,8 @@ export class StakingService {
     // 유저에게 TP지급
     let amount = toxicArr.length * 20 + foolkatArr.length * 4 + succubusArr.length * 10 + toxicSpecialArr.length * 30
     if (user_staking.id >= 1 && user_staking.id <= 298) amount *= 2;
-    if (user_staking.id >= 299 && user_staking.id <= 443) amount *= 1;
-    if (user_staking.id >= 444) amount *= 0;
+    if (user_staking.id >= 299 && user_staking.id <= 316) amount *= 1;
+    if (user_staking.id >= 317) amount *= 0;
 
     const user = await this.userQueryRepo.findOne("public_address", param.public_address);
     if (amount !== 0) {
