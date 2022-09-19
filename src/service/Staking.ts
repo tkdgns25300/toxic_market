@@ -237,13 +237,24 @@ export class StakingService {
       return new PageResObj({}, 'Staking 10일 이후부터 Unstaking이 가능합니다.', true)
     }
 
-    // 2. transfer NFT
-    const kip17 = new caver.kct.kip17(param.contract_address)
-    for (const tokenId of param.token_id) {
-      await kip17.safeTransferFrom(process.env.STAKING_WALLET_ADDRESS, public_address, tokenId, {
-        from: process.env.STAKING_WALLET_ADDRESS
-      })
-    }
+    // // Transfer NFT and Update Staking Data AT ONCE
+    // const kip17 = new caver.kct.kip17(param.contract_address)
+    // for (const tokenId of param.token_id) {
+    //   // Transfer NFT
+    //   await kip17.safeTransferFrom(process.env.STAKING_WALLET_ADDRESS, public_address, tokenId, {
+    //     from: process.env.STAKING_WALLET_ADDRESS
+    //   })
+
+    //   // Update Staking Data
+
+    // }
+    // // 2. transfer NFT
+    // const kip17 = new caver.kct.kip17(param.contract_address)
+    // for (const tokenId of param.token_id) {
+    //   await kip17.safeTransferFrom(process.env.STAKING_WALLET_ADDRESS, public_address, tokenId, {
+    //     from: process.env.STAKING_WALLET_ADDRESS
+    //   })
+    // }
 
     // 3. Update Staking Data
     const newStakingTimeArr = staking[stakingTimeName].split('&')
