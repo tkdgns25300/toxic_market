@@ -87,45 +87,81 @@ export class StakingService {
         break;
     }
     
-    // 1. transfer NFT + set staking time
-    const stakingTimeArr = []
+    // Transfer NFT and Create Staking Data AT ONCE
+    const NFTAmount = kindOfNFT + '_amount'
+    const stakingTimeName = kindOfNFT + '_staking_time';
     for (const tokenId of param.token_id) {
+      // Transfer
       await kip17.safeTransferFrom(public_address, process.env.STAKING_WALLET_ADDRESS, tokenId, {
         from: process.env.STAKING_WALLET_ADDRESS
       })
-      stakingTimeArr.push(new Date().toISOString())
-    }
 
-    // 2. Create Staking Data  
-    const staking = await this.stakingQueryRepo.findOne('user_address', public_address)
-    const NFTAmount = kindOfNFT + '_amount'
-    const stakingTimeName = kindOfNFT + '_staking_time';
-    // 이전에 스테이킹 했던 사용자
-    if (staking) {
-      if (staking[kindOfNFT] === null || staking[kindOfNFT] === '') {
-        staking[kindOfNFT] = param.token_id.join('&')
-        staking[stakingTimeName] = stakingTimeArr.join('&')
+      // Create Staking Data
+      const staking = await this.stakingQueryRepo.findOne('user_address', public_address)
+      if (!staking) {
+        const newStaking = {
+          [kindOfNFT]: tokenId,
+          [stakingTimeName]: new Date().toISOString(),
+          [NFTAmount]: 1,
+          total_points: 0,
+          user_address: public_address
+        }
+        await this.stakingQueryRepo.create(newStaking)
       }
       else {
-        staking[kindOfNFT] += '&' + param.token_id.join('&')
-        staking[stakingTimeName] += '&' + stakingTimeArr.join('&')
+        if (staking[kindOfNFT] === null || staking[kindOfNFT] === '') {
+          staking[kindOfNFT] = tokenId;
+          staking[stakingTimeName] = new Date().toISOString();
+        } else {
+          staking[kindOfNFT] += '&' + tokenId;
+        staking[stakingTimeName] += '&' + new Date().toISOString();
+        }
+        staking[NFTAmount] += 1;
+        await this.stakingQueryRepo.update(staking, 'user_address', public_address)
       }
-      staking[NFTAmount] = staking[kindOfNFT].split('&').length;
-      await this.stakingQueryRepo.update(staking, 'user_address', public_address)
-    }
-    // 처음 스테이킹 하는 사용자
-    else {
-      const newStaking = {
-        [kindOfNFT]: param.token_id.join('&'),
-        [stakingTimeName]: stakingTimeArr.join('&'),
-        [NFTAmount]: param.token_id.length,
-        total_points: 0,
-        user_address: public_address
-      }
-      await this.stakingQueryRepo.create(newStaking)
     }
 
-    return new PageResObj({}, "Staking에 성공하였습니다.");    
+    // return new PageResObj({}, "Staking에 성공하였습니다.");
+    
+    // // 1. transfer NFT + set staking time
+    // const stakingTimeArr = []
+    // for (const tokenId of param.token_id) {
+    //   await kip17.safeTransferFrom(public_address, process.env.STAKING_WALLET_ADDRESS, tokenId, {
+    //     from: process.env.STAKING_WALLET_ADDRESS
+    //   })
+    //   stakingTimeArr.push(new Date().toISOString())
+    // }
+
+    // // 2. Create Staking Data  
+    // const staking = await this.stakingQueryRepo.findOne('user_address', public_address)
+    // const NFTAmount = kindOfNFT + '_amount'
+    // const stakingTimeName = kindOfNFT + '_staking_time';
+    // // 이전에 스테이킹 했던 사용자
+    // if (staking) {
+    //   if (staking[kindOfNFT] === null || staking[kindOfNFT] === '') {
+    //     staking[kindOfNFT] = param.token_id.join('&')
+    //     staking[stakingTimeName] = stakingTimeArr.join('&')
+    //   }
+    //   else {
+    //     staking[kindOfNFT] += '&' + param.token_id.join('&')
+    //     staking[stakingTimeName] += '&' + stakingTimeArr.join('&')
+    //   }
+    //   staking[NFTAmount] = staking[kindOfNFT].split('&').length;
+    //   await this.stakingQueryRepo.update(staking, 'user_address', public_address)
+    // }
+    // // 처음 스테이킹 하는 사용자
+    // else {
+    //   const newStaking = {
+    //     [kindOfNFT]: param.token_id.join('&'),
+    //     [stakingTimeName]: stakingTimeArr.join('&'),
+    //     [NFTAmount]: param.token_id.length,
+    //     total_points: 0,
+    //     user_address: public_address
+    //   }
+    //   await this.stakingQueryRepo.create(newStaking)
+    // }
+
+    // return new PageResObj({}, "Staking에 성공하였습니다.");
   }
 
   async findUserStakingNFT(param: NftSearchReq, public_address: string): Promise<PageResObj<any>> {
