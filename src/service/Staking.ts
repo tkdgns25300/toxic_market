@@ -237,17 +237,32 @@ export class StakingService {
       return new PageResObj({}, 'Staking 10일 이후부터 Unstaking이 가능합니다.', true)
     }
 
-    // // Transfer NFT and Update Staking Data AT ONCE
-    // const kip17 = new caver.kct.kip17(param.contract_address)
-    // for (const tokenId of param.token_id) {
-    //   // Transfer NFT
-    //   await kip17.safeTransferFrom(process.env.STAKING_WALLET_ADDRESS, public_address, tokenId, {
-    //     from: process.env.STAKING_WALLET_ADDRESS
-    //   })
+    // Transfer NFT and Update Staking Data AT ONCE
+    const NFTAmount = kindOfNFT + '_amount'
+    const kip17 = new caver.kct.kip17(param.contract_address)
+    for (const tokenId of param.token_id) {
+      // Transfer NFT
+      await kip17.safeTransferFrom(process.env.STAKING_WALLET_ADDRESS, public_address, tokenId, {
+        from: process.env.STAKING_WALLET_ADDRESS
+      })
 
-    //   // Update Staking Data
+      // Update Staking Data
+      const staking = await this.stakingQueryRepo.findOne('user_address', public_address)
+      const newStakingTimeArr = staking[stakingTimeName].split('&')
+      const newTokenIdArr = staking[kindOfNFT].split('&').filter((id, idx) => {
+        if (tokenId === id) {
+          newStakingTimeArr.splice(idx, 1)
+          return false;
+        }
+      })
+      staking[kindOfNFT] = newTokenIdArr.join('&');
+      staking[stakingTimeName] = newStakingTimeArr.join('&');
+      if (newTokenIdArr === '') staking[NFTAmount] = 0
+      else staking[NFTAmount] = newTokenIdArr.split('&').length;
+      await this.stakingQueryRepo.update(staking, "user_address", public_address);
+    }
 
-    // }
+    return new PageResObj({}, 'Unstaking에 성공하였습니다.')
     // // 2. transfer NFT
     // const kip17 = new caver.kct.kip17(param.contract_address)
     // for (const tokenId of param.token_id) {
@@ -256,27 +271,27 @@ export class StakingService {
     //   })
     // }
 
-    // 3. Update Staking Data
-    const newStakingTimeArr = staking[stakingTimeName].split('&')
-    let index = -1;
-    const newTokenIdArr = staking[kindOfNFT].split('&').filter((tokenId, idx) => {
-      index++;
-      if(param.token_id.includes(tokenId)) {
-        // staking time도 같이 제거
-        newStakingTimeArr.splice(index, 1)
-        index--;
-        return false;
-      }
-      return true;
-    }).join('&');
-    staking[kindOfNFT] = newTokenIdArr;
-    staking[stakingTimeName] = newStakingTimeArr.join('&');
-    const NFTAmount = kindOfNFT + '_amount'
-    if (newTokenIdArr === '') staking[NFTAmount] = 0
-    else staking[NFTAmount] = newTokenIdArr.split('&').length;
-    await this.stakingQueryRepo.update(staking, "user_address", public_address);    
+    // // 3. Update Staking Data
+    // const newStakingTimeArr = staking[stakingTimeName].split('&')
+    // let index = -1;
+    // const newTokenIdArr = staking[kindOfNFT].split('&').filter((tokenId, idx) => {
+    //   index++;
+    //   if(param.token_id.includes(tokenId)) {
+    //     // staking time도 같이 제거
+    //     newStakingTimeArr.splice(index, 1)
+    //     index--;
+    //     return false;
+    //   }
+    //   return true;
+    // }).join('&');
+    // staking[kindOfNFT] = newTokenIdArr;
+    // staking[stakingTimeName] = newStakingTimeArr.join('&');
+    // const NFTAmount = kindOfNFT + '_amount'
+    // if (newTokenIdArr === '') staking[NFTAmount] = 0
+    // else staking[NFTAmount] = newTokenIdArr.split('&').length;
+    // await this.stakingQueryRepo.update(staking, "user_address", public_address);    
 
-    return new PageResObj({}, 'Unstaking에 성공하였습니다.')
+    // return new PageResObj({}, 'Unstaking에 성공하였습니다.')
   }
 
   @Transaction()
