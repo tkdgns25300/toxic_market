@@ -351,76 +351,76 @@ export class StakingService {
      * 2단계 : 누락된 토큰들에 대해 TP지급, staking 업데이트, 로그 생성
      */
     
-    // 유저에게 TP지급
-    let amount = toxicArr.length * 20 + foolkatArr.length * 4 + succubusArr.length * 10 + toxicSpecialArr.length * 30
-    if (user_staking.id >= 1 && user_staking.id <= 298) amount *= 2;
-    if (user_staking.id >= 299 && user_staking.id <= 316) amount *= 1;
-    if (user_staking.id >= 317) amount *= 0;
+    // // 유저에게 TP지급
+    // let amount = toxicArr.length * 20 + foolkatArr.length * 4 + succubusArr.length * 10 + toxicSpecialArr.length * 30
+    // if (user_staking.id >= 1 && user_staking.id <= 298) amount *= 2;
+    // if (user_staking.id >= 299 && user_staking.id <= 316) amount *= 1;
+    // if (user_staking.id >= 317) amount *= 0;
 
-    const user = await this.userQueryRepo.findOne("public_address", param.public_address);
-    if (amount !== 0) {
-      user.CF_balance += amount;
-      await this.userQueryRepo.update(user, "public_address", param.public_address)
-    }
+    // const user = await this.userQueryRepo.findOne("public_address", param.public_address);
+    // if (amount !== 0) {
+    //   user.CF_balance += amount;
+    //   await this.userQueryRepo.update(user, "public_address", param.public_address)
+    // }
 
-    // staking 업데이트
-    if (amount !== 0) {
-      user_staking.total_payments += amount;
-    }
-    if (toxicArr.length > 0) {
-      if (user_staking.toxic_ape === null || user_staking.toxic_ape === '') {
-        user_staking.toxic_ape = toxicArr.join('&')
-        user_staking.toxic_ape_staking_time = new Array(toxicArr.length).fill(new Date().toISOString()).join('&')
-      } else {
-        user_staking.toxic_ape += '&' + toxicArr.join('&')
-        user_staking.toxic_ape_staking_time += '&' + new Array(toxicArr.length).fill(new Date().toISOString()).join('&')
-      }
-      user_staking.toxic_ape_amount = user_staking.toxic_ape.split('&').length;
-    }
-    if (foolkatArr.length > 0) {
-      if (user_staking.foolkat === null || user_staking.foolkat === '') {
-        user_staking.foolkat = foolkatArr.join('&')
-        user_staking.foolkat_staking_time = new Array(foolkatArr.length).fill(new Date().toISOString()).join('&')
-      } else {
-        user_staking.foolkat += '&' + foolkatArr.join('&')
-        user_staking.foolkat_staking_time += '&' + new Array(foolkatArr.length).fill(new Date().toISOString()).join('&')
-      }
-      user_staking.foolkat_amount = user_staking.foolkat.split('&').length;
-    }
-    if (succubusArr.length > 0) {
-      if (user_staking.succubus === null || user_staking.succubus === '') {
-        user_staking.succubus = succubusArr.join('&')
-        user_staking.succubus_staking_time = new Array(succubusArr.length).fill(new Date().toISOString()).join('&')
-      } else {
-        user_staking.succubus += '&' + succubusArr.join('&')
-        user_staking.succubus_staking_time += '&' + new Array(succubusArr.length).fill(new Date().toISOString()).join('&')
-      }
-      user_staking.succubus_amount = user_staking.succubus.split('&').length;
-    }
-    if (toxicSpecialArr.length > 0) {
-      if (user_staking.toxic_ape_special === null || user_staking.toxic_ape_special === '') {
-        user_staking.toxic_ape_special = toxicSpecialArr.join('&')
-        user_staking.toxic_ape_special_staking_time = new Array(toxicSpecialArr.length).fill(new Date().toISOString()).join('&')
-      } else {
-        user_staking.toxic_ape_special += '&' + toxicSpecialArr.join('&')
-        user_staking.toxic_ape_special_staking_time += '&' + new Array(toxicSpecialArr.length).fill(new Date().toISOString()).join('&')
-      }
-      user_staking.toxic_ape_special_amount = user_staking.toxic_ape_special.split('&').length;
-    }
-    await this.stakingQueryRepo.update(user_staking, "user_address", param.public_address)
+    // // staking 업데이트
+    // if (amount !== 0) {
+    //   user_staking.total_payments += amount;
+    // }
+    // if (toxicArr.length > 0) {
+    //   if (user_staking.toxic_ape === null || user_staking.toxic_ape === '') {
+    //     user_staking.toxic_ape = toxicArr.join('&')
+    //     user_staking.toxic_ape_staking_time = new Array(toxicArr.length).fill(new Date().toISOString()).join('&')
+    //   } else {
+    //     user_staking.toxic_ape += '&' + toxicArr.join('&')
+    //     user_staking.toxic_ape_staking_time += '&' + new Array(toxicArr.length).fill(new Date().toISOString()).join('&')
+    //   }
+    //   user_staking.toxic_ape_amount = user_staking.toxic_ape.split('&').length;
+    // }
+    // if (foolkatArr.length > 0) {
+    //   if (user_staking.foolkat === null || user_staking.foolkat === '') {
+    //     user_staking.foolkat = foolkatArr.join('&')
+    //     user_staking.foolkat_staking_time = new Array(foolkatArr.length).fill(new Date().toISOString()).join('&')
+    //   } else {
+    //     user_staking.foolkat += '&' + foolkatArr.join('&')
+    //     user_staking.foolkat_staking_time += '&' + new Array(foolkatArr.length).fill(new Date().toISOString()).join('&')
+    //   }
+    //   user_staking.foolkat_amount = user_staking.foolkat.split('&').length;
+    // }
+    // if (succubusArr.length > 0) {
+    //   if (user_staking.succubus === null || user_staking.succubus === '') {
+    //     user_staking.succubus = succubusArr.join('&')
+    //     user_staking.succubus_staking_time = new Array(succubusArr.length).fill(new Date().toISOString()).join('&')
+    //   } else {
+    //     user_staking.succubus += '&' + succubusArr.join('&')
+    //     user_staking.succubus_staking_time += '&' + new Array(succubusArr.length).fill(new Date().toISOString()).join('&')
+    //   }
+    //   user_staking.succubus_amount = user_staking.succubus.split('&').length;
+    // }
+    // if (toxicSpecialArr.length > 0) {
+    //   if (user_staking.toxic_ape_special === null || user_staking.toxic_ape_special === '') {
+    //     user_staking.toxic_ape_special = toxicSpecialArr.join('&')
+    //     user_staking.toxic_ape_special_staking_time = new Array(toxicSpecialArr.length).fill(new Date().toISOString()).join('&')
+    //   } else {
+    //     user_staking.toxic_ape_special += '&' + toxicSpecialArr.join('&')
+    //     user_staking.toxic_ape_special_staking_time += '&' + new Array(toxicSpecialArr.length).fill(new Date().toISOString()).join('&')
+    //   }
+    //   user_staking.toxic_ape_special_amount = user_staking.toxic_ape_special.split('&').length;
+    // }
+    // await this.stakingQueryRepo.update(user_staking, "user_address", param.public_address)
 
-    // 로그 생성
-    if (amount !== 0) {
-      const log = {
-        toxic_ape_amount: toxicArr.length,
-        foolkat_amount: foolkatArr.length,
-        succubus_amount: succubusArr.length,
-        toxic_ape_special_amount: toxicSpecialArr.length,
-        payment_amount: amount,
-        staking_id: user_staking.id
-      }
-      await this.stakingLogQueryRepo.create(log)
-    }
+    // // 로그 생성
+    // if (amount !== 0) {
+    //   const log = {
+    //     toxic_ape_amount: toxicArr.length,
+    //     foolkat_amount: foolkatArr.length,
+    //     succubus_amount: succubusArr.length,
+    //     toxic_ape_special_amount: toxicSpecialArr.length,
+    //     payment_amount: amount,
+    //     staking_id: user_staking.id
+    //   }
+    //   await this.stakingLogQueryRepo.create(log)
+    // }
 
     return new PageResObj(
 			{
@@ -428,9 +428,9 @@ export class StakingService {
         foolkatArr,
         succubusArr,
         toxicSpecialArr,
-        amount,
-        user,
-        user_staking,
+        // amount,
+        // user,
+        // user_staking,
 			},
 			"리워딩에 성공하였습니다."
 		);
