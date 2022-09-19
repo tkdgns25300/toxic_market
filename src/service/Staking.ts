@@ -121,7 +121,7 @@ export class StakingService {
       }
     }
 
-    // return new PageResObj({}, "Staking에 성공하였습니다.");
+    return new PageResObj({}, "Staking에 성공하였습니다.");
     
     // // 1. transfer NFT + set staking time
     // const stakingTimeArr = []
