@@ -248,15 +248,16 @@ export class StakingService {
 
       // Update Staking Data
       const staking = await this.stakingQueryRepo.findOne('user_address', public_address)
+      const newTokenIdArr = staking[kindOfNFT].split('&')
       const newStakingTimeArr = staking[stakingTimeName].split('&')
-      const newTokenIdArr = staking[kindOfNFT].split('&').filter((id, idx) => {
-        if (tokenId === id) {
-          newStakingTimeArr.splice(idx, 1)
-          return false;
-        }
-      })
+
+      const deleteIndex = newTokenIdArr.findIndex(e => e === tokenId)
+      newTokenIdArr.splice(deleteIndex, 1);
+      newStakingTimeArr.splice(deleteIndex, 1);
+
       staking[kindOfNFT] = newTokenIdArr.join('&');
       staking[stakingTimeName] = newStakingTimeArr.join('&');
+      
       if (staking[kindOfNFT] === '') staking[NFTAmount] = 0
       else staking[NFTAmount] = staking[kindOfNFT].split('&').length;
       await this.stakingQueryRepo.update(staking, "user_address", public_address);
