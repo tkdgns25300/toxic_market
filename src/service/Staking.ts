@@ -257,7 +257,7 @@ export class StakingService {
       })
       staking[kindOfNFT] = newTokenIdArr.join('&');
       staking[stakingTimeName] = newStakingTimeArr.join('&');
-      if (newTokenIdArr === '') staking[NFTAmount] = 0
+      if (staking[kindOfNFT] === '') staking[NFTAmount] = 0
       else staking[NFTAmount] = staking[kindOfNFT].split('&').length;
       await this.stakingQueryRepo.update(staking, "user_address", public_address);
     }
