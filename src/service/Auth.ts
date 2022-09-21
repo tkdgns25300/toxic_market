@@ -136,18 +136,24 @@ export class AuthService {
   }
 
   async isHolder(owner: string) {
-    const contracts = [
+    const klaytnContracts = [
       process.env.TOXIC_APE,
       // process.env.FOOLKATS,
       // process.env.SUCCUBUS,
       // process.env.TOXIC_APE_SPECIAL,
     ];
+    const ethereumContracts = [
+      process.env.CATBOTICA
+    ];
 
-    // for each contract address make query if length is greater than 0 , then it is holder
-    for (const i of contracts) {
+    let toxicHolder = false;
+    let catboticaHolder = false;
+
+    // Tox Holder Check
+    for (const contract of klaytnContracts) {
       const res = await axios({
         method: "get",
-        url: `https://th-api.klaytnapi.com/v2/contract/nft/${i}/owner/${owner}`,
+        url: `https://th-api.klaytnapi.com/v2/contract/nft/${contract}/owner/${owner}`,
         headers: {
           "x-chain-id": process.env.KLAYTN_API_X_CHAIN_ID
             ? process.env.KLAYTN_API_X_CHAIN_ID
@@ -156,10 +162,22 @@ export class AuthService {
         },
       });
       if (res.data.items.length > 0) {
-        return true;
+        toxicHolder = true;
       }
     }
-    return false;
+
+    // Catbotica Holder Check
+    for (const contract of ethereumContracts) {
+      const res = await ({
+        method: "get",
+        url: `https://api.blocksdk.com/v2/eth/erc721-tokens/${contract}/${owner}/owner`,
+        headers: {
+          "X-API-TOKEN": process.env.ETHEREUM_API_KEY
+        }
+      })
+    }
+
+    return toxicHolder || catboticaHolder
   }
 
   async checkStakingHolder(public_address: string): Promise<PageResObj<string>> {
