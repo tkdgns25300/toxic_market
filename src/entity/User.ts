@@ -156,4 +156,20 @@ export class User extends BaseEntity {
     comment: "소개글"
   })
   introduction: string;
+
+  @Column({
+    type: "varchar",
+    length: 1,
+    default: "X",
+    comment: "Toxic Ape 프로젝트 여부"
+  })
+  toxic_project: string;
+
+  @Column({
+    type: "varchar",
+    length: 1,
+    default: "X",
+    comment: "Catbotica 프로젝트 여부"
+  })
+  catbotica_project: string;
 }

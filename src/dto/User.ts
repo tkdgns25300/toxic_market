@@ -91,6 +91,16 @@ export class UserDto {
   @IsString({ message: "문자열이 아닙니다." })
   @IsOptional()
   introduction: string
+
+  @IsString({ message: "문자열이 아닙니다." })
+  @MaxLength(1, { message: "최대 1자까지 입력됩니다." })
+  @IsOptional()
+  toxic_project: string
+
+  @IsString({ message: "문자열이 아닙니다." })
+  @MaxLength(1, { message: "최대 1자까지 입력됩니다." })
+  @IsOptional()
+  catbotica_project: string
 }
 
 export class UserIdPasswordDto {
