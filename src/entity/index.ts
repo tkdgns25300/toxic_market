@@ -10,5 +10,6 @@ import { Bank } from "./Bank";
 import { BankLog } from "./BankLog";
 import { Staking } from "./Staking";
 import { StakingLog } from "./StakingLog";
+import { ExchangeLog } from "./ExchangeLog";
 
-export { User, Product, Log, Auction, BidLog, Raffle, RaffleLog, Banner, Bank, BankLog, Staking, StakingLog };
+export { User, Product, Log, Auction, BidLog, Raffle, RaffleLog, Banner, Bank, BankLog, Staking, StakingLog, ExchangeLog };

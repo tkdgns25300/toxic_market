@@ -11,5 +11,7 @@ import { BannerDto } from "./Banner";
 import { BankDto } from "./Bank";
 import { BankLogDto } from "./BankLog";
 import { StakingDto } from "./Staking";
+import { ExchangeLogDto } from "./ExchangeLog";
 
-export { ExchangeDto, UserDto, ProductDto, LogDto, ImageUploadDto, AuctionDto, BidDto, RaffleDto, RaffleLogDto, BannerDto, BankDto, BankLogDto, StakingDto };
+
+export { ExchangeDto, UserDto, ProductDto, LogDto, ImageUploadDto, AuctionDto, BidDto, RaffleDto, RaffleLogDto, BannerDto, BankDto, BankLogDto, StakingDto, ExchangeLogDto };
