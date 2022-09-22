@@ -167,18 +167,23 @@ export class AuthService {
     }
 
     // Catbotica Holder Check
-    // for (const contract of ethereumContracts) {
-    //   const res = await ({
-    //     method: "get",
-    //     url: `https://api.blocksdk.com/v2/eth/erc721-tokens/${contract}/${owner}/owner`,
-    //     headers: {
-    //       "X-API-TOKEN": process.env.ETHEREUM_API_KEY
-    //     }
-    //   })
-    // }
+    for (const contract of ethereumContracts) {
+      const res = await axios({
+        method: "get",
+        url: `https://eth-mainnet.g.alchemy.com/nft/v2/${process.env.ALCHEMY_API_KEY}/getNFTs`,
+        params: {
+          owner: owner,
+          'contractAddresses[]': contract,
+          withMetadata: 'false'
+        },
+        headers: {accept: 'application/json'}
+      });
+      if(res.data.ownedNfts.length > 0) {
+        catboticaHolder = true;
+      }
+    }
 
-    // return toxicHolder || catboticaHolder
-    return toxicHolder;
+    return toxicHolder || catboticaHolder;
   }
 
   async checkStakingHolder(public_address: string): Promise<PageResObj<string>> {

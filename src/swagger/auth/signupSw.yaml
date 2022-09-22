@@ -4,6 +4,13 @@ paths:
       tags:
         - Auth
       summary: signup
+      parameters:
+        - name: address
+          in: path
+          required: true
+          description: public address
+          schema:
+            type: string
 
       responses:
         200:
