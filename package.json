@@ -41,7 +41,8 @@
     "typeorm": "^0.2.38",
     "typeorm-naming-strategies": "^2.0.0",
     "typeorm-typedi-extensions": "^0.4.1",
-    "uniqid": "^5.4.0"
+    "uniqid": "^5.4.0",
+    "web3": "^1.8.0"
   },
   "scripts": {
     "start": "cross-env NODE_ENV=production ts-node src/index.ts",

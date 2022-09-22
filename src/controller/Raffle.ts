@@ -112,8 +112,7 @@ export class RaffleController {
   @Get("/find/:id")
   public async getOne(@Param("id") id: number, @Res() res: Response) {
     try {
-      const is_admin = res.locals.jwtPayload.admin;
-      return await this.raffleService.getOne(id, is_admin);
+      return await this.raffleService.getOne(id);
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);

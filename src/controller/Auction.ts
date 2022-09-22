@@ -164,8 +164,7 @@ export class AuctionController {
   @Get("/find/:id")
   public async getOne(@Param("id") id: number, @Res() res: Response) {
     try {
-      const { admin } = res.locals.jwtPayload;
-      return await this.auctionService.findOne(id, admin);
+      return await this.auctionService.findOne(id);
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);

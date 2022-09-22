@@ -105,7 +105,7 @@ export class AuctionService {
   }
 
 
-  async findOne(id: number, withUser: boolean): Promise<PageResObj<Auction | {}>> {
+  async findOne(id: number): Promise<PageResObj<Auction | {}>> {
     const joinTable = [{property: "Auction.bid_logs", alias: "bid_log"}, {property: "Auction.creator", alias: "user"}]
 
     const result = await this.auctionQueryRepo.findOne("id", id, joinTable);
@@ -119,11 +119,10 @@ export class AuctionService {
     }
     result.bid_logs = newBidLog;
     delete result.creator.password_hash;
-    if(!withUser) {
-      result.bid_logs.map(a => {
-        a.bidder = `${a.bidder.slice(0,3)}******${a.bidder.slice(-3)}`
-      })
-    }
+    // 지갑 별표 표시
+    result.bid_logs.map(a => {
+      a.bidder = `${a.bidder.slice(0,3)}******${a.bidder.slice(-3)}`
+    })
     result.bid_logs.reverse();
     return new PageResObj(result, "Auction 조회에 성공했습니다.");
   }
