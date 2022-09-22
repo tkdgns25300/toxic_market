@@ -167,17 +167,18 @@ export class AuthService {
     }
 
     // Catbotica Holder Check
-    for (const contract of ethereumContracts) {
-      const res = await ({
-        method: "get",
-        url: `https://api.blocksdk.com/v2/eth/erc721-tokens/${contract}/${owner}/owner`,
-        headers: {
-          "X-API-TOKEN": process.env.ETHEREUM_API_KEY
-        }
-      })
-    }
+    // for (const contract of ethereumContracts) {
+    //   const res = await ({
+    //     method: "get",
+    //     url: `https://api.blocksdk.com/v2/eth/erc721-tokens/${contract}/${owner}/owner`,
+    //     headers: {
+    //       "X-API-TOKEN": process.env.ETHEREUM_API_KEY
+    //     }
+    //   })
+    // }
 
-    return toxicHolder || catboticaHolder
+    // return toxicHolder || catboticaHolder
+    return toxicHolder;
   }
 
   async checkStakingHolder(public_address: string): Promise<PageResObj<string>> {

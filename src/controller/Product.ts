@@ -37,7 +37,6 @@ export class ProductController {
   }
 
   @Get("/find/:id")
-  @UseBefore(checkAccessToken)
   public async getOne(@Param("id") id: number, @Res() res: Response) {
     try {
       return await this.productService.findOne(id);

@@ -124,7 +124,6 @@ export class AuctionController {
   }
 
   @Get("/newest")
-  @UseBefore(checkAccessToken)
   public async getNewest() {
   try {
     return await this.auctionService.getNewest();
@@ -137,7 +136,6 @@ export class AuctionController {
 }
 
   @Get("/approved")
-  @UseBefore(checkAccessToken)
   public async getAllApproved(@QueryParams() param: PageReq) {
   try {
     return await this.auctionService.findAllApproved(param);
@@ -164,7 +162,6 @@ export class AuctionController {
   }
 
   @Get("/find/:id")
-  @UseBefore(checkAccessToken)
   public async getOne(@Param("id") id: number, @Res() res: Response) {
     try {
       const { admin } = res.locals.jwtPayload;

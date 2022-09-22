@@ -84,7 +84,6 @@ export class RaffleController {
   }
 
   @Get("/approved")
-  @UseBefore(checkAccessToken)
   public async getAllApproved(@QueryParams() params: PageReq) {
     try {
       return await this.raffleService.findAllApproved(params);
@@ -111,7 +110,6 @@ export class RaffleController {
   }
 
   @Get("/find/:id")
-  @UseBefore(checkAccessToken)
   public async getOne(@Param("id") id: number, @Res() res: Response) {
     try {
       const is_admin = res.locals.jwtPayload.admin;
