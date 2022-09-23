@@ -1,0 +1,48 @@
+paths:
+  /auth/holder/{address}:
+    get:
+      tags:
+        - Auth
+      summary: Check which projdct holder
+      consumes:
+        - application/json
+      parameters:
+        - name: address
+          in: path
+          required: true
+          description: public address
+          schema:
+            type: string
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: 홀더 체크에 성공하였습니다.
+                  item:
+                    type: object
+                    properties: 
+                      toxicHolder:
+                        type: string
+                        default: "O"
+                      catboticaHolder:
+                        type: string
+                        default: "O"
+
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http

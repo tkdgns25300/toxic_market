@@ -196,6 +196,10 @@ export class AuthService {
 
   async checkHolder(public_address: string): Promise<PageResObj<any>> {
     const projectHolder = await this.checkProjectHolder(public_address);
-    return new PageResObj(projectHolder, "홀더 체크에 성공하였습니다.")
+    const result = {
+      toxicHolder: projectHolder.toxicHolder ? 'O' : 'X',
+      catboticaHolder: projectHolder.catboticaHolder ? 'O' : 'X',
+    }
+    return new PageResObj(result, "홀더 체크에 성공하였습니다.")
   }
 }
