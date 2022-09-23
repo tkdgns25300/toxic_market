@@ -101,8 +101,8 @@ export class AuthService {
   }
 
   async signup(public_address: string): Promise<PageResObj<User | {}>> {
-    let isHolder = await this.isHolder(public_address);
-    if (!isHolder) {
+    let checkProjectHolder = await this.checkProjectHolder(public_address);
+    if (checkProjectHolder.toxicHolder || checkProjectHolder.catboticaHolder) {
       return new PageResObj(
         { public_address },
         "톡시 NFT 홀더만 가입 가능합니다.",
@@ -135,7 +135,7 @@ export class AuthService {
     return new PageResObj(result, "회원가입에 성공했습니다.");
   }
 
-  async isHolder(owner: string) {
+  async checkProjectHolder(owner: string) {
     const klaytnContracts = [
       process.env.TOXIC_APE,
       // process.env.FOOLKATS,
@@ -183,7 +183,7 @@ export class AuthService {
       }
     }
 
-    return (toxicHolder || catboticaHolder);
+    return { toxicHolder, catboticaHolder };
   }
 
   async checkStakingHolder(public_address: string): Promise<PageResObj<string>> {
@@ -193,4 +193,9 @@ export class AuthService {
     }
     return new PageResObj('X', "Toxic_Ape 홀더가 아닙니다.")
     }
+
+  async checkHolder(public_address: string): Promise<PageResObj<any>> {
+    const projectHolder = await this.checkProjectHolder(public_address);
+    return new PageResObj(projectHolder, "홀더 체크에 성공하였습니다.")
+  }
 }
