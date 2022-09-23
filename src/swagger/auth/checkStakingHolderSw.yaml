@@ -1,5 +1,5 @@
 paths:
-  /auth/holder/{address}:
+  /auth/holder/staking/{address}:
     get:
       tags:
         - Auth

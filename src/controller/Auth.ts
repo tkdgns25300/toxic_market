@@ -102,7 +102,7 @@ export class AuthController {
     }
   }
 
-  @Get("/holder/:address")
+  @Get("/holder/staking/:address")
   public async checkStakingHolder(@Param("address") address: string) {
     try {
       return this.authService.checkStakingHolder(address);

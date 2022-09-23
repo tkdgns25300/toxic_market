@@ -183,7 +183,7 @@ export class AuthService {
       }
     }
 
-    return toxicHolder || catboticaHolder;
+    return (toxicHolder || catboticaHolder);
   }
 
   async checkStakingHolder(public_address: string): Promise<PageResObj<string>> {
