@@ -91,9 +91,21 @@ export class AuthController {
   }
 
   @Get("/signup/:address")
-  public async signup(@Param("address") address: string) {
+  public async signUpWallet(@Param("address") address: string) {
     try {
-      return this.authService.signup(address);
+      return this.authService.signUpWallet(address);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
+
+  @Post("/signup")
+  public async signUpGeneral(@Param("address") address: string) {
+    try {
+      return this.authService.signUpGeneral(address);
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);

@@ -100,7 +100,7 @@ export class AuthService {
     return new PageResObj({ token }, "로그인 성공하였습니다.", false);
   }
 
-  async signup(public_address: string): Promise<PageResObj<User | {}>> {
+  async signUpWallet(public_address: string): Promise<PageResObj<User | {}>> {
     let checkProjectHolder = await this.checkProjectHolder(public_address);
     if (checkProjectHolder.toxicHolder || checkProjectHolder.catboticaHolder) {
       return new PageResObj(
@@ -134,6 +134,41 @@ export class AuthService {
     );
     return new PageResObj(result, "회원가입에 성공했습니다.");
   }
+
+  async signUpGeneral(public_address: string): Promise<PageResObj<User | {}>> {
+    let checkProjectHolder = await this.checkProjectHolder(public_address);
+    if (checkProjectHolder.toxicHolder || checkProjectHolder.catboticaHolder) {
+      return new PageResObj(
+        { public_address },
+        "톡시 NFT 홀더만 가입 가능합니다.",
+        true
+      );
+    }
+
+    const isUnique = await this.userQueryRepo.findOne(
+      "public_address",
+      public_address
+    );
+    if (isUnique) {
+      return new PageResObj(
+        { public_address },
+        "이미 존재하는 지갑 주소입니다.",
+        true
+      );
+    }
+    const user = {
+      public_address: public_address,
+      nonce: String(Math.floor(Math.random() * 1000000)),
+      point_balance: 0,
+    };
+
+    const createResult = await this.userQueryRepo.create(user);
+    const result = await this.userQueryRepo.findOne(
+      "public_address",
+      createResult.identifiers[0].public_address
+    );
+    return new PageResObj(result, "회원가입에 성공했습니다.");
+  }  
 
   async checkProjectHolder(owner: string) {
     const klaytnContracts = [
