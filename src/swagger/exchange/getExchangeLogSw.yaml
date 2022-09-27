@@ -1,0 +1,88 @@
+paths:
+  /exchange/log:
+    get:
+      tags:
+        - Exchange
+      summary: Exchange Log
+      consumes:
+        - application/json
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          description: rows per page
+          schema:
+            type: integer
+        - name: pageNo
+          in: query
+          required: false
+          description: page number
+          schema:
+            type: integer
+        - name: user_toxic_project
+          in: query
+          required: false
+          description: 참여 프로젝트(톡시)
+          schema:
+            type: string
+        - name: user_catbotica_project
+          in: query
+          required: false
+          description: 참여 프로젝트(캣보티카)
+          schema:
+            type: string
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalCount:
+                    type: integer
+                    description: 전체 ExchangeLog의 갯수
+                    example: 10
+                  pageSize:
+                    type: integer
+                    description: 페이지의 최대 ExchangeLog의 갯수; limit, pageNo 를 0으로 보낼 시 null
+                    example: 1
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: Exchange Log 목록을 찾는데 성공했습니다.
+                  items:
+                    type: array
+                    items:
+                      properties:
+                        id:
+                          type: number
+                        user_type:
+                          type: string
+                        user_toxic_project:
+                          type: string
+                        user_catbotica_project:
+                          type: string
+                        user_id:
+                          type: string
+                        exchange_point:
+                          type: number
+                        exchange_coin:
+                          type: number
+                        commission:
+                          type: number
+                        return_commission:
+                          type: number
+                        creator_address:
+                          type: string
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http

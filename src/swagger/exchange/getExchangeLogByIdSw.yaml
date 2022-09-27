@@ -1,0 +1,62 @@
+paths:
+  /exchange/log/{id}:
+    get:
+      tags:
+        - Exchange
+      summary: Exchange Log point to coin
+      consumes:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: exchange log id
+          schema:
+            type: number
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: Exchange Log를 찾는데 성공했습니다.
+                  item:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      user_type:
+                        type: string
+                      user_toxic_project:
+                        type: string
+                      user_catbotica_project:
+                        type: string
+                      user_id:
+                        type: string
+                      exchange_point:
+                        type: number
+                      exchange_coin:
+                        type: number
+                      commission:
+                        type: number
+                      return_commission:
+                        type: number
+                      creator_address:
+                        type: string
+
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http

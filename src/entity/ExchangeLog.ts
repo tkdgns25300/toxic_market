@@ -36,6 +36,16 @@ export class ExchangeLog extends BaseEntity {
   user_catbotica_project: string;
 
   @Column({
+    type: "varchar",
+    length: 20,
+    default: null,
+    nullable: true,
+    unique: true,
+    comment: "아이디"
+  })
+  user_id: string;
+
+  @Column({
     type: "int",
     default: null,
     nullable: true,
@@ -63,6 +73,14 @@ export class ExchangeLog extends BaseEntity {
     comment: "수수료"
   })
   return_commission: number;
+
+  @Column({
+    type: "char",
+    length: 42,
+    comment: "생성한 사용자",
+    nullable: true
+  })
+  creator_address: string;
 
   @ManyToOne(() => User, (user) => user.public_address, {
     createForeignKeyConstraints: false
