@@ -2,7 +2,7 @@ import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import Caver from "caver-js";
 import { UserQueryRepo } from "../repository/User";
-import { User } from "../entity";
+import { ExchangeLog, User } from "../entity";
 import { PageResObj } from "../api";
 import { ABI, TOX_CONTRACT_ADDRESS } from "../middlewares/smartContract";
 import { EntityManager, Transaction, TransactionManager } from "typeorm";
@@ -84,25 +84,22 @@ export class ExchangeService {
   }
 
   @Transaction()
-  async pointToTox(
-    point_amount: number,
-    public_address: string,
-    @TransactionManager() manager: EntityManager
-  ) {
-    const user: User = await manager.findOne(User, {
-      public_address: public_address,
-    });
+  async pointToTox(point_amount: number, public_address: string, @TransactionManager() manager: EntityManager) {
+    const user: User = await manager.findOne(User, { public_address: public_address });
+    // 1. 포인트 감소
     if (point_amount < 1000) return new PageResObj({}, "1000TP 이상부터 TOX 코인으로 교환 가능합니다.", true);
     if (user.CF_balance < point_amount) {
       return new PageResObj({}, "포인트가 부족합니다.");
     }
     user.CF_balance = user.CF_balance - point_amount;
     await manager.update(User, public_address, user);
-    const amountOfCoins = BigInt(point_amount * 0.090 * Math.pow(10, 18)); // 9% of pointAmount COMMISSION 3%
+
+    // 2. Transaction Send
+    const amountOfCoins = BigInt(point_amount * 0.090 * Math.pow(10, 18)); // 9% of pointAmount
     const commissionFee = BigInt(point_amount * 0.010 * Math.pow(10, 18)); // 1% of pointAmount
     // @ts-ignore
     const contractInstance = caver.contract.create(ABI, TOX_CONTRACT_ADDRESS);
-    //sending 97% coin from SaveAccount to User
+    //sending 90% coin from SaveAccount to User
     await contractInstance.send(
       {
         from: keyring.address,
@@ -112,7 +109,7 @@ export class ExchangeService {
       public_address,
       `${amountOfCoins}`
     );
-    //sending 3% coin from SavingAccount to Commission Wallet
+    //sending 10% coin from SavingAccount to Commission Wallet
     await contractInstance.send(
       {
         from: keyring.address,
@@ -122,9 +119,22 @@ export class ExchangeService {
       process.env.COMMISSION_WALLET,
       `${commissionFee}`
     );
-    return new PageResObj(
-      user,
-      "포인트를 TOX 코인으로 교환하는데 성공했습니다."
-    );
+
+    // 3. Create Exchange Log
+    const exchangeLog = {
+      user_type: user.is_seller === 'O' ? UserType.SELLER : UserType.GENERAL,
+      user_toxic_project: user.toxic_project,
+      user_catbotica_project: user.catbotica_project,
+      user_id: user.id,
+      exchange_point: 0,
+      exchange_coin: point_amount * 0.09,
+      commission: 0,
+      return_commission: 0,
+      creator: user.public_address
+    }
+    const log = manager.create(ExchangeLog, exchangeLog)
+    await manager.save(ExchangeLog, log)
+
+    return new PageResObj(user, "포인트를 TOX 코인으로 교환하는데 성공했습니다.");
   }
 }
