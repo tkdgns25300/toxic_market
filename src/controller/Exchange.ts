@@ -5,6 +5,8 @@ import {
   UseBefore,
   Post,
   Get,
+  QueryParams,
+  Param,
 } from "routing-controllers";
 import { Response } from "express";
 import { Inject, Service } from "typedi";
@@ -14,6 +16,7 @@ import { ExchangeService } from "../service/Exchange";
 import { PageResObj } from "../api";
 import { checkAccessToken, checkAdminAccessToken } from "../middlewares/Auth";
 import { ExchangeDto } from "../dto";
+import { ExchangeLogSearchReq } from "../api/request/ExchangeLogSearchReq";
 
 @Service()
 @JsonController("/exchange")
@@ -49,29 +52,29 @@ export class ExchangeController {
     }
   }
 
-  // @Get("/log/coin")
-  // @UseBefore(checkAdminAccessToken)
-  // public async toxToPointLog() {
-  //   try {
-  //     return await this.exchangeService.toxToPointLog();
-  //   } catch (err) {
-  //     if (err instanceof QueryFailedError) {
-  //       return new PageResObj({}, err.message, true);
-  //     }
-  //     return new PageResObj({}, err.message, true);
-  //   }
-  // }
+  @Get("/log")
+  @UseBefore(checkAdminAccessToken)
+  public async findExchangeLogs(@QueryParams() param: ExchangeLogSearchReq) {
+    try {
+      return await this.exchangeService.findExchangeLogs(param);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
 
-  // @Get("/log/piont")
-  // @UseBefore(checkAdminAccessToken)
-  // public async pointToToxLog() {
-  //   try {
-  //     return await this.exchangeService.pointToToxLog();
-  //   } catch (err) {
-  //     if (err instanceof QueryFailedError) {
-  //       return new PageResObj({}, err.message, true);
-  //     }
-  //     return new PageResObj({}, err.message, true);
-  //   }
-  // }
+  @Get("/log/:id")
+  @UseBefore(checkAdminAccessToken)
+  public async findExchangeLogsById(@Param("id") id: number) {
+    try {
+      return await this.exchangeService.findExchangeLogsById(id);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
 }

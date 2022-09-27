@@ -3,11 +3,12 @@ import { InjectRepository } from "typeorm-typedi-extensions";
 import Caver from "caver-js";
 import { UserQueryRepo } from "../repository/User";
 import { ExchangeLog, User } from "../entity";
-import { PageResObj } from "../api";
+import { PageResList, PageResObj } from "../api";
 import { ABI, TOX_CONTRACT_ADDRESS } from "../middlewares/smartContract";
 import { EntityManager, Transaction, TransactionManager } from "typeorm";
 import { UserType } from "../enum";
 import { ExchangeLogQueryRepo } from "../repository/ExchangeLog";
+import { ExchangeLogSearchReq } from "../api/request/ExchangeLogSearchReq";
 
 const caver = new Caver("https://public-node-api.klaytnapi.com/v1/cypress");
 //const caver = new Caver('https://api.baobab.klaytn.net:8651/')
@@ -26,10 +27,7 @@ export class ExchangeService {
   ) {}
 
 
-  async toxToPoint(
-    amount: number,
-    public_address: string
-  ) {
+  async toxToPoint(amount: number, public_address: string): Promise<PageResObj<User | {}>> {
     // @ts-ignore
     const contractInstance = caver.contract.create(ABI, TOX_CONTRACT_ADDRESS);
     const user: User = await this.userQueryRepo.findOne("public_address", public_address);
@@ -84,7 +82,7 @@ export class ExchangeService {
   }
 
   @Transaction()
-  async pointToTox(point_amount: number, public_address: string, @TransactionManager() manager: EntityManager) {
+  async pointToTox(point_amount: number, public_address: string, @TransactionManager() manager: EntityManager): Promise<PageResObj<User | {}>> {
     const user: User = await manager.findOne(User, { public_address: public_address });
     // 1. 포인트 감소
     if (point_amount < 1000) return new PageResObj({}, "1000TP 이상부터 TOX 코인으로 교환 가능합니다.", true);
@@ -136,5 +134,22 @@ export class ExchangeService {
     await manager.save(ExchangeLog, log)
 
     return new PageResObj(user, "포인트를 TOX 코인으로 교환하는데 성공했습니다.");
+  }
+
+  async findExchangeLogs(paramObj: ExchangeLogSearchReq): Promise<PageResList<ExchangeLog>> {
+    const result = await this.exchangeLogQueryRepo.findExchangeLogs(paramObj);
+    return new PageResList<ExchangeLog>(
+      result[1],
+      paramObj.limit,
+      result[0].map((el: ExchangeLog) => {
+        return el;
+      }),
+      "Exchange Log 목록을 찾는데 성공했습니다."
+    );
+  }
+
+  async findExchangeLogsById(id: number): Promise<PageResObj<ExchangeLog>> {
+    const result = await this.exchangeLogQueryRepo.findOne("id", id);
+    return new PageResObj(result, "Exchange Log를 찾는데 성공했습니다.")
   }
 }

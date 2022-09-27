@@ -3,7 +3,7 @@ paths:
     get:
       tags:
         - Auth
-      summary: Check which projdct holder
+      summary: Check which project holder
       consumes:
         - application/json
       parameters:
