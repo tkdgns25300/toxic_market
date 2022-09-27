@@ -3,7 +3,7 @@ paths:
     get:
       tags:
         - Auth
-      summary: signup
+      summary: signup with wallet
       parameters:
         - name: address
           in: path
