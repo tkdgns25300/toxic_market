@@ -21,12 +21,19 @@ export class ExchangeLog extends BaseEntity {
 
   @Column({
     type: "varchar",
-    length: 20,
-    default: null,
-    nullable: true,
-    comment: "사용자 아이디"
+    length: 1,
+    default: "X",
+    comment: "Toxic 프로젝트 여부"
   })
-  user_id: string;
+  user_toxic_project: string;
+
+  @Column({
+    type: "varchar",
+    length: 1,
+    default: "X",
+    comment: "Catbotica 프로젝트 여부"
+  })
+  user_catbotica_project: string;
 
   @Column({
     type: "int",

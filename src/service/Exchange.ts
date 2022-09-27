@@ -6,6 +6,8 @@ import { User } from "../entity";
 import { PageResObj } from "../api";
 import { ABI, TOX_CONTRACT_ADDRESS } from "../middlewares/smartContract";
 import { EntityManager, Transaction, TransactionManager } from "typeorm";
+import { UserType } from "../enum";
+import { ExchangeLogQueryRepo } from "../repository/ExchangeLog";
 
 const caver = new Caver("https://public-node-api.klaytnapi.com/v1/cypress");
 //const caver = new Caver('https://api.baobab.klaytn.net:8651/')
@@ -19,7 +21,8 @@ caver.wallet.add(keyring);
 export class ExchangeService {
   constructor(
     @InjectRepository()
-    readonly userQueryRepo: UserQueryRepo
+    readonly userQueryRepo: UserQueryRepo,
+    readonly exchangeLogQueryRepo: ExchangeLogQueryRepo
   ) {}
 
 
@@ -29,12 +32,10 @@ export class ExchangeService {
   ) {
     // @ts-ignore
     const contractInstance = caver.contract.create(ABI, TOX_CONTRACT_ADDRESS);
-    const user: User = await this.userQueryRepo.findOne(
-      "public_address", public_address);
+    const user: User = await this.userQueryRepo.findOne("public_address", public_address);
 
     // user.CF_balance = user.CF_balance + amount * 10 * 0.95; // 1 TOX = 10 POINT - 5% commission
     user.CF_balance = user.CF_balance + amount * 10 * 1; // NO COMMISSION
-
 
     // const amountOfCoins = BigInt(amount * 0.95 * Math.pow(10, 18)); // 95% of coin COMMISSION 5%
     // const commissionFee = BigInt(amount * 0.05 * Math.pow(10, 18)); // 5% of coin
@@ -46,7 +47,7 @@ export class ExchangeService {
       "transferFrom",
       public_address,
       keyring.address,
-        `${amountOfCoins}`
+      `${amountOfCoins}`
     );
     //update user CF_balance right after coin was transferred
     await this.userQueryRepo.update(user, "public_address", public_address);
@@ -64,6 +65,20 @@ export class ExchangeService {
         `${commissionFee}`
     );
     */
+
+    // Create Exchange Log
+    const exchangeLog = {
+      user_type: user.is_seller === 'O' ? UserType.SELLER : UserType.GENERAL,
+      user_toxic_project: user.toxic_project,
+      user_catbotica_project: user.catbotica_project,
+      user_id: user.id,
+      exchange_point: amount * 10,
+      exchange_coin: 0,
+      commission: 0,
+      return_commission: 0,
+      creator: user.public_address
+    }
+    await this.exchangeLogQueryRepo.create(exchangeLog)
 
     return new PageResObj(user, "TOX 코인을 포인트로 교환하는데 성공했습니다.");
   }
