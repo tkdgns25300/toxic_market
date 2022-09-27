@@ -49,29 +49,29 @@ export class ExchangeController {
     }
   }
 
-  @Get("/log/coin")
-  @UseBefore(checkAdminAccessToken)
-  public async toxToPointLog() {
-    try {
-      return await this.exchangeService.toxToPointLog();
-    } catch (err) {
-      if (err instanceof QueryFailedError) {
-        return new PageResObj({}, err.message, true);
-      }
-      return new PageResObj({}, err.message, true);
-    }
-  }
+  // @Get("/log/coin")
+  // @UseBefore(checkAdminAccessToken)
+  // public async toxToPointLog() {
+  //   try {
+  //     return await this.exchangeService.toxToPointLog();
+  //   } catch (err) {
+  //     if (err instanceof QueryFailedError) {
+  //       return new PageResObj({}, err.message, true);
+  //     }
+  //     return new PageResObj({}, err.message, true);
+  //   }
+  // }
 
-  @Get("/log/piont")
-  @UseBefore(checkAdminAccessToken)
-  public async pointToToxLog() {
-    try {
-      return await this.exchangeService.pointToToxLog();
-    } catch (err) {
-      if (err instanceof QueryFailedError) {
-        return new PageResObj({}, err.message, true);
-      }
-      return new PageResObj({}, err.message, true);
-    }
-  }
+  // @Get("/log/piont")
+  // @UseBefore(checkAdminAccessToken)
+  // public async pointToToxLog() {
+  //   try {
+  //     return await this.exchangeService.pointToToxLog();
+  //   } catch (err) {
+  //     if (err instanceof QueryFailedError) {
+  //       return new PageResObj({}, err.message, true);
+  //     }
+  //     return new PageResObj({}, err.message, true);
+  //   }
+  // }
 }

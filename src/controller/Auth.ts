@@ -18,7 +18,7 @@ import {
   generateAccessToken,
 } from "../middlewares/Auth";
 import { User } from "../entity";
-import { UserIdPasswordDto } from "../dto/User";
+import { UserIdPasswordDto, UserSignUpDto } from "../dto/User";
 
 @Service()
 @JsonController("/auth")
@@ -102,10 +102,10 @@ export class AuthController {
     }
   }
 
-  @Post("/signup")
-  public async signUpGeneral(@Param("address") address: string) {
+  @Post("/signup/:address")
+  public async signUpGeneral(@Param("address") address: string, @Body() params: UserSignUpDto) {
     try {
-      return this.authService.signUpGeneral(address);
+      return this.authService.signUpGeneral(address, params);
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);

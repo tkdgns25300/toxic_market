@@ -7,7 +7,7 @@ import { UserQueryRepo } from "../repository/User";
 import { User } from "../entity";
 import { PageResObj } from "../api";
 import { generateAccessToken } from "../middlewares/Auth";
-import { UserIdPasswordDto } from "../dto/User";
+import { UserIdPasswordDto, UserSignUpDto } from "../dto/User";
 import { hash } from "../util/hash";
 import { StakingQueryRepo } from "../repository/Staking";
 
@@ -135,40 +135,25 @@ export class AuthService {
     return new PageResObj(result, "회원가입에 성공했습니다.");
   }
 
-  async signUpGeneral(public_address: string): Promise<PageResObj<User | {}>> {
-    let checkProjectHolder = await this.checkProjectHolder(public_address);
-    if (checkProjectHolder.toxicHolder || checkProjectHolder.catboticaHolder) {
-      return new PageResObj(
-        { public_address },
-        "톡시 NFT 홀더만 가입 가능합니다.",
-        true
-      );
+  async signUpGeneral(public_address: string, paramObj: UserSignUpDto): Promise<PageResObj<{}>> {
+    const user = await this.userQueryRepo.findOne("public_address", public_address);
+    if (user.id !== null) {
+      return new PageResObj({}, "이미 ID가 등록되어 있습니다.", true);
     }
 
-    const isUnique = await this.userQueryRepo.findOne(
-      "public_address",
-      public_address
-    );
-    if (isUnique) {
-      return new PageResObj(
-        { public_address },
-        "이미 존재하는 지갑 주소입니다.",
-        true
-      );
+    // ID 등록
+    const updatedUser = await this.userQueryRepo.update({
+      toxic_project: paramObj.toxic_project,
+      catbotica_project: paramObj.catbotica_project,
+      nickname: paramObj.nickname,
+      id: paramObj.id,
+      password_hash: hash(paramObj.password)
+    }, "public_address", public_address)
+    if (updatedUser.affected !== 1) {
+      return new PageResObj({}, "ID등록에 실패하였습니다.", true);
     }
-    const user = {
-      public_address: public_address,
-      nonce: String(Math.floor(Math.random() * 1000000)),
-      point_balance: 0,
-    };
-
-    const createResult = await this.userQueryRepo.create(user);
-    const result = await this.userQueryRepo.findOne(
-      "public_address",
-      createResult.identifiers[0].public_address
-    );
-    return new PageResObj(result, "회원가입에 성공했습니다.");
-  }  
+    return new PageResObj({}, "회원가입에 성공했습니다.");
+  }
 
   async checkProjectHolder(owner: string) {
     const klaytnContracts = [
