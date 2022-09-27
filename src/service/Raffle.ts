@@ -14,6 +14,7 @@ import { UserQueryRepo } from "../repository/User";
 import { selectWinner } from "../util/selectWinner";
 import schedule from 'node-schedule';
 import { dateToCron } from "../util/dateToCron";
+import { checkAdminReq } from "../api/request/CheckAdminReq";
 
 @Service()
 export class RaffleService {
@@ -178,7 +179,7 @@ export class RaffleService {
     return new PageResObj(result, "응모에 성공했습니다.");
   }
 
-  async getOne(id: number): Promise<PageResObj<Raffle | {}>> {
+  async getOne(id: number, paramObj: checkAdminReq): Promise<PageResObj<Raffle | {}>> {
     const result: any = await this.raffleQueryRepo.getOne(id)
     // raffle_logs에 nickname, profile_img추가 하여 리턴 : 좋지 않은 방식 => but 프로젝트 크기가 크지 않아 속도 저하의 우려가 없어 이렇게 작성.
     for (const el of result.raffle_logs) {
@@ -187,9 +188,11 @@ export class RaffleService {
       el.profile_img = applicant.profile_img;
     }
     // 응모자 지갑 별표처리
-    result.raffle_logs.map(r => {
-      r.applicant = `${r.applicant.slice(0,3)}******${r.applicant.slice(-3)}`
-    })
+    if (paramObj.getAdmin === 'X') {
+      result.raffle_logs.map(r => {
+        r.applicant = `${r.applicant.slice(0,3)}******${r.applicant.slice(-3)}`
+      })
+    }
     return new PageResObj(result, "Raffle 조회에 성공했습니다.");
   }
 

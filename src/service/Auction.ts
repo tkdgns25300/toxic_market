@@ -9,6 +9,7 @@ import { PageReq, PageResList, PageResObj } from "../api";
 import {UserQueryRepo} from "../repository/User";
 import {AuctionSearchReq} from "../api/request/AuctionSearchReq";
 import {UserSellerType} from "../enum";
+import { checkAdminReq } from "../api/request/CheckAdminReq";
 
 @Service()
 export class AuctionService {
@@ -105,7 +106,7 @@ export class AuctionService {
   }
 
 
-  async findOne(id: number): Promise<PageResObj<Auction | {}>> {
+  async findOne(id: number, paramObj: checkAdminReq): Promise<PageResObj<Auction | {}>> {
     const joinTable = [{property: "Auction.bid_logs", alias: "bid_log"}, {property: "Auction.creator", alias: "user"}]
 
     const result = await this.auctionQueryRepo.findOne("id", id, joinTable);
@@ -120,9 +121,11 @@ export class AuctionService {
     result.bid_logs = newBidLog;
     delete result.creator.password_hash;
     // 지갑 별표 표시
-    result.bid_logs.map(a => {
-      a.bidder = `${a.bidder.slice(0,3)}******${a.bidder.slice(-3)}`
-    })
+    if (paramObj.getAdmin === 'X') {
+      result.bid_logs.map(a => {
+        a.bidder = `${a.bidder.slice(0,3)}******${a.bidder.slice(-3)}`
+      })
+    }
     result.bid_logs.reverse();
     return new PageResObj(result, "Auction 조회에 성공했습니다.");
   }

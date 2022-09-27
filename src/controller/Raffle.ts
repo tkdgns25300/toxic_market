@@ -3,6 +3,7 @@ import { Body, Get, JsonController, Param, Patch, Post, QueryParams, Res, UseBef
 import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
 import { PageReq, PageResObj } from "../api";
+import { checkAdminReq } from "../api/request/CheckAdminReq";
 import { RaffleLogSearchReq } from "../api/request/RaffleLogSearchReq";
 import { RaffleSearchReq } from "../api/request/RaffleSearchReq";
 import { AgreeRaffleServiceDto, ApplyDto, RaffleConfirmDto, RaffleDto, RaffleFinishDto } from "../dto/Raffle";
@@ -110,9 +111,9 @@ export class RaffleController {
   }
 
   @Get("/find/:id")
-  public async getOne(@Param("id") id: number, @Res() res: Response) {
+  public async getOne(@Param("id") id: number, @QueryParams() param: checkAdminReq, @Res() res: Response) {
     try {
-      return await this.raffleService.getOne(id);
+      return await this.raffleService.getOne(id, param);
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);

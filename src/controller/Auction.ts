@@ -16,6 +16,7 @@ import {AuctionDto, BidDto, ProductDto} from "../dto";
 import {checkAccessToken, checkAdminAccessToken} from "../middlewares/Auth";
 import { AuctionService } from "../service/Auction";
 import {AuctionSearchReq} from "../api/request/AuctionSearchReq";
+import { checkAdminReq } from "../api/request/CheckAdminReq";
 
 @Service()
 @JsonController("/auction")
@@ -162,9 +163,9 @@ export class AuctionController {
   }
 
   @Get("/find/:id")
-  public async getOne(@Param("id") id: number, @Res() res: Response) {
+  public async getOne(@Param("id") id: number, @QueryParams() param: checkAdminReq, @Res() res: Response) {
     try {
-      return await this.auctionService.findOne(id);
+      return await this.auctionService.findOne(id, param);
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);
