@@ -14,6 +14,13 @@ paths:
           schema:
             type: number
 
+        - name: admin
+          in: query
+          required: false
+          description: check admin
+          schema:
+            type: string
+
       responses:
         200:
           description: "OK"
