@@ -128,7 +128,7 @@ export class StakingController {
   @Post("/air_drop/:key")
   public async airDrop(@Param("key") key: string) {
     try {
-      return await this.stakingSerivce.airDrop(key)
+      return await this.stakingSerivce.airDrop(key, null)
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);

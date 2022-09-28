@@ -498,18 +498,62 @@ export class StakingService {
 		);
   }
 
-  async airDrop(key: string): Promise<PageResObj<{}>> {
-    // 1. 22일 기준 스테이킹한 사람 지갑주소, 각 NFT 개수 파악
+  @Transaction()
+  async airDrop(key: string, @TransactionManager() manager: EntityManager): Promise<PageResObj<{}>> {
+    if (key !== process.env.KEY) {
+      return new PageResObj({}, '잘못된 접근입니다.', true)
+    }
 
-    // 2. (1)을 기준으로 airdrop_amount 생성
+    // 1-1. 22일 기준 스테이킹한 사람 지갑주소, 각 NFT 개수 파악
+    const stakedUserAndNFTamount = [];
+    let staking = await manager.query(`select * from staking where id <= 669`);
+
+    // 1-2. 22일 기준으로 자르기
+    for (const oneStaking of staking) {
+      const toxic_ape_staking_time = oneStaking.toxic_ape_staking_time === null ? [] : oneStaking.toxic_ape_staking_time.split('&');
+      const foolkat_staking_time = oneStaking.foolkat_staking_time === null ? [] : oneStaking.foolkat_staking_time.split('&');
+      const succubus_staking_time = oneStaking.succubus_staking_time === null ? [] : oneStaking.succubus_staking_time.split('&');
+      const toxic_ape_special_staking_time = oneStaking.toxic_ape_special_staking_time === null ? [] : oneStaking.toxic_ape_special_staking_time.split('&');
+      for (const e of toxic_ape_staking_time) {
+        if (new Date(e) > new Date('2022-09-22T15:00:00.000Z')) {
+          console.log(oneStaking)
+        }
+      }
+      for (const e of foolkat_staking_time) {
+        if (new Date(e) > new Date('2022-09-22T15:00:00.000Z')) {
+          console.log(oneStaking)
+        }
+      }
+      for (const e of succubus_staking_time) {
+        if (new Date(e) > new Date('2022-09-22T15:00:00.000Z')) {
+          console.log(oneStaking)
+        }
+      }
+      for (const e of toxic_ape_special_staking_time) {
+        if (new Date(e) > new Date('2022-09-22T15:00:00.000Z')) {
+          console.log(oneStaking)
+        }
+      }
+
+      stakedUserAndNFTamount.push({
+        public_address: oneStaking.user_address,
+        toxic_ape_amount: oneStaking.toxic_ape_amount,
+        foolkat_amount: oneStaking.foolkat_amount,
+        succubus_amount: oneStaking.succubus_amount,
+        toxic_ape_special_amount: oneStaking.toxic_ape_special_amount,
+        // 2. (1)을 기준으로 airdrop_amount 생성
+        airdrop_amount: (oneStaking.toxic_ape_amount * 20 + oneStaking.foolkat_amount * 4 + oneStaking.succubus_amount * 10 + oneStaking.toxic_ape_special_amount * 30) * 11
+      })
+    }
 
     // 3. get coin 하지 않은 사용자에 대해 airdrop_amount 수정
+
 
     /**
      * 4. 함수 로직
      * 각 user_address에게 airdrop_amount 지급 및 TP 리워드 로그 생성
      */
 
-    return new PageResObj({}, "Air Drop에 성공했습니다.")
+    return new PageResObj(stakedUserAndNFTamount, "Air Drop에 성공했습니다.")
   }  
 }
