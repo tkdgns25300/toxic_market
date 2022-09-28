@@ -17,6 +17,7 @@ import { PageResObj } from "../api";
 import { checkAccessToken, checkAdminAccessToken } from "../middlewares/Auth";
 import { ExchangeDto } from "../dto";
 import { ExchangeLogSearchReq } from "../api/request/ExchangeLogSearchReq";
+import { CommissionReq } from "../api/request/CommissionReq";
 
 @Service()
 @JsonController("/exchange")
@@ -70,6 +71,19 @@ export class ExchangeController {
   public async findExchangeLogsById(@Param("id") id: number) {
     try {
       return await this.exchangeService.findExchangeLogsById(id);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
+
+  @Post("/commission/:id")
+  @UseBefore(checkAdminAccessToken)
+  public async returnCommissionById(@Param("id") id: number, @Body() param: CommissionReq) {
+    try {
+      return await this.exchangeService.returnCommissionById(id, param, null);
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);

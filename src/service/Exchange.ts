@@ -9,6 +9,7 @@ import { EntityManager, Transaction, TransactionManager } from "typeorm";
 import { UserType } from "../enum";
 import { ExchangeLogQueryRepo } from "../repository/ExchangeLog";
 import { ExchangeLogSearchReq } from "../api/request/ExchangeLogSearchReq";
+import { CommissionReq } from "../api/request/CommissionReq";
 
 const caver = new Caver("https://public-node-api.klaytnapi.com/v1/cypress");
 //const caver = new Caver('https://api.baobab.klaytn.net:8651/')
@@ -74,7 +75,7 @@ export class ExchangeService {
       exchange_coin: 0,
       commission: 0,
       return_commission: 0,
-      creator: user.public_address
+      creator_address: user.public_address
     }
     await this.exchangeLogQueryRepo.create(exchangeLog)
 
@@ -126,9 +127,9 @@ export class ExchangeService {
       user_id: user.id,
       exchange_point: 0,
       exchange_coin: point_amount * 0.09,
-      commission: 0,
+      commission: point_amount * 0.1,
       return_commission: 0,
-      creator: user.public_address
+      creator_address: user.public_address
     }
     const log = manager.create(ExchangeLog, exchangeLog)
     await manager.save(ExchangeLog, log)
@@ -152,4 +153,24 @@ export class ExchangeService {
     const result = await this.exchangeLogQueryRepo.findOne("id", id);
     return new PageResObj(result, "Exchange Log를 찾는데 성공했습니다.")
   }
+
+  @Transaction()
+  async returnCommissionById(id: number, paramObj: CommissionReq, @TransactionManager() manager: EntityManager): Promise<PageResObj<{}>> {
+    const exchangeLog: ExchangeLog = await manager.findOne(ExchangeLog, id)
+
+    if (paramObj.returnCommissionFee > exchangeLog.commission) {
+      return new PageResObj({}, "수수료보다 낮은 금액을 입력해주세요.", true)
+    }
+
+    // 1. 유저에게 TP 지급
+    const user: User = await manager.findOne(User, { "public_address": exchangeLog.creator_address})
+    user.CF_balance += paramObj.returnCommissionFee;
+    await manager.update(User, { "public_address": exchangeLog.creator_address }, user);
+    
+    // 2. Exchange Log 수정
+    exchangeLog.return_commission += paramObj.returnCommissionFee;
+    await manager.update(ExchangeLog, exchangeLog.id, exchangeLog);
+
+    return new PageResObj({}, "수수료 반환에 성공하였습니다.")
+  } 
 }
