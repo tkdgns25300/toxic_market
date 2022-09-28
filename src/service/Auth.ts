@@ -102,7 +102,7 @@ export class AuthService {
 
   async signUpWallet(public_address: string): Promise<PageResObj<User | {}>> {
     let checkProjectHolder = await this.checkProjectHolder(public_address);
-    if (checkProjectHolder.toxicHolder || checkProjectHolder.catboticaHolder) {
+    if (checkProjectHolder.toxicHolder === false && checkProjectHolder.catboticaHolder === false) {
       return new PageResObj(
         { public_address },
         "톡시 NFT 홀더만 가입 가능합니다.",

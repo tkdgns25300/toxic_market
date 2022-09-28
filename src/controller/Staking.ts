@@ -123,4 +123,16 @@ export class StakingController {
       return new PageResObj({}, err.message, true);
     }
   }
+
+  // For Air Drop
+  // public async airDrop(@Param("key") key: string) {
+  //   try {
+  //     return await this.stakingSerivce.airDrop(key)
+  //   } catch (err) {
+  //     if (err instanceof QueryFailedError) {
+  //       return new PageResObj({}, err.message, true);
+  //     }
+  //     return new PageResObj({}, err.message, true);
+  //   }
+  // }
 }
