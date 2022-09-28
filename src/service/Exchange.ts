@@ -158,7 +158,7 @@ export class ExchangeService {
   async returnCommissionById(id: number, paramObj: CommissionReq, @TransactionManager() manager: EntityManager): Promise<PageResObj<{}>> {
     const exchangeLog: ExchangeLog = await manager.findOne(ExchangeLog, id)
 
-    if (paramObj.returnCommissionFee > exchangeLog.commission) {
+    if (paramObj.returnCommissionFee > exchangeLog.commission - exchangeLog.return_commission) {
       return new PageResObj({}, "수수료보다 낮은 금액을 입력해주세요.", true)
     }
 

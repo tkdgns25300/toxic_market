@@ -1,0 +1,49 @@
+paths:
+  /exchange/commission/{id}:
+    post:
+      tags:
+        - Exchange
+      summary: Return Exchange Commission Fee
+      consumes:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: exchange log id
+          schema:
+            type: number
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                returnCommissionFee:
+                  type: string
+
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    description: error 체크
+                    example: false
+                  msg:
+                    type: string
+                    description: 메시지
+                    example: 수수료가 반환되었습니다.
+                  item:
+                    type: object
+
+        500:
+          description: "Server Error"
+
+schemes:
+  - https
+  - http
