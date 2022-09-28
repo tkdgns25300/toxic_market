@@ -171,6 +171,6 @@ export class ExchangeService {
     exchangeLog.return_commission += paramObj.returnCommissionFee;
     await manager.update(ExchangeLog, exchangeLog.id, exchangeLog);
 
-    return new PageResObj({}, "수수료 반환에 성공하였습니다.")
+    return new PageResObj({}, "수수료가 반환되었습니다.")
   } 
 }
