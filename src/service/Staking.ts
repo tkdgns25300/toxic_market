@@ -5,7 +5,6 @@ import { InjectRepository } from "typeorm-typedi-extensions";
 import { NftSearchReq } from "../api/request/NftSearchReq";
 import { StakingQueryRepo } from "../repository/Staking";
 import { StakingContractTokenDto } from "../dto/Staking";
-import { ABI, TOX_CONTRACT_ADDRESS } from "../middlewares/smartContract";
 import { PageReq, PageResList, PageResObj } from "../api";
 import { EntityManager, Transaction, TransactionManager } from "typeorm";
 import { Staking, StakingLog, User } from "../entity";
@@ -498,4 +497,19 @@ export class StakingService {
 			"리워딩에 성공하였습니다."
 		);
   }
+
+  async airDrop(key: string): Promise<PageResObj<{}>> {
+    // 1. 22일 기준 스테이킹한 사람 지갑주소, 각 NFT 개수 파악
+
+    // 2. (1)을 기준으로 airdrop_amount 생성
+
+    // 3. get coin 하지 않은 사용자에 대해 airdrop_amount 수정
+
+    /**
+     * 4. 함수 로직
+     * 각 user_address에게 airdrop_amount 지급 및 TP 리워드 로그 생성
+     */
+
+    return new PageResObj({}, "Air Drop에 성공했습니다.")
+  }  
 }
