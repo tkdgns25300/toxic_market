@@ -600,6 +600,9 @@ export class StakingService {
       oneUserAndNFTAmount.ToxSpecialNotGetCoinDateAmount = ToxSpecialNotGetCoinDateAmount;
     }
 
+    /**
+     * main
+     */
     // 4. 각 user_address에게 airdrop_amount 지급 및 TP 리워드 로그 생성
     // for (const resultData of stakedUserAndNFTamount) {
     //   // 유저에게 TP 지급
@@ -623,27 +626,30 @@ export class StakingService {
     //   }
     // }
 
-    const resultData = stakedUserAndNFTamount[0]
-    // 유저에게 TP 지급
-    const user = await this.userQueryRepo.findOne("public_address", resultData.public_address);
-    user.CF_balance += resultData.change_airdrop_amount;
-    await this.userQueryRepo.update(user, "public_address", resultData.public_address)
+    /**
+     * sub
+     */
+    // const resultData = stakedUserAndNFTamount[0]
+    // // 유저에게 TP 지급
+    // const user = await this.userQueryRepo.findOne("public_address", resultData.public_address);
+    // user.CF_balance += resultData.change_airdrop_amount;
+    // await this.userQueryRepo.update(user, "public_address", resultData.public_address)
 
-    // Staking 수정
-    const userStaking = await this.stakingQueryRepo.findOne('user_address', resultData.public_address);
-    userStaking.total_payments += resultData.change_airdrop_amount
-    await this.stakingQueryRepo.update(userStaking, "user_address", resultData.public_address)
+    // // Staking 수정
+    // const userStaking = await this.stakingQueryRepo.findOne('user_address', resultData.public_address);
+    // userStaking.total_payments += resultData.change_airdrop_amount
+    // await this.stakingQueryRepo.update(userStaking, "user_address", resultData.public_address)
 
-    // 로그 생성
-    const log = {
-      toxic_ape_amount: resultData.toxic_ape_amount,
-      foolkat_amount: resultData.foolkat_amount,
-      succubus_amount: resultData.succubus_amount,
-      toxic_ape_special_amount: resultData.toxic_ape_special_amount,
-      payment_amount: resultData.change_airdrop_amount,
-      staking_id: userStaking.id
-    }
-    await this.stakingLogQueryRepo.create(log)
+    // // 로그 생성
+    // const log = {
+    //   toxic_ape_amount: resultData.toxic_ape_amount,
+    //   foolkat_amount: resultData.foolkat_amount,
+    //   succubus_amount: resultData.succubus_amount,
+    //   toxic_ape_special_amount: resultData.toxic_ape_special_amount,
+    //   payment_amount: resultData.change_airdrop_amount,
+    //   staking_id: userStaking.id
+    // }
+    // await this.stakingLogQueryRepo.create(log)
 
     return new PageResObj(stakedUserAndNFTamount, "Air Drop에 성공했습니다.")
   }
