@@ -40,7 +40,6 @@ export class ExchangeLog extends BaseEntity {
     length: 20,
     default: null,
     nullable: true,
-    unique: true,
     comment: "아이디"
   })
   user_id: string;

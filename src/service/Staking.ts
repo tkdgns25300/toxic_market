@@ -13,6 +13,7 @@ import { StakingLogSearchReq } from "../api/request/StakingLogSearchReq";
 import { ErrorNFTSearchReq } from "../api/request/ErrorNFTSearchReq";
 import { UserQueryRepo } from "../repository/User";
 import { StakingLogQueryRepo } from "../repository/StakingLog";
+import { ToxMiningLog } from "../util/miningLog";
 
 const toxicNFTContractAddress = [process.env.TOXIC_APE, process.env.FOOLKATS, process.env.SUCCUBUS, process.env.TOXIC_APE_SPECIAL]
 const caver = new Caver("https://public-node-api.klaytnapi.com/v1/cypress");
@@ -498,49 +499,70 @@ export class StakingService {
 		);
   }
 
-  @Transaction()
-  async airDrop(key: string, @TransactionManager() manager: EntityManager): Promise<PageResObj<{}>> {
-    if (key !== process.env.KEY) {
-      return new PageResObj({}, '잘못된 접근입니다.', true)
-    }
+  // @Transaction()
+  // async airDrop(key: string, @TransactionManager() manager: EntityManager): Promise<PageResObj<{}>> {
+  //   if (key !== process.env.KEY) {
+  //     return new PageResObj({}, '잘못된 접근입니다.', true)
+  //   }
+  //   let currentDate = new Date();
+  //   currentDate.setHours(currentDate.getHours() + 9);
 
-    // 1-1. 22일 기준 스테이킹한 사람 지갑주소, 각 NFT 개수 파악
-    const stakedUserAndNFTamount = [];
-    let staking = await manager.query(`select * from staking where id <= 669`);
+  //   // 1-1. 22일 기준 스테이킹한 사람 지갑주소, 각 NFT 개수 파악
+  //   const stakedUserAndNFTamount = [];
+  //   let staking = await manager.query(`select * from staking where id <= 20`);
 
-    // 1-2. 22일 기준으로 자르기
-    for (const oneStaking of staking) {
-      let toxic_ape_staking_time_arr = oneStaking.toxic_ape_staking_time === null || oneStaking.toxic_ape_staking_time === '' ? [] : oneStaking.toxic_ape_staking_time.split('&');
-      let foolkat_staking_time_arr = oneStaking.foolkat_staking_time === null || oneStaking.foolkat_staking_time === '' ? [] : oneStaking.foolkat_staking_time.split('&');
-      let succubus_staking_time_arr = oneStaking.succubus_staking_time === null || oneStaking.succubus_staking_time === '' ? [] : oneStaking.succubus_staking_time.split('&');
-      let toxic_ape_special_staking_time_arr = oneStaking.toxic_ape_special_staking_time === null || oneStaking.toxic_ape_special_staking_time === '' ? [] : oneStaking.toxic_ape_special_staking_time.split('&');
-      toxic_ape_staking_time_arr = toxic_ape_staking_time_arr.filter(e => new Date(e) <= new Date('2022-09-22T15:00:00.000Z'))
-      foolkat_staking_time_arr = foolkat_staking_time_arr.filter(e => new Date(e) <= new Date('2022-09-22T15:00:00.000Z'))
-      succubus_staking_time_arr = succubus_staking_time_arr.filter(e => new Date(e) <= new Date('2022-09-22T15:00:00.000Z'))
-      toxic_ape_special_staking_time_arr = toxic_ape_special_staking_time_arr.filter(e => new Date(e) <= new Date('2022-09-22T15:00:00.000Z'))
+  //   // 1-2. 22일 기준으로 자르기
+  //   for (const oneStaking of staking) {
+  //     let toxic_ape_staking_time_arr = oneStaking.toxic_ape_staking_time === null || oneStaking.toxic_ape_staking_time === '' ? [] : oneStaking.toxic_ape_staking_time.split('&');
+  //     let foolkat_staking_time_arr = oneStaking.foolkat_staking_time === null || oneStaking.foolkat_staking_time === '' ? [] : oneStaking.foolkat_staking_time.split('&');
+  //     let succubus_staking_time_arr = oneStaking.succubus_staking_time === null || oneStaking.succubus_staking_time === '' ? [] : oneStaking.succubus_staking_time.split('&');
+  //     let toxic_ape_special_staking_time_arr = oneStaking.toxic_ape_special_staking_time === null || oneStaking.toxic_ape_special_staking_time === '' ? [] : oneStaking.toxic_ape_special_staking_time.split('&');
+  //     toxic_ape_staking_time_arr = toxic_ape_staking_time_arr.filter(e => new Date(e) <= new Date('2022-09-22T15:00:00.000Z'))
+  //     foolkat_staking_time_arr = foolkat_staking_time_arr.filter(e => new Date(e) <= new Date('2022-09-22T15:00:00.000Z'))
+  //     succubus_staking_time_arr = succubus_staking_time_arr.filter(e => new Date(e) <= new Date('2022-09-22T15:00:00.000Z'))
+  //     toxic_ape_special_staking_time_arr = toxic_ape_special_staking_time_arr.filter(e => new Date(e) <= new Date('2022-09-22T15:00:00.000Z'))
 
-      stakedUserAndNFTamount.push({
-        id: oneStaking.id,
-        public_address: oneStaking.user_address,
-        toxic_ape_amount: toxic_ape_staking_time_arr.length,
-        foolkat_amount: foolkat_staking_time_arr.length,
-        succubus_amount: succubus_staking_time_arr.length,
-        toxic_ape_special_amount: toxic_ape_special_staking_time_arr.length,
-        // 2. (1)을 기준으로 airdrop_amount 생성
-        airdrop_amount: (toxic_ape_staking_time_arr.length * 20 + foolkat_staking_time_arr.length * 4 + succubus_staking_time_arr.length * 10 + toxic_ape_special_staking_time_arr.length * 30) * 11
-      })
-    }
+  //     stakedUserAndNFTamount.push({
+  //       id: oneStaking.id,
+  //       public_address: oneStaking.user_address,
+  //       toxic_ape_amount: toxic_ape_staking_time_arr.length,
+  //       foolkat_amount: foolkat_staking_time_arr.length,
+  //       succubus_amount: succubus_staking_time_arr.length,
+  //       toxic_ape_special_amount: toxic_ape_special_staking_time_arr.length,
+  //       // 2. (1)을 기준으로 airdrop_amount 생성
+  //       airdrop_amount: (toxic_ape_staking_time_arr.length * 20 + foolkat_staking_time_arr.length * 4 + succubus_staking_time_arr.length * 10 + toxic_ape_special_staking_time_arr.length * 30) * 11
+  //     })
+  //   }
 
-    // 3. get coin 하지 않은 사용자에 대해 airdrop_amount 수정
+  //   // 3. get coin 하지 않은 사용자에 대해 airdrop_amount 수정
+  //   for (const oneUserAndNFTAmount of stakedUserAndNFTamount) {
+  //     // Toxic-Ape
+  //     let ToxRecentGetCoinDate;
+
+  //     const recentData = ToxMiningLog.reverse().find(e => (e.METHOD === "claimAll" || e.METHOD === "claim") && e.FROM === oneUserAndNFTAmount.public_address)
+  //     if (recentData === undefined) {
+  //       ToxRecentGetCoinDate = new Date('2022-08-29T00:21:31+09:00');
+  //     } else {
+  //       ToxRecentGetCoinDate = new Date(recentData["TIME(KST)"]);
+  //     }
+  //     // Foolkat
+
+
+  //     // Succubus
+
+
+  //     // Toxic-Ape-Special
+  //     console.log(recentData)
+  //     console.log(ToxRecentGetCoinDate)      
+  //   }
     
+  //   /**
+  //    * 4. 함수 로직
+  //    * 각 user_address에게 airdrop_amount 지급 및 TP 리워드 로그 생성
+  //    */
 
-    /**
-     * 4. 함수 로직
-     * 각 user_address에게 airdrop_amount 지급 및 TP 리워드 로그 생성
-     */
-
-    return new PageResObj(stakedUserAndNFTamount, "Air Drop에 성공했습니다.")
-  }
+  //   return new PageResObj(stakedUserAndNFTamount, "Air Drop에 성공했습니다.")
+  // }
 }
 
 /**
