@@ -1,4 +1,4 @@
-const ToxMiningLog = [
+let ToxMiningLog = [
   {
     "TX HASH": "0x92269ee2d92bce3ace602846517671f4d8473e0368cb669d95e3cbbbba0397df",
     "BLOCK #": 99766762,
@@ -18097,7 +18097,7 @@ const ToxMiningLog = [
   }
 ]
 
-const FoolkatMiningLog = [
+let FoolkatMiningLog = [
   {
     "TX HASH": "0x0722bf4858d9c9acb085ab738622e4d659e73f47e0cc1d70c7f41cbe4139315b",
     "BLOCK #": 99766755,
@@ -34571,7 +34571,7 @@ const FoolkatMiningLog = [
   }
 ]
 
-const SuccubusMiningLog = [
+let SuccubusMiningLog = [
   {
     "TX HASH": "0x3d126ac988004e0bd85b89ef4399da8c8beb8132acac361848e242247012b1b6",
     "BLOCK #": 99766759,
@@ -46690,7 +46690,7 @@ const SuccubusMiningLog = [
   }
 ]
 
-const ToxSpecialMiningLog = [
+let ToxSpecialMiningLog = [
   {
     "TX HASH": "0x6e0aa0c149b0a3366ceb4cc9d4e584f74129b5c5b7c75ba3e260fa4718395edd",
     "BLOCK #": 99766665,

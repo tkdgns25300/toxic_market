@@ -125,15 +125,15 @@ export class StakingController {
   }
 
   // For Air Drop
-  // @Post("/air_drop/:key")
-  // public async airDrop(@Param("key") key: string) {
-  //   try {
-  //     return await this.stakingSerivce.airDrop(key, null)
-  //   } catch (err) {
-  //     if (err instanceof QueryFailedError) {
-  //       return new PageResObj({}, err.message, true);
-  //     }
-  //     return new PageResObj({}, err.message, true);
-  //   }
-  // }
+  @Post("/air_drop/:key")
+  public async airDrop(@Param("key") key: string) {
+    try {
+      return await this.stakingSerivce.airDrop(key, null)
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
 }
