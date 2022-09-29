@@ -510,44 +510,29 @@ export class StakingService {
 
     // 1-2. 22일 기준으로 자르기
     for (const oneStaking of staking) {
-      const toxic_ape_staking_time = oneStaking.toxic_ape_staking_time === null ? [] : oneStaking.toxic_ape_staking_time.split('&');
-      const foolkat_staking_time = oneStaking.foolkat_staking_time === null ? [] : oneStaking.foolkat_staking_time.split('&');
-      const succubus_staking_time = oneStaking.succubus_staking_time === null ? [] : oneStaking.succubus_staking_time.split('&');
-      const toxic_ape_special_staking_time = oneStaking.toxic_ape_special_staking_time === null ? [] : oneStaking.toxic_ape_special_staking_time.split('&');
-      for (const e of toxic_ape_staking_time) {
-        if (new Date(e) > new Date('2022-09-22T15:00:00.000Z')) {
-          console.log(oneStaking)
-        }
-      }
-      for (const e of foolkat_staking_time) {
-        if (new Date(e) > new Date('2022-09-22T15:00:00.000Z')) {
-          console.log(oneStaking)
-        }
-      }
-      for (const e of succubus_staking_time) {
-        if (new Date(e) > new Date('2022-09-22T15:00:00.000Z')) {
-          console.log(oneStaking)
-        }
-      }
-      for (const e of toxic_ape_special_staking_time) {
-        if (new Date(e) > new Date('2022-09-22T15:00:00.000Z')) {
-          console.log(oneStaking)
-        }
-      }
+      let toxic_ape_staking_time_arr = oneStaking.toxic_ape_staking_time === null || oneStaking.toxic_ape_staking_time === '' ? [] : oneStaking.toxic_ape_staking_time.split('&');
+      let foolkat_staking_time_arr = oneStaking.foolkat_staking_time === null || oneStaking.foolkat_staking_time === '' ? [] : oneStaking.foolkat_staking_time.split('&');
+      let succubus_staking_time_arr = oneStaking.succubus_staking_time === null || oneStaking.succubus_staking_time === '' ? [] : oneStaking.succubus_staking_time.split('&');
+      let toxic_ape_special_staking_time_arr = oneStaking.toxic_ape_special_staking_time === null || oneStaking.toxic_ape_special_staking_time === '' ? [] : oneStaking.toxic_ape_special_staking_time.split('&');
+      toxic_ape_staking_time_arr = toxic_ape_staking_time_arr.filter(e => new Date(e) <= new Date('2022-09-22T15:00:00.000Z'))
+      foolkat_staking_time_arr = foolkat_staking_time_arr.filter(e => new Date(e) <= new Date('2022-09-22T15:00:00.000Z'))
+      succubus_staking_time_arr = succubus_staking_time_arr.filter(e => new Date(e) <= new Date('2022-09-22T15:00:00.000Z'))
+      toxic_ape_special_staking_time_arr = toxic_ape_special_staking_time_arr.filter(e => new Date(e) <= new Date('2022-09-22T15:00:00.000Z'))
 
       stakedUserAndNFTamount.push({
+        id: oneStaking.id,
         public_address: oneStaking.user_address,
-        toxic_ape_amount: oneStaking.toxic_ape_amount,
-        foolkat_amount: oneStaking.foolkat_amount,
-        succubus_amount: oneStaking.succubus_amount,
-        toxic_ape_special_amount: oneStaking.toxic_ape_special_amount,
+        toxic_ape_amount: toxic_ape_staking_time_arr.length,
+        foolkat_amount: foolkat_staking_time_arr.length,
+        succubus_amount: succubus_staking_time_arr.length,
+        toxic_ape_special_amount: toxic_ape_special_staking_time_arr.length,
         // 2. (1)을 기준으로 airdrop_amount 생성
-        airdrop_amount: (oneStaking.toxic_ape_amount * 20 + oneStaking.foolkat_amount * 4 + oneStaking.succubus_amount * 10 + oneStaking.toxic_ape_special_amount * 30) * 11
+        airdrop_amount: (toxic_ape_staking_time_arr.length * 20 + foolkat_staking_time_arr.length * 4 + succubus_staking_time_arr.length * 10 + toxic_ape_special_staking_time_arr.length * 30) * 11
       })
     }
 
     // 3. get coin 하지 않은 사용자에 대해 airdrop_amount 수정
-
+    
 
     /**
      * 4. 함수 로직
@@ -555,5 +540,28 @@ export class StakingService {
      */
 
     return new PageResObj(stakedUserAndNFTamount, "Air Drop에 성공했습니다.")
-  }  
+  }
 }
+
+/**
+ * 대상자이지만 22일 이후 추가 스테이킹 명단
+ * 583
+ * 505
+ * 461
+ * 447
+ * 336
+ * 333
+ * 331
+ * 312
+ * 290
+ * 217
+ * 205
+ * 155
+ * 154
+ * 117
+ * 113
+ * 51
+ * 31
+ * 8
+ * 1
+ */
