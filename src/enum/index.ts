@@ -9,4 +9,10 @@ enum UserSellerType {
   INDIVIDUAL = "개인"
 }
 
-export { UserType, UserSellerType };
+enum LogClassification {
+  PRODUCT = "마켓",
+  AUCTION = "경매",
+  RAFFLE = "응모"
+}
+
+export { UserType, UserSellerType, LogClassification };
