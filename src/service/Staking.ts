@@ -509,7 +509,7 @@ export class StakingService {
 
     // 1-1. 22일 기준 스테이킹한 사람 지갑주소, 각 NFT 개수 파악
     const stakedUserAndNFTamount = [];
-    let staking = await manager.query(`select * from staking where id <= 669`);
+    let staking = await manager.query(`select * from staking where id <= 669 and id >= 601`);
 
     // 1-2. 22일 기준으로 자르기
     for (const oneStaking of staking) {
@@ -611,7 +611,7 @@ export class StakingService {
     //   await this.userQueryRepo.update(user, "public_address", resultData.public_address)
 
     //   // Staking 수정
-    //   const userStaking = await this.stakingLogQueryRepo.findOne('user_address', resultData.public_address);
+    //   const userStaking = await this.stakingQueryRepo.findOne('user_address', resultData.public_address);
     //   userStaking.total_payments += resultData.change_airdrop_amount
     //   await this.stakingQueryRepo.update(userStaking, "user_address", resultData.public_address)
 
@@ -624,33 +624,10 @@ export class StakingService {
     //     payment_amount: resultData.change_airdrop_amount,
     //     staking_id: userStaking.id
     //   }
+    //   await this.stakingLogQueryRepo.create(log)
     // }
 
-    /**
-     * sub
-     */
-    // const resultData = stakedUserAndNFTamount[0]
-    // // 유저에게 TP 지급
-    // const user = await this.userQueryRepo.findOne("public_address", resultData.public_address);
-    // user.CF_balance += resultData.change_airdrop_amount;
-    // await this.userQueryRepo.update(user, "public_address", resultData.public_address)
-
-    // // Staking 수정
-    // const userStaking = await this.stakingQueryRepo.findOne('user_address', resultData.public_address);
-    // userStaking.total_payments += resultData.change_airdrop_amount
-    // await this.stakingQueryRepo.update(userStaking, "user_address", resultData.public_address)
-
-    // // 로그 생성
-    // const log = {
-    //   toxic_ape_amount: resultData.toxic_ape_amount,
-    //   foolkat_amount: resultData.foolkat_amount,
-    //   succubus_amount: resultData.succubus_amount,
-    //   toxic_ape_special_amount: resultData.toxic_ape_special_amount,
-    //   payment_amount: resultData.change_airdrop_amount,
-    //   staking_id: userStaking.id
-    // }
-    // await this.stakingLogQueryRepo.create(log)
-
+    console.log(stakedUserAndNFTamount.length)
     return new PageResObj(stakedUserAndNFTamount, "Air Drop에 성공했습니다.")
   }
 }
