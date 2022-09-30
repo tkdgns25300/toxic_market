@@ -1,13 +1,9 @@
-tags:
-  - name: Log
-    description: 기록(로그) API
-
 paths:
-  /log/find:
+  /product/log/find:
     get:
       tags:
-        - Log
-      summary: Find logs
+        - Product
+      summary: Find product logs
       consumes:
         - application/json
       parameters:

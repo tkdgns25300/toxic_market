@@ -17,17 +17,17 @@ export class LogController {
   @Inject()
   logService: LogService;
 
-  @Get("/find")
-  @UseBefore(checkAccessToken)
-  public async search(@QueryParams() params: LogSearchReq) {
-    try {
-      return await this.logService.search(params);
-    } catch (err) {
-      if (err instanceof QueryFailedError) {
-        console.log("Instance of QueryFailedError!");
-        return new PageResObj({}, err.message, true);
-      }
-      return new PageResObj({}, err.message, true);
-    }
-  }
+  // @Get("/find")
+  // @UseBefore(checkAccessToken)
+  // public async search(@QueryParams() params: LogSearchReq) {
+  //   try {
+  //     return await this.logService.logSearch(params);
+  //   } catch (err) {
+  //     if (err instanceof QueryFailedError) {
+  //       console.log("Instance of QueryFailedError!");
+  //       return new PageResObj({}, err.message, true);
+  //     }
+  //     return new PageResObj({}, err.message, true);
+  //   }
+  // }
 }

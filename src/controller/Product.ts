@@ -13,6 +13,7 @@ import {
 import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
 import { PageReq, PageResObj } from "../api";
+import { LogSearchReq } from "../api/request/LogSearchReq";
 import { ProductDto } from "../dto";
 import { checkAccessToken, checkAdminAccessToken } from "../middlewares/Auth";
 import { ProductService } from "../service/Product";
@@ -117,6 +118,20 @@ export class ProductController {
       return await this.productService.findUserProducts(param, aud);
     } catch (err) {
       if (err instanceof QueryFailedError) {
+        return new PageResObj({}, err.message, true);
+      }
+      return new PageResObj({}, err.message, true);
+    }
+  }
+
+  @Get("/log/find")
+  @UseBefore(checkAccessToken)
+  public async search(@QueryParams() params: LogSearchReq) {
+    try {
+      return await this.productService.logSearch(params);
+    } catch (err) {
+      if (err instanceof QueryFailedError) {
+        console.log("Instance of QueryFailedError!");
         return new PageResObj({}, err.message, true);
       }
       return new PageResObj({}, err.message, true);

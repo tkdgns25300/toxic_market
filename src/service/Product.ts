@@ -9,6 +9,7 @@ import { LogQueryRepo } from "../repository/Log";
 import { EntityManager, Transaction, TransactionManager } from "typeorm";
 import {UserQueryRepo} from "../repository/User";
 import {UserSellerType} from "../enum";
+import { LogSearchReq } from "../api/request/LogSearchReq";
 
 @Service()
 export class ProductService {
@@ -159,6 +160,18 @@ export class ProductService {
         return el;
       }),
       "Product 목록을 찾는데 성공했습니다."
+    );
+  }
+
+  async logSearch(param: LogSearchReq): Promise<PageResList<Log>> {
+    const result = await this.LogQueryRepo.findLogs(param);
+    return new PageResList<Log>(
+      result[1],
+      param.limit,
+      result[0].map((el: Log) => {
+        return el;
+      }),
+      "Log 목록을 찾는데 성공했습니다."
     );
   }
 }
