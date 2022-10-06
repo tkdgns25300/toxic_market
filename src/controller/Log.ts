@@ -7,6 +7,7 @@ import {
 import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
 import { PageResObj } from "../api";
+import { LogListSearchReq } from "../api/request/LogListSearchReq";
 import { LogSearchReq } from "../api/request/LogSearchReq";
 import { checkAccessToken } from "../middlewares/Auth";
 import { LogService } from "../service/Log";
@@ -19,9 +20,9 @@ export class LogController {
 
   @Get("/find")
   @UseBefore(checkAccessToken)
-  public async findAllLogs(@QueryParams() params: LogSearchReq) {
+  public async findAllLogs(@QueryParams() params: LogListSearchReq) {
     try {
-      return await this.logService.findAllLogs();
+      return await this.logService.findAllLogs(params, null);
     } catch (err) {
       if (err instanceof QueryFailedError) {
         console.log("Instance of QueryFailedError!");
