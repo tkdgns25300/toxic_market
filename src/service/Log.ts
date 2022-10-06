@@ -134,14 +134,14 @@ export class LogService {
       result = result.concat(raffleLog)
     }
 
-    // created_at 순으로 나열
-
-    
+    // created_at 순으로 정렬 및 offset
+    result = result.sort((a, b) => b.created_at - a.created_at);
+    const sliceResult = result.slice(param.getOffset(), param.getOffset() + param.getLimit());
     // 반환
     return new PageResList<any>(
       result.length,
       param.limit,
-      result,
+      sliceResult,
       "거래 목록을 찾는데 성공했습니다."
     );
   }
