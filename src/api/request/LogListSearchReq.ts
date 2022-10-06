@@ -4,18 +4,23 @@ import { PageReq } from "./PageReq";
 
 export class LogListSearchReq extends PageReq {
   sort: LogClassification;
-  name: string;
   title: string;
+  buyerId: string;
+  sellerId: string;
 
   get getSort() {
     return this.sort ? this.sort : "";
   }
-  
-  get getName() {
-      return this.name ? this.name : "";
-  }
 
   get getTitle() {
       return this.title ? this.title : "";
+  }
+
+  get getBuyerId() {
+      return this.buyerId ? this.buyerId : "";
+  }
+
+  get getSellerId() {
+    return this.sellerId ? this.sellerId : "";
   }
 }

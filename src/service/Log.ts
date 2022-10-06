@@ -37,18 +37,39 @@ export class LogService {
     // 각 마켓, 경매, 응모 로그 수집
     const result = [];
     
-    const productLogArr = await manager.query((`SELECT * FROM log`));
-    const auctionLogArr = await manager.query(
-      `SELECT * FROM auction
-       LEFT JOIN user
-       ON auction.creator_address = user.public_address
-       where auction.is_approved = "O"
-       and auction.end_at <= ?
-       and auction.title like "%${param.getTitle}%"
-       and user.name like "%${param.getName}%"`,
-      [new Date()]
-    );
-    const raffleLog = await manager.query((`SELECT * FROM raffle_log`));
+    if (param.getSort === "" || param.getSort === LogClassification.PRODUCT) {
+      const productLogArr = await manager.query(
+        `SELECT * FROM log
+         WHERE title like "%${param.getTitle}%"`
+      );
+      // 판매자, 구매자 아이디 솔팅
+    }
+
+    if (param.getSort === "" || param.getSort === LogClassification.AUCTION) {
+      const auctionLogArr = await manager.query(
+        `SELECT auction.price, auction.title, auction.created_at, auction.bidder, auction.bid, auction.creator_address, user.id FROM auction
+        JOIN user
+        ON auction.creator_address = user.public_address
+        WHERE auction.is_approved = "O"
+        AND auction.is_succeed = "O"
+        AND auction.end_at <= ?
+        AND auction.title like "%${param.getTitle}%"
+        AND user.id like "%${param.getSellerId}%" OR user.id IS NULL`,
+        [new Date()]
+      );
+      // 구매자 아이디 솔팅
+    }
+
+    if (param.getSort === "" || param.getSort === LogClassification.RAFFLE) {
+      const raffleLogArr = await manager.query(
+        `SELECT raffle_log.applicant, raffle_log.amount, raffle_log.created_at, raffle.price, raffle.title, raffle.creator_address FROM raffle_log
+        JOIN raffle
+        ON raffle_log.raffle_id = raffle.id
+        WHERE raffle.title like "%${param.getTitle}%"`
+      );
+      // 판매자, 구매자 아이디 솔팅
+    }
+
 
     // created_at 순으로 나열
 
