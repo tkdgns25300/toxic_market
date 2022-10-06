@@ -105,7 +105,7 @@ export class AuthService {
     if (checkProjectHolder.toxicHolder === false && checkProjectHolder.catboticaHolder === false) {
       return new PageResObj(
         { public_address },
-        "톡시 NFT 홀더만 가입 가능합니다.",
+        "톡시나 캣보티카 NFT홀더만 가입 가능합니다.",
         true
       );
     }
