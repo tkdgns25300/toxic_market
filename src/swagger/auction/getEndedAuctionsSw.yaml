@@ -21,7 +21,6 @@ paths:
           schema:
             type: integer
 
-
         - name: name
           in: query
           required: false
@@ -35,8 +34,8 @@ paths:
           description: 상품명
           schema:
             type: string
-
-          - name: user_toxic_project
+          
+        - name: user_toxic_project
           in: query
           required: false
           description: 참여 프로젝트(톡시)
