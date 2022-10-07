@@ -137,6 +137,10 @@ export class AuthService {
 
   async signUpGeneral(public_address: string, paramObj: UserSignUpDto): Promise<PageResObj<{}>> {
     const user = await this.userQueryRepo.findOne("public_address", public_address);
+    if (!user) {
+      return new PageResObj({}, "존재하지 않는 사용자입니다.", true);
+    }
+
     if (user.id !== null) {
       return new PageResObj({}, "이미 ID가 등록되어 있습니다.", true);
     }
