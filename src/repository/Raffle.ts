@@ -27,6 +27,8 @@ export class RaffleQueryRepo extends BaseQueryRepo {
     .andWhere('end_at > :end_at', {
       end_at: new Date()
     })
+    .andWhere(`user.toxic_project = :toxic_project`, {toxic_project: param.getUserToxicProject})
+    .andWhere(`user.catbotica_project = :catbotica_project`, {catbotica_project: param.getUserCatboticaProject})
 
     if (param.name) {
       builder.andWhere('name like :name', { name: `%${param.name}%` });
@@ -56,6 +58,8 @@ export class RaffleQueryRepo extends BaseQueryRepo {
     .andWhere('end_at > :end_at', {
       end_at: new Date()
     })
+    .andWhere(`user.toxic_project = :toxic_project`, {toxic_project: param.getUserToxicProject})
+    .andWhere(`user.catbotica_project = :catbotica_project`, {catbotica_project: param.getUserCatboticaProject})
 
     if (param.name) {
       builder.andWhere('name like :name', { name: `%${param.name}%` });
@@ -86,6 +90,8 @@ export class RaffleQueryRepo extends BaseQueryRepo {
     .andWhere('end_at <= :end_at', {
       end_at: new Date()
     })
+    .andWhere(`user.toxic_project = :toxic_project`, {toxic_project: param.getUserToxicProject})
+    .andWhere(`user.catbotica_project = :catbotica_project`, {catbotica_project: param.getUserCatboticaProject})
 
     if (param.name) {
       builder.andWhere('name like :name', { name: `%${param.name}%` });

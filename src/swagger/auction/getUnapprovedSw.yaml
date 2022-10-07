@@ -34,6 +34,20 @@ paths:
           description: 상품명
           schema:
             type: string
+            
+        - name: user_toxic_project
+          in: query
+          required: false
+          description: 참여 프로젝트(톡시)
+          schema:
+            type: string
+            
+        - name: user_catbotica_project
+          in: query
+          required: false
+          description: 참여 프로젝트(캣보티카)
+          schema:
+            type: string
 
       responses:
         200:

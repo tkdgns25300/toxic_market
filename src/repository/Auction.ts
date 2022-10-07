@@ -78,6 +78,8 @@ export class AuctionQueryRepo extends BaseQueryRepo {
         .andWhere('end_at > :end_at', {
             end_at: new Date()
         })
+        .andWhere(`user.toxic_project = :toxic_project`, {toxic_project: param.getUserToxicProject})
+        .andWhere(`user.catbotica_project = :catbotica_project`, {catbotica_project: param.getUserCatboticaProject})
         .skip(param.getOffset())
         .take(param.getLimit())
         .getManyAndCount();
@@ -96,6 +98,8 @@ export class AuctionQueryRepo extends BaseQueryRepo {
             .andWhere('end_at > :end_at', {
                 end_at: new Date()
             })
+            .andWhere(`user.toxic_project = :toxic_project`, {toxic_project: param.getUserToxicProject})
+            .andWhere(`user.catbotica_project = :catbotica_project`, {catbotica_project: param.getUserCatboticaProject})
             .skip(param.getOffset())
             .take(param.getLimit())
             .getManyAndCount();
@@ -114,6 +118,8 @@ export class AuctionQueryRepo extends BaseQueryRepo {
             .andWhere('end_at <= :end_at', {
                 end_at: new Date()
             })
+            .andWhere(`user.toxic_project = :toxic_project`, {toxic_project: param.getUserToxicProject})
+            .andWhere(`user.catbotica_project = :catbotica_project`, {catbotica_project: param.getUserCatboticaProject})
             .skip(param.getOffset())
             .take(param.getLimit())
             .getManyAndCount();
