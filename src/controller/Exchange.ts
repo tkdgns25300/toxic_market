@@ -16,7 +16,7 @@ import { ExchangeService } from "../service/Exchange";
 import { PageResObj } from "../api";
 import { checkAccessToken, checkAdminAccessToken } from "../middlewares/Auth";
 import { ExchangeDto } from "../dto";
-import { ExchangeLogSearchReq } from "../api/request/ExchangeLogSearchReq";
+import { ProjectSortingSearchReq } from "../api/request/ProjectSortingSearchReq";
 import { CommissionReq } from "../api/request/CommissionReq";
 
 @Service()
@@ -55,7 +55,7 @@ export class ExchangeController {
 
   @Get("/log")
   @UseBefore(checkAdminAccessToken)
-  public async findExchangeLogs(@QueryParams() param: ExchangeLogSearchReq) {
+  public async findExchangeLogs(@QueryParams() param: ProjectSortingSearchReq) {
     try {
       return await this.exchangeService.findExchangeLogs(param);
     } catch (err) {

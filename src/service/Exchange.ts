@@ -8,7 +8,7 @@ import { ABI, TOX_CONTRACT_ADDRESS } from "../middlewares/smartContract";
 import { EntityManager, Transaction, TransactionManager } from "typeorm";
 import { UserType } from "../enum";
 import { ExchangeLogQueryRepo } from "../repository/ExchangeLog";
-import { ExchangeLogSearchReq } from "../api/request/ExchangeLogSearchReq";
+import { ProjectSortingSearchReq } from "../api/request/ProjectSortingSearchReq";
 import { CommissionReq } from "../api/request/CommissionReq";
 
 const caver = new Caver("https://public-node-api.klaytnapi.com/v1/cypress");
@@ -137,7 +137,7 @@ export class ExchangeService {
     return new PageResObj(user, "포인트를 TOX 코인으로 교환하는데 성공했습니다.");
   }
 
-  async findExchangeLogs(paramObj: ExchangeLogSearchReq): Promise<PageResList<ExchangeLog>> {
+  async findExchangeLogs(paramObj: ProjectSortingSearchReq): Promise<PageResList<ExchangeLog>> {
     const result = await this.exchangeLogQueryRepo.findExchangeLogs(paramObj);
     return new PageResList<ExchangeLog>(
       result[1],

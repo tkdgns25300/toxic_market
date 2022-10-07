@@ -14,6 +14,7 @@ import { Inject, Service } from "typedi";
 import { QueryFailedError } from "typeorm";
 import { PageReq, PageResObj } from "../api";
 import { LogSearchReq } from "../api/request/LogSearchReq";
+import { ProjectSortingSearchReq } from "../api/request/ProjectSortingSearchReq";
 import { ProductDto } from "../dto";
 import { checkAccessToken, checkAdminAccessToken } from "../middlewares/Auth";
 import { ProductService } from "../service/Product";
@@ -25,7 +26,7 @@ export class ProductController {
   productService: ProductService;
 
   @Get("/find")
-  public async getAll(@QueryParams() param: PageReq, @Res() res: Response) {
+  public async getAll(@QueryParams() param: ProjectSortingSearchReq, @Res() res: Response) {
     try {
       return await this.productService.findAll(param);
     } catch (err) {

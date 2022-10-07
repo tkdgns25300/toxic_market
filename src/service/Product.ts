@@ -10,6 +10,7 @@ import { EntityManager, Transaction, TransactionManager } from "typeorm";
 import {UserQueryRepo} from "../repository/User";
 import {UserSellerType} from "../enum";
 import { LogSearchReq } from "../api/request/LogSearchReq";
+import { ProjectSortingSearchReq } from "../api/request/ProjectSortingSearchReq";
 
 @Service()
 export class ProductService {
@@ -20,7 +21,7 @@ export class ProductService {
     readonly LogQueryRepo: LogQueryRepo
   ) {}
 
-  async findAll(param: PageReq): Promise<PageResList<Product>> {
+  async findAll(param: ProjectSortingSearchReq): Promise<PageResList<Product>> {
     let result = await this.ProductQueryRepo.findProducts(param);
     // nickname, profile_img추가하여 리턴 : 좋지 않은 방식 => 원래는 product와 user에 manyToOne관계를 맺어서 처리해야함. but 프로젝트 크기가 크지 않아 속도 저하의 우려가 없어 이렇게 작성.
     for (const el of result[0]) {
@@ -30,6 +31,7 @@ export class ProductService {
       el.nickname = creator.nickname;
       el.profile_img = creator.profile_img;
     }
+
     return new PageResList<Product>(
       result[1],
       param.limit,
