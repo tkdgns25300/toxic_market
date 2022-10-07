@@ -19,9 +19,6 @@ paths:
                 public_address:
                   type: string
                   required: true
-                CF_balance:
-                  type: number
-                  required: true
                 is_seller:
                   type: string
                   enum: [O,X]
@@ -47,6 +44,13 @@ paths:
                   type: string
                   enum: [개인사업자,법인,개인]
                   description: 판매자 종류
+                toxic_project:
+                  type: string
+                  enum: [ O,X ]
+                catbotica_project:
+                  type: string
+                  enum: [ O,X ]
+
 
 
       responses:
