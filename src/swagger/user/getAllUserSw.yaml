@@ -39,6 +39,20 @@ paths:
           schema:
             type: string
 
+        - name: user_toxic_project
+          in: query
+          required: false
+          description: 참여 프로젝트(톡시)
+          schema:
+            type: string
+
+        - name: user_catbotica_project
+          in: query
+          required: false
+          description: 참여 프로젝트(캣보티카)
+          schema:
+            type: string
+
       responses:
         200:
           description: "OK"
@@ -58,7 +72,7 @@ paths:
                   msg:
                     type: string
                     description: 메시지
-                    example: Product 목록을 찾는데 성공했습니다.
+                    example: User 목록을 찾는데 성공했습니다.
                   items:
                     type: array
                     items:
