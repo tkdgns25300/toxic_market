@@ -210,18 +210,11 @@ export class AuthService {
     return { toxicHolder, catboticaHolder };
   }
 
-  async checkStakingHolder(public_address: string): Promise<PageResObj<string>> {
-    const staking = await this.stakingQueryRepo.findOne("user_address", public_address);
-    if (staking?.toxic_ape) {
-      return new PageResObj('O', "Toxic_Ape 홀더입니다.")
-    }
-    return new PageResObj('X', "Toxic_Ape 홀더가 아닙니다.")
-    }
-
   async checkHolder(public_address: string): Promise<PageResObj<any>> {
     const projectHolder = await this.checkProjectHolder(public_address);
+    const staking = await this.stakingQueryRepo.findOne("user_address", public_address);
     const result = {
-      toxicHolder: projectHolder.toxicHolder ? 'O' : 'X',
+      toxicHolder: projectHolder.toxicHolder || staking?.toxic_ape ? 'O' : 'X',
       catboticaHolder: projectHolder.catboticaHolder ? 'O' : 'X',
     }
     return new PageResObj(result, "홀더 체크에 성공하였습니다.")
