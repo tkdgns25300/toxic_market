@@ -218,7 +218,14 @@ export class StakingService {
         break;
     }
 
-    // 1. Check Staking Time
+    // 1. Check is NFT owner
+    param.token_id.forEach((tokenId: string) => {
+      if (!staking[kindOfNFT].split('&').includes(tokenId)) {
+        return new PageResObj({}, '본인 소유의 NFT만 Unstaking이 가능합니다.', true)
+      }
+    })
+
+    // 2. Check Staking Time
     const stakingTimeName = kindOfNFT + '_staking_time';
     const stakingTimeArr = staking[stakingTimeName].split('&');
     let isPossible = true;
