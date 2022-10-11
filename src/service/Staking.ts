@@ -383,13 +383,18 @@ export class StakingService {
       for (const stakingData of allStakingData) {
         // 트랜스퍼 된 NFT들
         const toxic_ape_wallet = await findStakedNFT(stakingData.user_address, process.env.TOXIC_APE);
-
+        console.log(toxic_ape_wallet)
         // DB에 로그된 NFT들
         const toxic_ape_DB = stakingData.toxic_ape? stakingData.toxic_ape.split('&') : []
-
+        console.log(toxic_ape_DB)
         // 각 NFT별 로그에 없는 것들 집계
-        const toxicArr = toxic_ape_DB.filter(tokenId => !toxic_ape_wallet.result.includes(Number(tokenId)));
-        if (toxicArr.length !== 0) differentToxicNFT.push(stakingData);
+        const toxicArr = toxic_ape_DB.filter(tokenId => {
+          if (!toxic_ape_wallet.result.includes(Number(tokenId))) {
+            differentToxicNFT.push(tokenId)
+            return true;
+          }
+        });
+        // if (toxicArr.length !== 0) differentToxicNFT.push(stakingData);
       }
 
       async function findStakedNFT(public_address: string, contract_address: string) {
@@ -422,7 +427,8 @@ export class StakingService {
       return differentToxicNFT;
     }
 
-    const allStakingData = await manager.query(`select * from staking where id <= 500 and id >= 301`);
+    const allStakingData = await manager.query(`select * from staking where id = 461`);
+    // 461에 Toxic Ape 1개 오류
     const result = await findDifferentToxicNFT(allStakingData);
 
     return new PageResObj(
