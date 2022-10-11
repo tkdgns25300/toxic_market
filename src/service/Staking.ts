@@ -354,19 +354,20 @@ export class StakingService {
     );
   }
 
-  async errorNFT(key: string, param: ErrorNFTSearchReq): Promise<PageResObj<{}>> {
+  @Transaction()
+  async errorNFT(key: string, param: ErrorNFTSearchReq, @TransactionManager() manager: EntityManager): Promise<PageResObj<{}>> {
     if (key !== process.env.KEY) {
       return new PageResObj({}, '잘못된 접근입니다.', true)
     }
 
-    async function findStakedNFT(public_address: string, contract_address: string) {
-      // 유저의 모든 NFT
+    async function findDifferentToxicNFT(allStakingData) {
+      // 스테이킹 지갑의 모든 NFT
       let cursor = '';
       let result = [];
       do {
         const res = await axios({
           method: "get",
-          url: `https://th-api.klaytnapi.com/v2/account/${process.env.STAKING_WALLET_ADDRESS}/token?kind=nft&size=1000&ca-filters=${contract_address}&cursor=${cursor}`,
+          url: `https://th-api.klaytnapi.com/v2/account/${process.env.STAKING_WALLET_ADDRESS}/token?kind=nft&size=1000&ca-filters=${process.env.TOXIC_APE}&cursor=${cursor}`,
           headers: {
             "x-chain-id": process.env.KLAYTN_API_X_CHAIN_ID
               ? process.env.KLAYTN_API_X_CHAIN_ID
@@ -377,37 +378,90 @@ export class StakingService {
         result = result.concat(res.data.items);
         cursor = res.data.cursor;
       } while (cursor !== '')
-     
-      // 유저의 NFT만 필터링
-      result = result.filter(nft => nft.lastTransfer.transferFrom.toLowerCase() === public_address.toLowerCase())
-      result = result.map(nft => parseInt(nft.extras.tokenId, 16)).reverse()
-      const totalAmounts = result.length;
 
-      return { result, totalAmounts }
+      const differentToxicNFT = [];
+      for (const stakingData of allStakingData) {
+        // 트랜스퍼 된 NFT들
+        const toxic_ape_wallet = await findStakedNFT(stakingData.user_address, process.env.TOXIC_APE);
+
+        // DB에 로그된 NFT들
+        const toxic_ape_DB = stakingData.toxic_ape? stakingData.toxic_ape.split('&') : []
+
+        // 각 NFT별 로그에 없는 것들 집계
+        const toxicArr = toxic_ape_DB.filter(tokenId => !toxic_ape_wallet.result.includes(Number(tokenId)));
+        if (toxicArr.length !== 0) differentToxicNFT.push(stakingData);
+      }
+
+      async function findStakedNFT(public_address: string, contract_address: string) {
+        // 스테이킹 지갑의 모든 NFT
+        let cursor = '';
+        let result = [];
+        do {
+          const res = await axios({
+            method: "get",
+            url: `https://th-api.klaytnapi.com/v2/account/${process.env.STAKING_WALLET_ADDRESS}/token?kind=nft&size=1000&ca-filters=${contract_address}&cursor=${cursor}`,
+            headers: {
+              "x-chain-id": process.env.KLAYTN_API_X_CHAIN_ID
+                ? process.env.KLAYTN_API_X_CHAIN_ID
+                : "8217",
+              Authorization: `Basic ${process.env.KLAYTN_API_KEY}`,
+            },
+          });
+          result = result.concat(res.data.items);
+          cursor = res.data.cursor;
+        } while (cursor !== '')
+       
+        // 유저의 NFT만 필터링
+        result = result.filter(nft => nft.lastTransfer.transferFrom.toLowerCase() === public_address.toLowerCase())
+        result = result.map(nft => parseInt(nft.extras.tokenId, 16)).reverse()
+        const totalAmounts = result.length;
+  
+        return { result, totalAmounts }
+      }
+
+      return differentToxicNFT;
     }
+
+    const allStakingData = await manager.query(`select * from staking where id <= 500 and id >= 301`);
+    const result = await findDifferentToxicNFT(allStakingData);
+
+    return new PageResObj(
+			{
+        result
+				// toxicArr,
+        // foolkatArr,
+        // succubusArr,
+        // toxicSpecialArr,
+        // amount,
+        // user,
+        // user_staking,
+			},
+			"리워딩에 성공하였습니다."
+		);
+
 
     /**
      * 1단계 : 누락된 토큰(NFT)들의 id 파악
      */
 
-    // 트랜스퍼 된 NFT들
-    const toxic_ape_wallet = await findStakedNFT(param.public_address, process.env.TOXIC_APE)
-    const foolkat_wallet = await findStakedNFT(param.public_address, process.env.FOOLKATS)
-    const succubus_wallet = await findStakedNFT(param.public_address, process.env.SUCCUBUS)
-    const toxic_ape_special_wallet = await findStakedNFT(param.public_address, process.env.TOXIC_APE_SPECIAL)
+    // // 트랜스퍼 된 NFT들
+    // const toxic_ape_wallet = await findStakedNFT(param.public_address, process.env.TOXIC_APE)
+    // const foolkat_wallet = await findStakedNFT(param.public_address, process.env.FOOLKATS)
+    // const succubus_wallet = await findStakedNFT(param.public_address, process.env.SUCCUBUS)
+    // const toxic_ape_special_wallet = await findStakedNFT(param.public_address, process.env.TOXIC_APE_SPECIAL)
     
-    // DB에 로그된 NFT들
-    const user_staking = await this.stakingQueryRepo.findOne("user_address", param.public_address)
-    const toxic_ape_DB = user_staking.toxic_ape? user_staking.toxic_ape.split('&') : []
-    const foolkat_DB = user_staking.foolkat? user_staking.foolkat.split('&') : []
-    const succubus_DB = user_staking.succubus? user_staking.succubus.split('&') : []
-    const toxic_ape_special_DB = user_staking.toxic_ape_special? user_staking.toxic_ape_special.split('&') : []
+    // // DB에 로그된 NFT들
+    // const user_staking = await this.stakingQueryRepo.findOne("user_address", param.public_address)
+    // const toxic_ape_DB = user_staking.toxic_ape? user_staking.toxic_ape.split('&') : []
+    // const foolkat_DB = user_staking.foolkat? user_staking.foolkat.split('&') : []
+    // const succubus_DB = user_staking.succubus? user_staking.succubus.split('&') : []
+    // const toxic_ape_special_DB = user_staking.toxic_ape_special? user_staking.toxic_ape_special.split('&') : []
 
-    // 각 NFT별 로그에 없는 것들 집계
-    const toxicArr = toxic_ape_wallet.result.filter(tokenId => !toxic_ape_DB.includes(String(tokenId)))
-    const foolkatArr = foolkat_wallet.result.filter(tokenId => !foolkat_DB.includes(String(tokenId)))
-    const succubusArr = succubus_wallet.result.filter(tokenId => !succubus_DB.includes(String(tokenId)))
-    const toxicSpecialArr = toxic_ape_special_wallet.result.filter(tokenId => !toxic_ape_special_DB.includes(String(tokenId)))
+    // // 각 NFT별 로그에 없는 것들 집계
+    // const toxicArr = toxic_ape_wallet.result.filter(tokenId => !toxic_ape_DB.includes(String(tokenId)))
+    // const foolkatArr = foolkat_wallet.result.filter(tokenId => !foolkat_DB.includes(String(tokenId)))
+    // const succubusArr = succubus_wallet.result.filter(tokenId => !succubus_DB.includes(String(tokenId)))
+    // const toxicSpecialArr = toxic_ape_special_wallet.result.filter(tokenId => !toxic_ape_special_DB.includes(String(tokenId)))
 
 
     /**
@@ -485,18 +539,32 @@ export class StakingService {
     //   await this.stakingLogQueryRepo.create(log)
     // }
 
-    return new PageResObj(
-			{
-				toxicArr,
-        foolkatArr,
-        succubusArr,
-        toxicSpecialArr,
-        // amount,
-        // user,
-        // user_staking,
-			},
-			"리워딩에 성공하였습니다."
-		);
+    // async function findStakedNFT(public_address: string, contract_address: string) {
+    //   // 스테이킹 지갑의 모든 NFT
+    //   let cursor = '';
+    //   let result = [];
+    //   do {
+    //     const res = await axios({
+    //       method: "get",
+    //       url: `https://th-api.klaytnapi.com/v2/account/${process.env.STAKING_WALLET_ADDRESS}/token?kind=nft&size=1000&ca-filters=${contract_address}&cursor=${cursor}`,
+    //       headers: {
+    //         "x-chain-id": process.env.KLAYTN_API_X_CHAIN_ID
+    //           ? process.env.KLAYTN_API_X_CHAIN_ID
+    //           : "8217",
+    //         Authorization: `Basic ${process.env.KLAYTN_API_KEY}`,
+    //       },
+    //     });
+    //     result = result.concat(res.data.items);
+    //     cursor = res.data.cursor;
+    //   } while (cursor !== '')
+     
+    //   // 유저의 NFT만 필터링
+    //   result = result.filter(nft => nft.lastTransfer.transferFrom.toLowerCase() === public_address.toLowerCase())
+    //   result = result.map(nft => parseInt(nft.extras.tokenId, 16)).reverse()
+    //   const totalAmounts = result.length;
+
+    //   return { result, totalAmounts }
+    // }
   }
 
   @Transaction()

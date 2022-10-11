@@ -115,7 +115,7 @@ export class StakingController {
   @Post("/error_nft/:key")
   public async errorNFT(@Param("key") key: string, @QueryParams() params: ErrorNFTSearchReq) {
     try {
-      return await this.stakingSerivce.errorNFT(key, params)
+      return await this.stakingSerivce.errorNFT(key, params, null)
     } catch (err) {
       if (err instanceof QueryFailedError) {
         return new PageResObj({}, err.message, true);
