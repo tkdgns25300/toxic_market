@@ -56,7 +56,7 @@ export class UserQueryRepo extends BaseQueryRepo {
         })
       }
       if (param.getUserCatboticaProject) {
-        builder.andWhere(`catbotica_project = user_catbotica_project`, {
+        builder.andWhere(`catbotica_project = :user_catbotica_project`, {
           user_catbotica_project: param.getUserCatboticaProject
         })
       }

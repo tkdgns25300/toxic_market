@@ -15,11 +15,15 @@ export class ExchangeLogQueryRepo extends BaseQueryRepo {
   findExchangeLogs(param: ProjectSortingSearchReq): Promise<[Array<any>, number]> {
     const builder = createQueryBuilder("exchange_log");
 
-    if (param.user_toxic_project === 'O') {
-      builder.andWhere(`toxic_project = 'O'`)
+    if (param.getUserToxicProject) {
+      builder.andWhere(`user_toxic_project = :user_toxic_project`, {
+        user_toxic_project: param.getUserToxicProject
+      })
     }
-    if (param.user_catbotica_project === 'O') {
-      builder.andWhere(`catbotica_project = 'O'`)
+    if (param.getUserCatboticaProject) {
+      builder.andWhere(`user_catbotica_project = :user_catbotica_project`, {
+        user_catbotica_project: param.getUserCatboticaProject
+      })
     }
 
     builder.skip(param.getOffset()).take(param.getLimit());
