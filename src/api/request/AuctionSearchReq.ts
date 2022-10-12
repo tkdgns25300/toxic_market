@@ -15,10 +15,10 @@ export class AuctionSearchReq extends PageReq {
 	}
 
 	get getUserToxicProject() {
-		return this.user_toxic_project ? this.user_toxic_project : "X";
+		return this.user_toxic_project ? this.user_toxic_project : "";
 	}
 
 	get getUserCatboticaProject() {
-		return this.user_catbotica_project ? this.user_catbotica_project : "X";
+		return this.user_catbotica_project ? this.user_catbotica_project : "";
 	}
 }

@@ -67,8 +67,10 @@ export class AuctionQueryRepo extends BaseQueryRepo {
         .getManyAndCount();
   }
 
-  findAllNotApproved(param: AuctionSearchReq): Promise<[Array<any>, number]> {
-    return createQueryBuilder("auction")
+    findAllNotApproved(param: AuctionSearchReq): Promise<[Array<any>, number]> {
+        const builder = createQueryBuilder("auction");
+
+        builder
         .leftJoinAndSelect("Auction.creator", "user")
         .where(`user.name like :name`, {
             name: `%${param.getName}%`,
@@ -78,51 +80,69 @@ export class AuctionQueryRepo extends BaseQueryRepo {
         .andWhere('end_at > :end_at', {
             end_at: new Date()
         })
-        .andWhere(`user.toxic_project = :toxic_project`, {toxic_project: param.getUserToxicProject})
-        .andWhere(`user.catbotica_project = :catbotica_project`, {catbotica_project: param.getUserCatboticaProject})
-        .skip(param.getOffset())
-        .take(param.getLimit())
-        .getManyAndCount();
-  }
 
-  getAllApprovedAndNotFinished(param: AuctionSearchReq): Promise<[Array<any>, number]> {
-        return createQueryBuilder("auction")
-            .leftJoinAndSelect("Auction.creator", "user")
-            .where(`user.name like :name`, {
-                name: `%${param.getName}%`,
-            })
-            .andWhere("title like :title", {title: `%${param.getTitle}%`})
-            .andWhere('is_approved = :is_approved', {
-                is_approved: "O"
-            })
-            .andWhere('end_at > :end_at', {
-                end_at: new Date()
-            })
-            .andWhere(`user.toxic_project = :toxic_project`, {toxic_project: param.getUserToxicProject})
-            .andWhere(`user.catbotica_project = :catbotica_project`, {catbotica_project: param.getUserCatboticaProject})
-            .skip(param.getOffset())
-            .take(param.getLimit())
-            .getManyAndCount();
+        if (param.getUserToxicProject) {
+            builder.andWhere(`user.toxic_project = :toxic_project`, {toxic_project: param.getUserToxicProject})
+        }
+        if (param.getUserCatboticaProject) {
+            builder.andWhere(`user.catbotica_project = :catbotica_project`, {catbotica_project: param.getUserCatboticaProject})
+        }
+
+        builder.skip(param.getOffset()).take(param.getLimit());
+        return builder.getManyAndCount();
     }
 
-  getAllApprovedAndFinished(param: AuctionSearchReq): Promise<[Array<any>, number]> {
-        return createQueryBuilder("auction")
-            .leftJoinAndSelect("Auction.creator", "user")
-            .where(`user.name like :name`, {
-                name: `%${param.getName}%`,
-            })
-            .andWhere("title like :title", {title: `%${param.getTitle}%`})
-            .andWhere('is_approved = :is_approved', {
-                is_approved: "O"
-            })
-            .andWhere('end_at <= :end_at', {
-                end_at: new Date()
-            })
-            .andWhere(`user.toxic_project = :toxic_project`, {toxic_project: param.getUserToxicProject})
-            .andWhere(`user.catbotica_project = :catbotica_project`, {catbotica_project: param.getUserCatboticaProject})
-            .skip(param.getOffset())
-            .take(param.getLimit())
-            .getManyAndCount();
+    getAllApprovedAndNotFinished(param: AuctionSearchReq): Promise<[Array<any>, number]> {
+        const builder = createQueryBuilder("auction");
+
+        builder
+        .leftJoinAndSelect("Auction.creator", "user")
+        .where(`user.name like :name`, {
+            name: `%${param.getName}%`,
+        })
+        .andWhere("title like :title", {title: `%${param.getTitle}%`})
+        .andWhere('is_approved = :is_approved', {
+            is_approved: "O"
+        })
+        .andWhere('end_at > :end_at', {
+            end_at: new Date()
+        })
+
+        if (param.getUserToxicProject) {
+            builder.andWhere(`user.toxic_project = :toxic_project`, {toxic_project: param.getUserToxicProject})
+        }
+        if (param.getUserCatboticaProject) {
+            builder.andWhere(`user.catbotica_project = :catbotica_project`, {catbotica_project: param.getUserCatboticaProject})
+        }
+
+        builder.skip(param.getOffset()).take(param.getLimit());
+        return builder.getManyAndCount();
     }
 
+    getAllApprovedAndFinished(param: AuctionSearchReq): Promise<[Array<any>, number]> {
+        const builder = createQueryBuilder("auction");
+
+        builder
+        .leftJoinAndSelect("Auction.creator", "user")
+        .where(`user.name like :name`, {
+            name: `%${param.getName}%`,
+        })
+        .andWhere("title like :title", {title: `%${param.getTitle}%`})
+        .andWhere('is_approved = :is_approved', {
+            is_approved: "O"
+        })
+        .andWhere('end_at <= :end_at', {
+            end_at: new Date()
+        })
+
+        if (param.getUserToxicProject) {
+            builder.andWhere(`user.toxic_project = :toxic_project`, {toxic_project: param.getUserToxicProject})
+        }
+        if (param.getUserCatboticaProject) {
+            builder.andWhere(`user.catbotica_project = :catbotica_project`, {catbotica_project: param.getUserCatboticaProject})
+        }
+
+        builder.skip(param.getOffset()).take(param.getLimit());
+        return builder.getManyAndCount();    
+    }
 }

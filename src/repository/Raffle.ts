@@ -23,20 +23,22 @@ export class RaffleQueryRepo extends BaseQueryRepo {
       "user.name",
       "user.phone"
     ])
-    .where('is_approved IS NULL')
+    .where(`user.name like :name`, {
+      name: `%${param.getName}%`,
+  })
+    .andWhere("title like :title", {title: `%${param.getTitle}%`})
+    .andWhere('is_approved IS NULL')
     .andWhere('end_at > :end_at', {
       end_at: new Date()
     })
-    .andWhere(`user.toxic_project = :toxic_project`, {toxic_project: param.getUserToxicProject})
-    .andWhere(`user.catbotica_project = :catbotica_project`, {catbotica_project: param.getUserCatboticaProject})
-
-    if (param.name) {
-      builder.andWhere('name like :name', { name: `%${param.name}%` });
-    }
-    if (param.title) {
-      builder.andWhere('title like :title', { title: `%${param.title}%` });
-    }
     
+    if (param.getUserToxicProject) {
+      builder.andWhere(`user.toxic_project = :toxic_project`, {toxic_project: param.getUserToxicProject})
+    }
+    if (param.getUserCatboticaProject) {
+        builder.andWhere(`user.catbotica_project = :catbotica_project`, {catbotica_project: param.getUserCatboticaProject})
+    }
+
     builder.skip(param.getOffset()).take(param.getLimit());
     return builder.getManyAndCount();
   }
@@ -52,20 +54,22 @@ export class RaffleQueryRepo extends BaseQueryRepo {
       "user.name",
       "user.phone"
     ])
-    .where('is_approved = :is_approved', {
+    .where(`user.name like :name`, {
+      name: `%${param.getName}%`,
+    })
+    .andWhere("title like :title", {title: `%${param.getTitle}%`})
+    .andWhere('is_approved = :is_approved', {
       is_approved: "O"
     })
     .andWhere('end_at > :end_at', {
       end_at: new Date()
     })
-    .andWhere(`user.toxic_project = :toxic_project`, {toxic_project: param.getUserToxicProject})
-    .andWhere(`user.catbotica_project = :catbotica_project`, {catbotica_project: param.getUserCatboticaProject})
-
-    if (param.name) {
-      builder.andWhere('name like :name', { name: `%${param.name}%` });
+    
+    if (param.getUserToxicProject) {
+      builder.andWhere(`user.toxic_project = :toxic_project`, {toxic_project: param.getUserToxicProject})
     }
-    if (param.title) {
-      builder.andWhere('title like :title', { title: `%${param.title}%` });
+    if (param.getUserCatboticaProject) {
+        builder.andWhere(`user.catbotica_project = :catbotica_project`, {catbotica_project: param.getUserCatboticaProject})
     }
 
     builder.skip(param.getOffset()).take(param.getLimit());
@@ -84,20 +88,22 @@ export class RaffleQueryRepo extends BaseQueryRepo {
       "user.phone",
       "raffle_log"
     ])
-    .where('is_approved = :is_approved', {
+    .where(`user.name like :name`, {
+      name: `%${param.getName}%`,
+    })
+    .andWhere("title like :title", {title: `%${param.getTitle}%`})
+    .andWhere('is_approved = :is_approved', {
       is_approved: "O"
     })
     .andWhere('end_at <= :end_at', {
       end_at: new Date()
     })
-    .andWhere(`user.toxic_project = :toxic_project`, {toxic_project: param.getUserToxicProject})
-    .andWhere(`user.catbotica_project = :catbotica_project`, {catbotica_project: param.getUserCatboticaProject})
 
-    if (param.name) {
-      builder.andWhere('name like :name', { name: `%${param.name}%` });
+    if (param.getUserToxicProject) {
+      builder.andWhere(`user.toxic_project = :toxic_project`, {toxic_project: param.getUserToxicProject})
     }
-    if (param.title) {
-      builder.andWhere('title like :title', { title: `%${param.title}%` });
+    if (param.getUserCatboticaProject) {
+        builder.andWhere(`user.catbotica_project = :catbotica_project`, {catbotica_project: param.getUserCatboticaProject})
     }
 
     builder.skip(param.getOffset()).take(param.getLimit());
