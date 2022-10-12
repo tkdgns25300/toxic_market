@@ -28,12 +28,13 @@ export class UserService {
       param.limit,
       result[0].map((el: User) => {
         delete el.password_hash;
+        delete el.nonce;
         return el;
       }),
       "User 목록을 찾는데 성공했습니다."
     );
   }
-  Auction
+  
   async findAllSeller(param: UserSearchReq): Promise<PageResList<User>> {
     const result = await this.userQueryRepo.searchSeller(param);
     return new PageResList<User>(
@@ -41,6 +42,7 @@ export class UserService {
       param.limit,
       result[0].map((el: User) => {
         delete el.password_hash;
+        delete el.nonce;
         return el;
       }),
       "User 목록을 찾는데 성공했습니다."
@@ -50,6 +52,7 @@ export class UserService {
   async findOne(public_address: string): Promise<PageResObj<User | {}>> {
     const result = await this.userQueryRepo.findOne("public_address", public_address);
     delete result.password_hash;
+    delete result.nonce;
     return new PageResObj(result, "User 조회에 성공했습니다.");
   }
 

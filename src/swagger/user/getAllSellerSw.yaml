@@ -104,6 +104,20 @@ paths:
                           type: string
                           enum: [ 개인사업자,법인,개인 ]
                           description: 판매자 종류
+                        id:
+                          type: string
+                        agreeRaffleService:
+                          type: string
+                        profile_img:
+                          type: string
+                        nickname:
+                          type: string
+                        introduction:
+                          type: string
+                        toxic_project:
+                          type: string
+                        catbotica_project:
+                          type: string
 
                   error:
                     type: boolean

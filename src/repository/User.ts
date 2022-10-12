@@ -22,11 +22,15 @@ export class UserQueryRepo extends BaseQueryRepo {
 				public_address: `%${param.getAddress}%`,
 			});
 
-    if (param.getUserToxicProject === 'O') {
-      builder.andWhere(`toxic_project = 'O'`)
+    if (param.getUserToxicProject) {
+      builder.andWhere(`toxic_project = :user_toxic_project`, {
+        user_toxic_project: param.getUserToxicProject
+      })
     }
-    if (param.getUserCatboticaProject === 'O') {
-      builder.andWhere(`catbotica_project = 'O'`)
+    if (param.getUserCatboticaProject) {
+      builder.andWhere(`catbotica_project = user_catbotica_project`, {
+        user_catbotica_project: param.getUserCatboticaProject
+      })
     }
 
     builder.skip(param.getOffset()).take(param.getLimit());
@@ -46,12 +50,16 @@ export class UserQueryRepo extends BaseQueryRepo {
 				public_address: `%${param.getAddress}%`,
 			});
 
-    if (param.getUserToxicProject === 'O') {
-      builder.andWhere(`toxic_project = 'O'`)
-    }
-    if (param.getUserCatboticaProject === 'O') {
-      builder.andWhere(`catbotica_project = 'O'`)
-    }
+      if (param.getUserToxicProject) {
+        builder.andWhere(`toxic_project = :user_toxic_project`, {
+          user_toxic_project: param.getUserToxicProject
+        })
+      }
+      if (param.getUserCatboticaProject) {
+        builder.andWhere(`catbotica_project = user_catbotica_project`, {
+          user_catbotica_project: param.getUserCatboticaProject
+        })
+      }
 
     builder.skip(param.getOffset()).take(param.getLimit());
 
