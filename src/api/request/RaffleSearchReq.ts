@@ -2,7 +2,7 @@ import { PageReq } from "./PageReq";
 
 
 export class RaffleSearchReq extends PageReq {
-    name: string;
+	name: string;
 	title: string;
 	user_toxic_project: string;
 	user_catbotica_project: string;

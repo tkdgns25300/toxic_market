@@ -15,6 +15,18 @@ export class ExchangeLogQueryRepo extends BaseQueryRepo {
   findExchangeLogs(param: ProjectSortingSearchReq): Promise<[Array<any>, number]> {
     const builder = createQueryBuilder("exchange_log");
 
+    if (param.getId) {
+      builder.andWhere(`user_id like :user_id`, {
+        user_id: `%${param.getId}%`
+      })
+    }
+
+    if (param.getAddress) {
+      builder.andWhere(`creator_address like :creator_address`, {
+        creator_address: `%${param.getAddress}%`
+      })
+    }
+
     if (param.getUserToxicProject) {
       builder.andWhere(`user_toxic_project = :user_toxic_project`, {
         user_toxic_project: param.getUserToxicProject
