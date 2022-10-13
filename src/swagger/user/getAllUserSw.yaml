@@ -25,10 +25,10 @@ paths:
           schema:
             type: integer
 
-        - name: name
+        - name: id
           in: query
           required: false
-          description: 사용자 이름
+          description: 사용자 아이디
           schema:
             type: string
 

@@ -15,12 +15,15 @@ export class UserQueryRepo extends BaseQueryRepo {
     const builder = createQueryBuilder("user");
 
     builder
-			.where(`name like :name`, {
-				name: `%${param.getName}%`,
-			})
-			.andWhere("public_address like :public_address", {
+			.where("public_address like :public_address", {
 				public_address: `%${param.getAddress}%`,
 			});
+
+    if (param.getId) {
+      builder.andWhere("id like :id", {
+        name: `%${param.getId}%`
+      })
+    }
 
     if (param.getUserToxicProject) {
       builder.andWhere(`toxic_project = :user_toxic_project`, {

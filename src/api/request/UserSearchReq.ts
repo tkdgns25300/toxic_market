@@ -2,10 +2,15 @@ import { PageReq } from "./PageReq";
 
 
 export class UserSearchReq extends PageReq {
+  id: string;
   name: string;
   public_address: string;
   user_toxic_project: string;
   user_catbotica_project: string;
+
+  get getId() {
+    return this.id ? this.id : "";
+  }
 
   get getName() {
     return this.name ? this.name : "";
