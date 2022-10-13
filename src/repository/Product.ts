@@ -16,7 +16,7 @@ export class ProductQueryRepo extends BaseQueryRepo {
 		let monthBeforeDate: Date = new Date();
 		monthBeforeDate.setDate(monthBeforeDate.getDate() - 30);
 		const entityManager = getManager();
-
+	
 		const orderAndLimitQuery = ` ORDER BY created_at DESC LIMIT 99999`;
 		let notSoldOutQuery = `
 		SELECT product.id, product.main_img_url, product.sub_img_url, product.price, product.amount, product.title, product.description, product.contact, product.created_at, product.user_address, product.is_visible
@@ -28,6 +28,8 @@ export class ProductQueryRepo extends BaseQueryRepo {
 		AND product.created_at >= "${monthBeforeDate.toISOString()}"`;
 		if (param.getUserToxicProject) notSoldOutQuery += ` AND user.toxic_project = '${param.getUserToxicProject}'`;
 		if (param.getUserCatboticaProject) notSoldOutQuery += ` AND user.catbotica_project = '${param.getUserCatboticaProject}'`;
+		if (param.getName) notSoldOutQuery += ` AND user.name like '%${param.getName}%'`;
+		if (param.getTitle) notSoldOutQuery += ` AND product.title like '%${param.getTitle}%'`;
 		notSoldOutQuery += orderAndLimitQuery;
 		
 		let soldOutQuery = `
@@ -40,6 +42,8 @@ export class ProductQueryRepo extends BaseQueryRepo {
 		AND product.created_at >= "${monthBeforeDate.toISOString()}"`;
 		if (param.getUserToxicProject) soldOutQuery += ` AND user.toxic_project = '${param.getUserToxicProject}'`;
 		if (param.getUserCatboticaProject) soldOutQuery += ` AND user.catbotica_project = '${param.getUserCatboticaProject}'`;
+		if (param.getName) soldOutQuery += ` AND user.name like '%${param.getName}%'`;
+		if (param.getTitle) soldOutQuery += ` AND product.title like '%${param.getTitle}%'`;
 		soldOutQuery += orderAndLimitQuery;
 
     // Product
@@ -60,6 +64,8 @@ export class ProductQueryRepo extends BaseQueryRepo {
 			AND product.created_at >= "${monthBeforeDate.toISOString()}"`;
 		if (param.getUserToxicProject) totalCountQuery += ` AND user.toxic_project = '${param.getUserToxicProject}'`;
 		if (param.getUserCatboticaProject) totalCountQuery += ` AND user.catbotica_project = '${param.getUserCatboticaProject}'`;
+		if (param.getName) totalCountQuery += ` AND user.name like '%${param.getName}%'`;
+		if (param.getTitle) totalCountQuery += ` AND product.title like '%${param.getTitle}%'`;
 
 		let totalCount = await entityManager.query(totalCountQuery);
 		totalCount = Number(totalCount[0]["COUNT(*)"]);
