@@ -21,7 +21,7 @@ export class UserQueryRepo extends BaseQueryRepo {
 
     if (param.getId) {
       builder.andWhere("id like :id", {
-        name: `%${param.getId}%`
+        id: `%${param.getId}%`
       })
     }
 
