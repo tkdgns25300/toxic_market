@@ -162,6 +162,10 @@ export class ExchangeService {
       return new PageResObj({}, "수수료보다 낮은 금액을 입력해주세요.", true)
     }
 
+    if (!Number.isInteger(paramObj.returnCommissionFee)) {
+      return new PageResObj({}, "자연수만 입력해주세요.", true)
+    }
+
     // 1. 유저에게 TP 지급
     const user: User = await manager.findOne(User, { "public_address": exchangeLog.creator_address})
     user.CF_balance += paramObj.returnCommissionFee;
