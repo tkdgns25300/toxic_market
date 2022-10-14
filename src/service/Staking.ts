@@ -13,7 +13,7 @@ import { StakingLogSearchReq } from "../api/request/StakingLogSearchReq";
 import { ErrorNFTSearchReq } from "../api/request/ErrorNFTSearchReq";
 import { UserQueryRepo } from "../repository/User";
 import { StakingLogQueryRepo } from "../repository/StakingLog";
-import { FoolkatMiningLog, SuccubusMiningLog, ToxMiningLog, ToxSpecialMiningLog } from "../util/miningLog";
+// import { FoolkatMiningLog, SuccubusMiningLog, ToxMiningLog, ToxSpecialMiningLog } from "../util/miningLog";
 
 const toxicNFTContractAddress = [process.env.TOXIC_APE, process.env.FOOLKATS, process.env.SUCCUBUS, process.env.TOXIC_APE_SPECIAL]
 const caver = new Caver("https://public-node-api.klaytnapi.com/v1/cypress");
@@ -588,6 +588,7 @@ export class StakingService {
     let currentDate = new Date();
     currentDate.setHours(currentDate.getHours() + 9);
 
+    /*
     // 1-1. 22일 기준 스테이킹한 사람 지갑주소, 각 NFT 개수 파악
     const stakedUserAndNFTamount = [];
     let staking = await manager.query(`select * from staking where id <= 669 and id >= 601`);
@@ -680,6 +681,7 @@ export class StakingService {
       oneUserAndNFTAmount.SuccubusNotGetCoinDateAmount = SuccubusNotGetCoinDateAmount;
       oneUserAndNFTAmount.ToxSpecialNotGetCoinDateAmount = ToxSpecialNotGetCoinDateAmount;
     }
+     */
 
     /**
      * main
@@ -708,7 +710,8 @@ export class StakingService {
     //   await this.stakingLogQueryRepo.create(log)
     // }
 
-    console.log(stakedUserAndNFTamount.length)
-    return new PageResObj(stakedUserAndNFTamount, "Air Drop에 성공했습니다.")
+    // console.log(stakedUserAndNFTamount.length)
+    // return new PageResObj(stakedUserAndNFTamount, "Air Drop에 성공했습니다.")
+    return new PageResObj({}, "Air Drop에 성공했습니다.")
   }
 }
