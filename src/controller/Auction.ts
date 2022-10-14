@@ -23,24 +23,6 @@ import { checkAdminReq } from "../api/request/CheckAdminReq";
 export class AuctionController {
   @Inject()
   auctionService: AuctionService;
-  /**
-   *    Service
-   *  GET  /getAllApproved  only auction itself
-   *  GET  /getUser'sAuctions  only auction itself
-   *  POST  /create (Seller only)
-   *  GET  /getOne/:id  with BidLogs
-   *  PATCH /bid/:id  (Seller can not bid)
-   *
-   *
-   *   Admin - Get All requests has filtering by name and phone number
-   *   GET  /getAllNotApproved with user
-   *   GET  /getAllApprovedAndNotFinished with user
-   *   GET  /getAllApprovedAndFinished with user
-   *   GET  /getOne/:id  with BidLogs and user
-   *   PATCH /confirm/:id  /update
-   *   PATCH /finish/:id  /update
-   * */
-
 
   @Post("/create")
   @UseBefore(checkAccessToken)
