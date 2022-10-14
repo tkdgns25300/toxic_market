@@ -145,6 +145,11 @@ export class AuthService {
       return new PageResObj({}, "이미 ID가 등록되어 있습니다.", true);
     }
 
+    const isExist = await this.userQueryRepo.findOne("id", paramObj.id);
+    if (isExist) {
+      return new PageResObj({}, "이미 존재하는 ID입니다.", true);
+    }
+
     // ID 등록
     const updatedUser = await this.userQueryRepo.update({
       toxic_project: paramObj.toxic_project,
