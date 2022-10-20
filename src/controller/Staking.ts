@@ -137,30 +137,4 @@ export class StakingController {
       return new PageResObj({}, err.message, true);
     }
   }
-
-  @Get("/test")
-  public async test() {
-    try {
-      const Web3 = require('web3');
-      const Contract = require('web3-eth-contract');
-      console.log(Web3.givenProvider)
-      const web3 = new Web3('https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161');
-  
-      // const detectEthereumProvider = require('@metamask/detect-provider');
-      // const provider = await detectEthereumProvider();
-      // console.log(provider)
-      // web3.setProvider(new Web3.providers.HttpProvider("http://localhost:8545"))
-      // console.log(Web3.givenProvider)
-      // const accounts = await web3.eth.getAccounts();
-      // console.log(accounts); // []
-      const myContract = new Contract(testABI, '0x588dFd1181d1237D06b94a9A9343Bcdf93a72999');
-      const result = await myContract.methods.mintingInformation().call();
-      return result
-    } catch (err) {
-      if (err instanceof QueryFailedError) {
-        return new PageResObj({}, err.message, true);
-      }
-      return new PageResObj({}, err.message, true);
-    }
-  }
 }
