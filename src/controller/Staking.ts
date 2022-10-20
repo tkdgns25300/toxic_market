@@ -9,7 +9,6 @@ import { StakingLogSearchReq } from "../api/request/StakingLogSearchReq";
 import { StakingSearchReq } from "../api/request/StakingSearchReq";
 import { StakingContractTokenDto } from "../dto/Staking";
 import { checkAccessToken, checkAdminAccessToken } from "../middlewares/Auth";
-import { testABI } from "../middlewares/smartContract";
 import { StakingService } from "../service/Staking";
 
 @Service()
