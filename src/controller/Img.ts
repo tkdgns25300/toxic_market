@@ -56,16 +56,16 @@ export class ImageUploadCtrl {
     /* 폴더 접근 */
     const fileArray = await fs.readdirSync(`/Users/hansanghun/Desktop/AWS/NFTimages`);
     let totalJsonChange = 0;
+    console.log(fileArray)
     for (const file of fileArray) {
       const splitExtension = file.split('.')
       const number = splitExtension[splitExtension.length - 2];
       const extension = splitExtension[splitExtension.length-1];
       if (extension === 'json') {
-        let jsonData = await fs.readFileSync(`/Users/hansanghun/Desktop/AWS/NFTimages/${file}`, "utf8");
-        const jsonObjectData = JSON.parse(jsonData);
-        jsonObjectData.image = `https://magicclub-revealed-image.s3.ap-northeast-2.amazonaws.com/NFTimages/${number}.png`
-        jsonData = JSON.stringify(jsonObjectData);
-        await fs.writeFileSync(`/Users/hansanghun/Desktop/AWS/NFTimages/${file}`, jsonData)
+        const ranNum = await generateRandomNumber();
+        const ranFile = ranNum + '.json';
+        const jsonData = await fs.readFileSync(`/Users/hansanghun/Desktop/AWS/NFTimages/${file}`, "utf8");
+        await fs.writeFileSync(`/Users/hansanghun/Desktop/AWS/NFTimages/${ranFile}`, jsonData)
         totalJsonChange++;
       }
     }
@@ -73,16 +73,16 @@ export class ImageUploadCtrl {
     
 
     /*
-    // /* 랜덤 넘버 생성 */
-    // async function generateRandomNumber() {
-    //   const allNumberString = await fs.readFileSync("randomNumber.txt", {encoding:'utf8', flag:'r'})
-    //   const allNumber = allNumberString.split(",")
-    //   const randomIndex = Math.floor(Math.random() * allNumber.length);
-    //   const randomNumber = allNumber[randomIndex];
-    //   const newAllNumber = allNumber.filter(e => e !== randomNumber);
-    //   await fs.writeFileSync("randomNumber.txt", newAllNumber + "");
-    //   return randomNumber;
-    // }
+    /* 랜덤 넘버 생성 */
+    async function generateRandomNumber() {
+      const allNumberString = await fs.readFileSync("randomNumber.txt", {encoding:'utf8', flag:'r'})
+      const allNumber = allNumberString.split(",")
+      const randomIndex = Math.floor(Math.random() * allNumber.length);
+      const randomNumber = allNumber[randomIndex];
+      const newAllNumber = allNumber.filter(e => e !== randomNumber);
+      await fs.writeFileSync("randomNumber.txt", newAllNumber + "");
+      return randomNumber;
+    }
    
 
     // /* 폴더 접근 */
