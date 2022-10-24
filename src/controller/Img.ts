@@ -54,18 +54,24 @@ export class ImageUploadCtrl {
     const fs = require('fs');
 
     /* 폴더 접근 */
-    const fileArray = await fs.readdirSync(`/Users/hansanghun/Desktop/AWS/NFTimages`);
+    const fileArray = await fs.readdirSync(`/Users/hansanghun/Desktop/AWS/HablstoneNFT`);
     let totalJsonChange = 0;
-    console.log(fileArray)
+    const temp = [];
     for (const file of fileArray) {
       const splitExtension = file.split('.')
-      const number = splitExtension[splitExtension.length - 2];
       const extension = splitExtension[splitExtension.length-1];
       if (extension === 'json') {
-        const ranNum = await generateRandomNumber();
-        const ranFile = ranNum + '.json';
-        const jsonData = await fs.readFileSync(`/Users/hansanghun/Desktop/AWS/NFTimages/${file}`, "utf8");
-        await fs.writeFileSync(`/Users/hansanghun/Desktop/AWS/NFTimages/${ranFile}`, jsonData)
+
+        // const ranNum = await generateRandomNumber();
+        // const ranFile = ranNum + '.json';
+        // const jsonData = await fs.readFileSync(`/Users/hansanghun/Desktop/AWS/NFTimages/${file}`, "utf8");
+        // await fs.writeFileSync(`/Users/hansanghun/Desktop/AWS/NFTimages/${ranFile}`, jsonData)
+        const jsonData = await fs.readFileSync(`/Users/hansanghun/Desktop/AWS/HablstoneNFT/${file}`, "utf8")
+        const jsonObjectData = JSON.parse(jsonData);
+        const originalName = jsonObjectData.name
+        const originalNumber = originalName.split(' ')[0].split('#')[1];
+        const jsonFileName = `${originalNumber}.json`
+        await fs.writeFileSync(`/Users/hansanghun/Desktop/AWS/HablstoneNFTJSON/${jsonFileName}`, jsonData)
         totalJsonChange++;
       }
     }
@@ -74,15 +80,15 @@ export class ImageUploadCtrl {
 
     /*
     /* 랜덤 넘버 생성 */
-    async function generateRandomNumber() {
-      const allNumberString = await fs.readFileSync("randomNumber.txt", {encoding:'utf8', flag:'r'})
-      const allNumber = allNumberString.split(",")
-      const randomIndex = Math.floor(Math.random() * allNumber.length);
-      const randomNumber = allNumber[randomIndex];
-      const newAllNumber = allNumber.filter(e => e !== randomNumber);
-      await fs.writeFileSync("randomNumber.txt", newAllNumber + "");
-      return randomNumber;
-    }
+    // async function generateRandomNumber() {
+    //   const allNumberString = await fs.readFileSync("randomNumber.txt", {encoding:'utf8', flag:'r'})
+    //   const allNumber = allNumberString.split(",")
+    //   const randomIndex = Math.floor(Math.random() * allNumber.length);
+    //   const randomNumber = allNumber[randomIndex];
+    //   const newAllNumber = allNumber.filter(e => e !== randomNumber);
+    //   await fs.writeFileSync("randomNumber.txt", newAllNumber + "");
+    //   return randomNumber;
+    // }
    
 
     // /* 폴더 접근 */
