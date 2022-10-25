@@ -215,6 +215,54 @@ export class AuthService {
     return { toxicHolder, catboticaHolder };
   }
 
+  /**
+   * check project holder : toxic, catbotica, meta kongz
+   */
+  async checkProjectHolderTemplate(owner: string) {
+    let toxicHolder = false;
+    let catboticaHolder = false;
+    let metakongzHolder = false;
+
+    const toxicContracts = [
+      process.env.TOXIC_APE
+    ]
+    const catboticaContracts = [
+      process.env.CATBOTICA
+    ]
+    const metakongzContracts = [
+      process.env.METAKONGZ
+    ]
+
+    // Check Tox Holder
+    for (const contractAddress of toxicContracts) {
+      const res = await axios({
+        method: "get",
+        url: `https://th-api.klaytnapi.com/v2/contract/nft/${contractAddress}/owner/${owner}`,
+        headers: {
+          "x-chain-id": process.env.KLAYTN_API_X_CHAIN_ID
+            ? process.env.KLAYTN_API_X_CHAIN_ID
+            : "8217",
+          Authorization: `Basic ${process.env.KLAYTN_API_KEY}`,
+        },
+      });
+      if (res.data.items.length > 0) {
+        toxicHolder = true;
+      }
+    }
+
+    // Check Catbotica Holder
+    for (const contractAddress of catboticaContracts) {
+      
+    }
+
+    // Check Meta-Kongz Holder
+    for (const contractAddress of metakongzContracts) {
+      
+    }
+
+  }
+
+
   async checkHolder(public_address: string): Promise<PageResObj<any>> {
     const projectHolder = await this.checkProjectHolder(public_address);
     const staking = await this.stakingQueryRepo.findOne("user_address", public_address);
