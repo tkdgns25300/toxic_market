@@ -252,14 +252,39 @@ export class AuthService {
 
     // Check Catbotica Holder
     for (const contractAddress of catboticaContracts) {
-      
+      const res = await axios({
+        method: "get",
+        url: `https://eth-mainnet.g.alchemy.com/nft/v2/${process.env.ALCHEMY_API_KEY}/getNFTs`,
+        params: {
+          owner: owner,
+          'contractAddresses[]': contractAddress,
+          withMetadata: 'false'
+        },
+        headers: {accept: 'application/json'}
+      });
+      if(res.data.ownedNfts.length > 0) {
+        catboticaHolder = true;
+      }
     }
 
     // Check Meta-Kongz Holder
     for (const contractAddress of metakongzContracts) {
-      
+      const res = await axios({
+        method: "get",
+        url: `https://eth-mainnet.g.alchemy.com/nft/v2/${process.env.ALCHEMY_API_KEY}/getNFTs`,
+        params: {
+          owner: owner,
+          'contractAddresses[]': contractAddress,
+          withMetadata: 'false'
+        },
+        headers: {accept: 'application/json'}
+      });
+      if(res.data.ownedNfts.length > 0) {
+        catboticaHolder = true;
+      }
     }
 
+    return { toxicHolder, catboticaHolder, metakongzHolder };
   }
 
 
