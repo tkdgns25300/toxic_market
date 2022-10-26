@@ -16,6 +16,7 @@ import { ImageUploadDto } from "../dto";
 import { PageResObj } from "../api";
 import { checkAccessToken } from "../middlewares/Auth";
 import { ImageUploadService } from "../service/ImageUpload";
+import fetch from 'node-fetch';
 @Service()
 @JsonController("/image")
 export class ImageUploadCtrl {
@@ -51,31 +52,47 @@ export class ImageUploadCtrl {
 
   @Get("/aws")
   public async AWSBucketUpdate(@QueryParams() param) {
-    const fs = require('fs');
+    /**
+     * fetch AWS json file test
+     */
+    let res;
+    try {
+      res = await fetch('https://hablstone.s3.ap-northeast-2.amazonaws.com/ipfs/4111.json').then(response => {
+        console.log(response)
+        return response.json()
+      })
+      console.log(res)
+    } catch (error) {
+      console.log(error)
+    }
+    return new PageResObj(res, "AWS Test OK")
+
+
+    // const fs = require('fs');
 
     /* 폴더 접근 */
-    const fileArray = await fs.readdirSync(`/Users/hansanghun/Desktop/AWS/HablstoneNFT`);
-    let totalJsonChange = 0;
-    const temp = [];
-    for (const file of fileArray) {
-      const splitExtension = file.split('.')
-      const extension = splitExtension[splitExtension.length-1];
-      if (extension === 'json') {
+    // const fileArray = await fs.readdirSync(`/Users/hansanghun/Desktop/AWS/HablstoneNFT`);
+    // let totalJsonChange = 0;
+    // const temp = [];
+    // for (const file of fileArray) {
+    //   const splitExtension = file.split('.')
+    //   const extension = splitExtension[splitExtension.length-1];
+    //   if (extension === 'json') {
 
-        // const ranNum = await generateRandomNumber();
-        // const ranFile = ranNum + '.json';
-        // const jsonData = await fs.readFileSync(`/Users/hansanghun/Desktop/AWS/NFTimages/${file}`, "utf8");
-        // await fs.writeFileSync(`/Users/hansanghun/Desktop/AWS/NFTimages/${ranFile}`, jsonData)
-        const jsonData = await fs.readFileSync(`/Users/hansanghun/Desktop/AWS/HablstoneNFT/${file}`, "utf8")
-        const jsonObjectData = JSON.parse(jsonData);
-        const originalName = jsonObjectData.name
-        const originalNumber = originalName.split(' ')[0].split('#')[1];
-        const jsonFileName = `${originalNumber}.json`
-        await fs.writeFileSync(`/Users/hansanghun/Desktop/AWS/HablstoneNFTJSON/${jsonFileName}`, jsonData)
-        totalJsonChange++;
-      }
-    }
-    console.log(totalJsonChange)
+    //     // const ranNum = await generateRandomNumber();
+    //     // const ranFile = ranNum + '.json';
+    //     // const jsonData = await fs.readFileSync(`/Users/hansanghun/Desktop/AWS/NFTimages/${file}`, "utf8");
+    //     // await fs.writeFileSync(`/Users/hansanghun/Desktop/AWS/NFTimages/${ranFile}`, jsonData)
+    //     const jsonData = await fs.readFileSync(`/Users/hansanghun/Desktop/AWS/HablstoneNFT/${file}`, "utf8")
+    //     const jsonObjectData = JSON.parse(jsonData);
+    //     const originalName = jsonObjectData.name
+    //     const originalNumber = originalName.split(' ')[0].split('#')[1];
+    //     const jsonFileName = `${originalNumber}.json`
+    //     await fs.writeFileSync(`/Users/hansanghun/Desktop/AWS/HablstoneNFTJSON/${jsonFileName}`, jsonData)
+    //     totalJsonChange++;
+    //   }
+    // }
+    // console.log(totalJsonChange)
     
 
     /*
