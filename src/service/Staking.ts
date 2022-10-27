@@ -122,46 +122,6 @@ export class StakingService {
     }
 
     return new PageResObj({}, "Staking에 성공하였습니다.");
-    
-    // // 1. transfer NFT + set staking time
-    // const stakingTimeArr = []
-    // for (const tokenId of param.token_id) {
-    //   await kip17.safeTransferFrom(public_address, process.env.STAKING_WALLET_ADDRESS, tokenId, {
-    //     from: process.env.STAKING_WALLET_ADDRESS
-    //   })
-    //   stakingTimeArr.push(new Date().toISOString())
-    // }
-
-    // // 2. Create Staking Data  
-    // const staking = await this.stakingQueryRepo.findOne('user_address', public_address)
-    // const NFTAmount = kindOfNFT + '_amount'
-    // const stakingTimeName = kindOfNFT + '_staking_time';
-    // // 이전에 스테이킹 했던 사용자
-    // if (staking) {
-    //   if (staking[kindOfNFT] === null || staking[kindOfNFT] === '') {
-    //     staking[kindOfNFT] = param.token_id.join('&')
-    //     staking[stakingTimeName] = stakingTimeArr.join('&')
-    //   }
-    //   else {
-    //     staking[kindOfNFT] += '&' + param.token_id.join('&')
-    //     staking[stakingTimeName] += '&' + stakingTimeArr.join('&')
-    //   }
-    //   staking[NFTAmount] = staking[kindOfNFT].split('&').length;
-    //   await this.stakingQueryRepo.update(staking, 'user_address', public_address)
-    // }
-    // // 처음 스테이킹 하는 사용자
-    // else {
-    //   const newStaking = {
-    //     [kindOfNFT]: param.token_id.join('&'),
-    //     [stakingTimeName]: stakingTimeArr.join('&'),
-    //     [NFTAmount]: param.token_id.length,
-    //     total_points: 0,
-    //     user_address: public_address
-    //   }
-    //   await this.stakingQueryRepo.create(newStaking)
-    // }
-
-    // return new PageResObj({}, "Staking에 성공하였습니다.");
   }
 
   async findUserStakingNFT(param: NftSearchReq, public_address: string): Promise<PageResObj<any>> {
@@ -271,35 +231,6 @@ export class StakingService {
     }
 
     return new PageResObj({}, 'Unstaking에 성공하였습니다.')
-    // // 2. transfer NFT
-    // const kip17 = new caver.kct.kip17(param.contract_address)
-    // for (const tokenId of param.token_id) {
-    //   await kip17.safeTransferFrom(process.env.STAKING_WALLET_ADDRESS, public_address, tokenId, {
-    //     from: process.env.STAKING_WALLET_ADDRESS
-    //   })
-    // }
-
-    // // 3. Update Staking Data
-    // const newStakingTimeArr = staking[stakingTimeName].split('&')
-    // let index = -1;
-    // const newTokenIdArr = staking[kindOfNFT].split('&').filter((tokenId, idx) => {
-    //   index++;
-    //   if(param.token_id.includes(tokenId)) {
-    //     // staking time도 같이 제거
-    //     newStakingTimeArr.splice(index, 1)
-    //     index--;
-    //     return false;
-    //   }
-    //   return true;
-    // }).join('&');
-    // staking[kindOfNFT] = newTokenIdArr;
-    // staking[stakingTimeName] = newStakingTimeArr.join('&');
-    // const NFTAmount = kindOfNFT + '_amount'
-    // if (newTokenIdArr === '') staking[NFTAmount] = 0
-    // else staking[NFTAmount] = newTokenIdArr.split('&').length;
-    // await this.stakingQueryRepo.update(staking, "user_address", public_address);    
-
-    // return new PageResObj({}, 'Unstaking에 성공하였습니다.')
   }
 
   @Transaction()
