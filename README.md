@@ -10,10 +10,10 @@ TOXIC MARKET는 블록체인 NFT를 포인트로 이용해 거래하는 이커�
 2. Setup database settings inside `ormconfig.ts` file
 3. Run `npm start` command
 
-## 서버 엔드포인트 (현재 작동하지 않음)
+## 서버 엔드포인트
 
 https://api.toxicnara.com
 
-## API 문서 (현재 작동하지 않음)
+## API 문서
 
 https://api.toxicnara.com/api-docs/#
